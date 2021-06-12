@@ -106,9 +106,9 @@ export default [
         },
     }, 
     {
-        path: '/sedes',
-        name: 'sedes',
-        component: () => import('../views/pages/admin/sedes'),
+        path: '/empresas',
+        name: 'empresas',
+        component: () => import('../views/pages/admin/empresas'),
         meta: {
             beforeEnter: (to, from, next) => {
                 if (!store.state.usuarioDB) {

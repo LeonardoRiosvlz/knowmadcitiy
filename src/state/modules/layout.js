@@ -3,7 +3,7 @@ export const state = {
   layoutWidth: 'fluid',
   leftSidebarType: 'light',
   topbar: 'dark',
-  loader: true
+  loader: false
 }
 
 export const getters = {}

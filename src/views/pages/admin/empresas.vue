@@ -2,7 +2,7 @@
   <Layout>
     <PageHeader :title="title" :items="items" />
     <div class="clearfix mb-3">
-      <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear cliente</b-button>
+      <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear empresas</b-button>
     </div>
     <div class="row">
       <div class="col-12">
@@ -38,7 +38,7 @@
             <div class="table-responsive mb-0">
 
               <b-table
-                :items="clientes"
+                :items="empresas"
                 :fields="fields"
                 responsive="sm"
                 :per-page="perPage"
@@ -61,6 +61,7 @@
                     <i class="mdi mdi-chevron-down"></i>
                   </template>
                   <b-dropdown-item-button@click="editMode=true;setear(data.item.id)">Editar</b-dropdown-item-button>
+                  <b-dropdown-item-button@click="editMode=true;eliminar(data.item.id)">Eliminar</b-dropdown-item-button>
                 </b-dropdown>
                 </template>
               </b-table>
@@ -83,96 +84,100 @@
 
 
 
-        <b-modal id="modal" false size="lg" hide-footer  title="Gestión de clientes" ok-only>
+        <b-modal id="modal" false size="lg" hide-footer  title="Gestión de empresas" ok-only>
           <ValidationObserver ref="form">
+            <b-row>
+              <b-col>
+                <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
+                  <label>Cliente {{form.dependencia}}</label>
+                    <v-select v-model="form.cliente_id" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
+                    <span style="color:red">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </b-col>
+            </b-row>
+         <b-row>
+              <b-col>
+                <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
+                  <label>Fundada</label>
+                   <b-form-datepicker id="example-datepicker" v-model="form.fundada" class="mb-2"></b-form-datepicker>
+               <span style="color:red">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </b-col>
+            </b-row>
             <b-row>
               <b-col>
                 <div class="form-group">
                   <label>Nombre </label>
-                  <ValidationProvider name="nombre" rules="required|alpha_spaces" v-slot="{ errors }">
+                  <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
                         <input v-model="form.nombre"  type="text" class="form-control" placeholder=" ">
                         <span style="color:red">{{ errors[0] }}</span>
                   </ValidationProvider>
                 </div>
               </b-col>
+              <b-col>
+                <div class="form-group">
+                  <label>Cargo del contacto </label>
+                  <ValidationProvider name="cargo del contacto" rules="required" v-slot="{ errors }">
+                        <input v-model="form.cargo_contacto"  type="text" class="form-control" placeholder=" ">
+                        <span style="color:red">{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </div>
+              </b-col>
+              </b-row>      
+              <b-row>
+                <b-col>
+                  <div class="form-group">
+                    <label>Rubro </label>
+                    <ValidationProvider name="rubro" rules="required" v-slot="{ errors }">
+                            <input v-model="form.rubro"  type="text" class="form-control" placeholder=" ">
+                            <span style="color:red">{{ errors[0] }}</span>
+                    </ValidationProvider>
+                    </div>
+                </b-col>
               </b-row>
               <b-row>
                 <b-col>
                   <div class="form-group">
-                    <label>Email</label>
-                    <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
-                          <input v-model="form.email" @keyup="setEmail()" type="text" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
+                    <label>Numero de empleados </label>
+                    <ValidationProvider name="numero de empleados" rules="required" v-slot="{ errors }">
+                            <input v-model="form.numero_empleados"  type="text" class="form-control" placeholder=" ">
+                            <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
-                  </div>
+                    </div>
                 </b-col>
-        
+              </b-row>
+              <b-row>
+               <b-col>
+                  <div class="form-group">
+                    <label>Porcentaje de mujeres </label>
+                    <ValidationProvider name="Porcentaje de mujeres" rules="required" v-slot="{ errors }">
+                            <input v-model="form.procentaje_mujeres"  type="text" class="form-control" placeholder=" ">
+                            <span style="color:red">{{ errors[0] }}</span>
+                    </ValidationProvider>
+                    </div>
+                </b-col>
                 <b-col>
                   <div class="form-group">
-                    <label>Telefono</label>
-                    <ValidationProvider name="telefono" rules="required" v-slot="{ errors }">
-                          <input v-model="form.telefono"  type="text" class="form-control" placeholder=" ">
+                    <label>Volumen de facturación</label>
+                    <ValidationProvider name="volumen de facturación" rules="required" v-slot="{ errors }">
+                          <input v-model="form.volumen_facturacion"  type="text" class="form-control" placeholder=" ">
                           <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
                   </div>
                 </b-col>
             </b-row>
-             <b-row>
+              <b-row>
                 <b-col>
                   <div class="form-group">
-                    <label>Fax</label>
-                    <ValidationProvider name="email" rules="required" v-slot="{ errors }">
-                          <input v-model="form.fax"  type="text" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-        
-                <b-col>
-                  <div class="form-group">
-                    <label>Celular</label>
-                    <ValidationProvider name="celular" rules="required" v-slot="{ errors }">
-                          <input v-model="form.celular"  type="text" class="form-control" placeholder=" ">
+                    <label>Dirección</label>
+                    <ValidationProvider name="dirección" rules="required" v-slot="{ errors }">
+                          <textarea v-model="form.direccion"  type="text" class="form-control" placeholder=" "></textarea>
                           <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
                   </div>
                 </b-col>
             </b-row>
             <hr>
-              <b-row >
-                <b-col>
-                  <div class="form-group">
-                    <label>Estatus</label>
-                    <ValidationProvider name="status" rules="required" v-slot="{ errors }">
-                          <select v-model="form.status"  name="tipo" class="form-control form-control-lg" >
-                              <option value="activo">Activo</option>
-                              <option value="inactivo">Inactivo</option>
-                          </select>
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row>    
-            <b-row v-if="!editMode">
-                <b-col>
-                  <div class="form-group">
-                    <label>Contraseña</label>
-                    <ValidationProvider name="password" rules="required" v-slot="{ errors }">
-                          <input v-model="form.password"  type="password" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-                 <b-col>
-                  <div class="form-group">
-                    <label>Confirmar contraseña</label>
-                    <ValidationProvider name="repass" rules="required|confirmed:password" v-slot="{ errors }">
-                          <input v-model="form.repass"  type="password" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row> 
             <b-row class="mb-2">
                <b-col>
                    <label>Imagen</label>
@@ -191,7 +196,6 @@
         <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Guardar</button>
         <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Editar</button>
      </b-modal>
-
   </Layout>
 </template>
 
@@ -225,7 +229,7 @@ export default {
           text: "Gestión corporativa"
         },
         {
-          text: "Clientes",
+          text: "empresas",
           active: true
         }
       ],
@@ -250,24 +254,23 @@ export default {
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
-      fields: ["nombre","telefono", "email", "status","actions"],
-      clientes: [], 
+      fields: ["nombre","actions"],
+      empresas: [], 
       areas: [],
-      cargos: [],
+      clientes: [],
       regionales: [],
       regional: [],
       editMode:false,
       form:{
-          'id':'',
-          'logo':'',
-          'nombre':'',
-          'direccion':'',
-          'telefono':'',
-          'fax':'',
-          'celular':'',
-          'email':'', 
-          'status':'', 
-          'password':'',
+        'nombre':'',
+	    'cargo_contacto':'',
+	    'rubro':'',
+	    'logo':'',
+	    'numero_empleados':'',
+	    'procentaje_mujeres':'',
+	    'volumen_facturacion':'',
+	    'direccion':'',
+	    'fundada':'',
       }
     }
   },
@@ -275,7 +278,7 @@ export default {
         ...mapState(['counter'])
    },
   created(){
-    this.listarclientes();
+    this.listarempresas();
   },
   methods: {
      ...mapActions(['guardarUsuario']),
@@ -286,14 +289,14 @@ export default {
       if (!this.editMode) {
         this.$refs.form.validate().then(esValido => {
             if (esValido) {
-              this.agregarCliente();
+              this.agregarEmpresa();
             } else {
             }
           });        
       }else{
         this.$refs.form.validate().then(esValido => {
         if (esValido) {
-          this.editarCliente();
+          this.editarEmpresa();
         } else {
           
         }
@@ -305,7 +308,7 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-   async agregarCliente(){
+   async agregarEmpresa(){
      let data = new FormData();
       var formulario = this.form;
       for (var key in formulario) {
@@ -314,13 +317,13 @@ export default {
       if (this.file) {
         data.append('filename',this.file);
        }
-       await  this.axios.post('api/clientes', data, {
+       await  this.axios.post('api/empresas', data, {
            headers: {
             'Content-Type': 'multipart/form-data'
            }}).then(response => {
             if (response.status==200) {
                this.$swal('Creado!!!','','success');
-               this.listarclientes();
+               this.listarempresas();
                this.$root.$emit("bv::hide::modal", "modal", "#btnShow");
                ///limpiar el formulario
                 for (var key in formulario) {
@@ -331,7 +334,7 @@ export default {
                 this.$swal('Nose pudo crear!!!','','warning');
             });
       },
-    async editarCliente(){
+    async editarEmpresa(){
      let data = new FormData();
       var formulario = this.form;
       for (var key in formulario) {
@@ -340,13 +343,13 @@ export default {
       if (this.file) {
        data.append('filename',this.file);
       }
-      await  this.axios.put('api/clientes', data, {
+      await  this.axios.put('api/empresas', data, {
            headers: {
             'Content-Type': 'multipart/form-data'
               }}).then(response => {
             if (response.status==200) {
                this.$swal('Editado con exito','','success');
-               this.listarClientes();
+               this.listarempresas();
                this.$root.$emit("bv::hide::modal", "modal", "#btnShow");
                ///limpiar el formulario
                 for (var key in formulario) {
@@ -359,22 +362,68 @@ export default {
             });
      },
     setear(id) {
-      for (let index = 0; index < this.clientes.length; index++) {
-        if (this.clientes[index].id===id) {
-          this.form.id=this.clientes[index].id;
-          this.form.logo=this.clientes[index].logo;
-          this.form.nombre=this.clientes[index].nombre;
-          this.form.direccion=this.clientes[index].direccion;
-          this.form.telefono=this.clientes[index].telefono;
-          this.form.fax=this.clientes[index].fax;
-          this.form.celular=this.clientes[index].celular;
-          this.form.email=this.clientes[index].email;
-          this.form.status=this.clientes[index].user.status;
-          this.url=this.clientes[index].user.imagen;
+      for (let index = 0; index < this.empresas.length; index++) {
+        if (this.empresas[index].id===id) {
+        this.form.id=this.empresas[index].id;
+        this.form.nombre=this.empresas[index].nombre;
+	    this.form.cargo_contacto=this.empresas[index].cargo_contacto;
+	    this.form.rubro=this.empresas[index].rubro;
+	    this.form.logo=this.empresas[index].logo;
+	    this.form.numero_empleados=this.empresas[index].numero_empleados;
+	    this.form.procentaje_mujeres=this.empresas[index].procentaje_mujeres;
+	    this.form.volumen_facturacion=this.empresas[index].volumen_facturacion;
+	    this.form.direccion=this.empresas[index].direccion;
+	    this.form.fundada=this.empresas[index].fundada;
+        this.form.cliente_id=this.empresas[index].cliente_id;
+        this.url=this.empresas[index].logo;
           this.$root.$emit("bv::show::modal", "modal", "#btnShow");
           return;
         }
       }
+    },
+     async eliminarempresa(id){
+        let data = new FormData();
+        data.append('id',id);
+        await this.axios.post('api/empresas/delete',data, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }}).then(response => {
+              if (response.status==200) {
+                this.$swal(
+                    'Eliminado con exito!',
+                      '',
+                      'success'
+                );
+                this.listarempresas();
+                }
+              }).catch(e => {
+                console.log(e.response.data.menssage);
+                this.$swal(e.response.data);
+          });
+      }, 
+      eliminar(id){
+        this.$swal({
+          title: 'Desea borrar esta empresa?',
+          icon: 'question',
+          iconHtml: '',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          showCancelButton: true,
+          showCloseButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.eliminarempresa(id);
+          }
+        })
+      },
+  async  listarempresas(){
+    await  this.axios.get('api/empresas')
+      .then((response) => {
+        this.empresas = response.data;
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
     },
   async  listarClientes(){
     await  this.axios.get('api/clientes')
@@ -385,7 +434,6 @@ export default {
         console.log('error' + e);
       })
     },
-
     setEmail(){
       this.form.username=this.form.email;
     },
@@ -425,12 +473,13 @@ export default {
 	}
   },
     created(){
-		  this.session();
+	  this.session();
+      this.listarempresas();
       this.listarClientes();
     },
     computed: {
     rows() {
-      return this.clientes.length;
+      return this.empresas.length;
     },
   },
 }
