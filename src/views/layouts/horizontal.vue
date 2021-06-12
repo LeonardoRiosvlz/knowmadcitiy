@@ -25,7 +25,9 @@ export default {
   created: () => {
     document.body.setAttribute("data-layout", "horizontal");
     document.body.setAttribute("data-topbar", "dark");
-    document.body.removeAttribute("data-sidebar", "dark");
+    document.body.setAttribute("data-sidebar", "dark");
+    document.body.setAttribute("main-content", "dark");
+    //document.body.removeAttribute("data-sidebar", "dark");
     document.body.removeAttribute("data-layout-size", "boxed");
   },
   methods: {

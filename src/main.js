@@ -36,7 +36,7 @@ if(token) {
 }
 
 //axios.defaults.baseURL = 'https://naun.herokuapp.com/';
-axios.defaults.baseURL = 'http://localhost:4000/';
+axios.defaults.baseURL = 'https://knowmadcity.herokuapp.com/';
 
 
 Vue.config.productionTip = false

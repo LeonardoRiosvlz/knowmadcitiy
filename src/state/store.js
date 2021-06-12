@@ -16,7 +16,7 @@ const store = new Vuex.Store({
     token:'',
     usuarioDB:'',
     cliente:'',
-    counter:'s',
+    counter:'refresh',
     load:false
 },
 mutations:{

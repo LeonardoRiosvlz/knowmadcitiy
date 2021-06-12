@@ -15,7 +15,7 @@ export default [
                     // Continue to the login page
                     next()
                 }
-            },
+            }, 
         },
     },
     {

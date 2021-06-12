@@ -155,15 +155,18 @@ export default {
           switch (newVal) {
             case "boxed":
               document.body.setAttribute("data-layout-size", "boxed");
+              document.body.setAttribute("data-sidebar", "dark");
               break;
             case "fluid":
               document.body.setAttribute("data-layout-mode", "fluid");
               document.body.removeAttribute("data-layout-size");
+              document.body.setAttribute("data-sidebar", "dark");
               break;
             default:
               document.body.setAttribute("data-layout-mode", "fluid");
+              document.body.setAttribute("data-sidebar", "dark");
               break;
-          }
+          } 
         }
       },
     },
@@ -172,10 +175,10 @@ export default {
 </script>
 <template>
   <!-- ========== Left Sidebar Start ========== -->
-  <div class="vertical-menu">
-    <simplebar class="h-100" ref="currentMenu" id="my-element">
+  <div class="vertical-menu" data-sidebar="dark">
+    <simplebar class="h-100" ref="currentMenu" id="my-element" data-sidebar="dark">
       <!--- Sidemenu -->
-      <div id="sidebar-menu">
+      <div id="sidebar-menu"  data-sidebar="dark">
         <!-- Left Menu Start -->
         <ul class="metismenu list-unstyled" id="side-menu">
           <template v-for="item in menuItems">

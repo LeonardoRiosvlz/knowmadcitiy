@@ -1,28 +1,24 @@
 <template>
   <div>
     <div class="home-btn d-none d-sm-block">
-      <a href="/">
-        <i class="mdi mdi-home-variant h2 text-white"></i>
-      </a>
+      
     </div>
     <div>
-      <div class="container-fluid p-0">
+      <div class="container-fluid p-0  authentication-bg ">
         <div class="row no-gutters">
           <div class="col-lg-4">
-            <div class="authentication-page-content p-4 d-flex align-items-center min-vh-100">
+            <div class="authentication-page-content  p-4 d-flex align-items-center min-vh-100">
               <div class="w-100">
                 <div class="row justify-content-center">
                   <div class="col-lg-9">
                     <div>
                       <div class="text-center">
                         <div>
+                           <h4 class="font-size-32 mt-4 text-white">Bienvenido a nuestra Intranet!</h4>
                           <a href="/" class="logo">
-                            <img src="@/assets/images/logo-dark.png" height="20" alt="logo" />
                           </a>
-                        </div>
-
-                        <h4 class="font-size-18 mt-4">Bienvenido !</h4>
-                        <p class="text-muted">Logueate para continuar al sistema.</p>
+                        </div>               
+                        <p class="text-white">Logueate para continuar al sistema.</p>
                       </div>
 
                       <b-alert
@@ -71,7 +67,7 @@
                               id="customControlInline"
                             />
                             <label
-                              class="custom-control-label"
+                              class="custom-control-label text-white"
                               for="customControlInline"
                             >Recordarme</label>
                           </div>
@@ -84,7 +80,7 @@
                           </div>
 
                           <div class="mt-4 text-center">
-                            <router-link tag="a" to="/forgot-password" class="text-muted">
+                            <router-link tag="a" to="/forgot-password" class="text-white">
                               <i class="mdi mdi-lock mr-1"></i> Olvidaste tu contraseña?
                             </router-link>
                           </div>
@@ -92,10 +88,9 @@
                         
                       </div>
 
-                      <div class="mt-5 text-center">
+                      <div class="mt-5 text-center text-white">
                         <p>
-                          © 2021 Pristel
-                          <i class="mdi mdi-heart text-danger"></i> by Bioscenter
+                          © 2021 Desarrollador por: <br><a href="https://innovatuhotel.com" target="_blank" style="color:white;">INNOVA TU HOTEL ECUADOR</a>
                         </p>
                       </div>
                     </div>
@@ -105,8 +100,9 @@
             </div>
           </div>
           <div class="col-lg-8">
-            <div class="authentication-bg">
-              <div class="bg-overlay"></div>
+            <div class=""><br>
+             <img src="@/assets/images/Logo-Knowmadcity-finalblanco.png" height="350" align="center" alt="" class="centerimg">
+               
             </div>
           </div>
         </div>
@@ -138,8 +134,8 @@ export default {
       editMode:false,
       submitted: false,
       form:{
-          'email':'leonardo2718@hotmail.es',
-          'password':'Anakena',
+          'email':'',
+          'password':'',
       }
     };
   },
@@ -173,7 +169,9 @@ export default {
         data.append('password',this.form.password);
        await  this.axios.post('api/auth/signin', data).then(response => {
             if (response.status==200) {
-               this.$swal('Bien!!!');
+               this.$swal('Acceso Confirmado!',
+                          'Bienvenido',
+                          'success');
                ///limpiar el formulario 
               this.guardarUsuario(response.data.accessToken);  
 			        this.session();
@@ -181,7 +179,13 @@ export default {
               }
             }).catch(e => {
               console.log(e);
-              this.$swal(e);
+              this.$swal({
+                        icon: 'error',
+                        title: 'Oops...',
+                        html: 'Algo ha salido mal, usuario o contraseña incorrectos<br>¿No recuerdas tus Credenciales?',
+                        confirmButtonText: 'Reintentar',
+                        footer: '<a href="#">Recuperar Cuenta</a>'
+                      });
            });     
     },
     session(){

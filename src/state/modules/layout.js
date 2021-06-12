@@ -1,9 +1,9 @@
 export const state = {
-  layoutType: 'vertical',
+  layoutType: 'horizontal',
   layoutWidth: 'fluid',
   leftSidebarType: 'light',
-  topbar: 'ligth',
-  loader: false
+  topbar: 'dark',
+  loader: true
 }
 
 export const getters = {}
