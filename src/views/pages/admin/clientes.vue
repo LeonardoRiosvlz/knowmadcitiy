@@ -370,7 +370,7 @@ export default {
           this.form.celular=this.clientes[index].celular;
           this.form.email=this.clientes[index].email;
           this.form.status=this.clientes[index].user.status;
-          this.url=this.clientes[index].user.imagen;
+          this.url=this.clientes[index].logo;
           this.$root.$emit("bv::show::modal", "modal", "#btnShow");
           return;
         }
