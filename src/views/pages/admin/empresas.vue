@@ -7,6 +7,12 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
+          <div class="row p-2">
+              <div class="col-3 pl-3">
+                  <label>Cliente</label>
+                    <v-select v-model="client" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
+              </div>
+          </div>
           <div class="card-body">
             <h4 class="card-title"></h4>
             <div class="row mt-4">
@@ -251,6 +257,7 @@ export default {
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
       filter: null,
+      client: null,
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
@@ -277,6 +284,16 @@ export default {
   computed:{
         ...mapState(['counter'])
    },
+  watch: {
+    cliente: function (val) {
+      this.form.cliente_id=val;
+      this.listarEmpresas();
+    },
+    client: function (val) {
+      this.form.cliente_id=val;
+      this.listarEmpresa();
+    }
+  },
   created(){
     this.listarempresas();
   },
@@ -418,6 +435,17 @@ export default {
       },
   async  listarempresas(){
     await  this.axios.get('api/empresas')
+      .then((response) => {
+        this.empresas = response.data;
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+    async listarEmpresa(){
+    let data = new FormData();
+    data.append('cliente_id',this.form.cliente_id);
+    await this.axios.post('api/empresas/listar',data)
       .then((response) => {
         this.empresas = response.data;
       })

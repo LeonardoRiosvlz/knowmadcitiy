@@ -134,7 +134,9 @@
         </ValidationObserver>
         <button class="btn btn-block float-right btn-success my-2" @click="switchLoc" v-if="!ver && !editMode">Guardar</button>
         <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Editar</button>
+
      </b-modal>
+   
   </Layout>
 </template>
 
@@ -146,7 +148,7 @@ import {mapState,mapMutations, mapActions} from 'vuex'
 import { ValidationProvider, ValidationObserver } from "vee-validate";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
-
+import Editor from "./editor";
 
 /**
  * Dashboard component
@@ -158,7 +160,8 @@ export default {
     PageHeader,
     ValidationProvider,
     ValidationObserver,
-    vSelect
+    vSelect,
+    Editor
   },
   data() {
     return {
