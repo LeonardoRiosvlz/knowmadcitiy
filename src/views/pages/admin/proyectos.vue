@@ -4,9 +4,19 @@
     <div class="clearfix mb-3">
       <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear proyectos</b-button>
     </div>
+
     <div class="row">
       <div class="col-12">
         <div class="card">
+            <div class="row p-2">
+              <div class="col-3 pl-3">
+  
+                  <label>Cliente</label>
+                    <v-select v-model="client" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
+                 
+            
+              </div>
+          </div>
           <div class="card-body">
             <h4 class="card-title"></h4>
             <div class="row mt-4">
@@ -49,6 +59,12 @@
                 :filter-included-fields="filterOn"
                 @filtered="onFiltered"
               >
+              <template v-slot:cell(empresa)="data">
+                {{data.item.empresa.nombre}}
+              </template>
+              <template v-slot:cell(estado)="data">
+                {{data.item.status}}
+              </template>
               <template v-slot:cell(status)="data">
                 <span v-if="data.item.user.status==='activo'" class="badge badge-success">Activo</span>
                 <span v-else class="badge badge-danger">Inactivo</span>
@@ -62,6 +78,7 @@
                   </template>
                   <b-dropdown-item-button@click="editMode=true;setear(data.item.id)">Editar</b-dropdown-item-button>
                   <b-dropdown-item-button@click="editMode=true;eliminar(data.item.id)">Eliminar</b-dropdown-item-button>
+                  <b-dropdown-item-button@click="editMode=true;verdocumento(data.item.id)">Ver</b-dropdown-item-button>
                 </b-dropdown>
                 </template>
               </b-table>
@@ -81,125 +98,153 @@
       </div>
     </div>
 
-
-
-
+        <b-modal id="modal_ver" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
+          <div>
+            <button @click="generateReport()">ver</button>
+            <vue-html2pdf
+                :show-layout="false"
+                :float-layout="true"
+                :enable-download="true"
+                :preview-modal="true"
+                :paginate-elements-by-height="1400"
+                filename="hee hee"
+                :pdf-quality="2"
+                :manual-pagination="false"
+                pdf-format="a4"
+                pdf-orientation="landscape"
+                pdf-content-width="800px"
+        
+                @progress="onProgress($event)"
+                @hasStartedGeneration="hasStartedGeneration()"
+                @hasGenerated="hasGenerated($event)"
+                ref="html2Pdf"
+            >
+                <section slot="pdf-content">
+                    <pre>{{form}}</pre>
+                </section>
+            </vue-html2pdf>
+          </div>
+        </b-modal>
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
           <ValidationObserver ref="form">
             <b-row>
               <b-col>
                 <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
-                  <label>Cliente {{form.dependencia}}</label>
-                    <v-select v-model="form.cliente_id" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
+                  <label>Cliente</label>
+                    <v-select v-model="cliente" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
                     <span style="color:red">{{ errors[0] }}</span>
                 </ValidationProvider>
               </b-col>
             </b-row>
-         <b-row>
+             <b-row>
               <b-col>
                 <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
-                  <label>Fundada</label>
-                   <b-form-datepicker id="example-datepicker" v-model="form.fundada" class="mb-2"></b-form-datepicker>
-               <span style="color:red">{{ errors[0] }}</span>
+                  <label>Empresas </label>
+                    <v-select v-model="form.empresa_id" :options="empresas" :reduce="empresas => empresas.id"  :getOptionLabel="option => option.nombre" ></v-select>
+                    <span style="color:red">{{ errors[0] }}</span>
                 </ValidationProvider>
               </b-col>
             </b-row>
             <b-row>
               <b-col>
                 <div class="form-group">
-                  <label>Nombre </label>
+                  <label>Titulo </label>
                   <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
-                        <input v-model="form.nombre"  type="text" class="form-control" placeholder=" ">
+                        <input v-model="form.titulo"  type="text" class="form-control" placeholder=" ">
                         <span style="color:red">{{ errors[0] }}</span>
                   </ValidationProvider>
                 </div>
               </b-col>
+              </b-row> 
+              <b-row>
+                <div class="col-11">
+                  <div class="form-group">
+                    <label>Descripción de la iniciativa </label>
+                        <input v-model="form.iniciativa"  type="text" class="form-control" placeholder=" ">
+                    </div>
+                </div >
+                <div class="col-1 py-4">
+                  <label></label>
+                  <button class="btn btn-success " @click="cargarIniciativa()" :disabled="form.iniciativa===''">+</button>
+                </div >
+              </b-row>
+               <b-row>
+                <ol>
+                  <li v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">X</button></li>
+                </ol>
+              </b-row>
+              </b-row> 
+              <b-row>
               <b-col>
                 <div class="form-group">
-                  <label>Cargo del contacto </label>
-                  <ValidationProvider name="cargo del contacto" rules="required" v-slot="{ errors }">
-                        <input v-model="form.cargo_contacto"  type="text" class="form-control" placeholder=" ">
+                  <label>Justificación de la necesidad </label>
+                  <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
+                        <textarea v-model="form.justificacion"  type="text" class="form-control" placeholder=" "></textarea>
                         <span style="color:red">{{ errors[0] }}</span>
                   </ValidationProvider>
                 </div>
               </b-col>
               </b-row>      
               <b-row>
-                <b-col>
+                <div class="col-11">
                   <div class="form-group">
-                    <label>Rubro </label>
-                    <ValidationProvider name="rubro" rules="required" v-slot="{ errors }">
-                            <input v-model="form.rubro"  type="text" class="form-control" placeholder=" ">
-                            <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
+                    <label>Promotores </label>
+                        <input v-model="form.promotor"  type="text" class="form-control" placeholder=" ">
                     </div>
-                </b-col>
+                </div >
+                <div class="col-1 py-4">
+                  <label></label>
+                  <button class="btn btn-success " @click="cargarPromotor()" :disabled="form.promotor===''">+</button>
+                </div >
+              </b-row>
+              <b-row>
+                <ol>
+                  <li v-for="(promotor, index) in form.promotores" :key="index">{{promotor.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarpromotor(index)">X</button></li>
+                </ol>
+              </b-row>
+              <b-row>
+                <div class="col-11">
+                  <div class="form-group">
+                    <label>Objetivos de la iniciativa </label>
+                        <input v-model="form.objetivo"  type="text" class="form-control" placeholder=" ">
+                    </div>
+                </div >
+                <div class="col-1 py-4">
+                  <label></label>
+                  <button class="btn btn-success " @click="cargarObjetivo()" :disabled="form.objetivo===''">+</button>
+                </div >
+              </b-row>
+              <b-row>
+               
+                <ol>
+                  <li v-for="(objetivo, index) in form.objetivos" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarObjetivo(index)">X</button></li>
+                </ol>
               </b-row>
               <b-row>
                 <b-col>
                   <div class="form-group">
-                    <label>Numero de empleados </label>
+                    <label>Presupuesto</label>
                     <ValidationProvider name="numero de empleados" rules="required" v-slot="{ errors }">
-                            <input v-model="form.numero_empleados"  type="text" class="form-control" placeholder=" ">
+                            <input v-model="form.presupuesto"  type="text" class="form-control" placeholder=" ">
                             <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
                     </div>
                 </b-col>
               </b-row>
-              <b-row>
-               <b-col>
-                  <div class="form-group">
-                    <label>Porcentaje de mujeres </label>
-                    <ValidationProvider name="Porcentaje de mujeres" rules="required" v-slot="{ errors }">
-                            <input v-model="form.procentaje_mujeres"  type="text" class="form-control" placeholder=" ">
-                            <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                    </div>
-                </b-col>
-                <b-col>
-                  <div class="form-group">
-                    <label>Volumen de facturación</label>
-                    <ValidationProvider name="volumen de facturación" rules="required" v-slot="{ errors }">
-                          <input v-model="form.volumen_facturacion"  type="text" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row>
-              <b-row>
-                <b-col>
-                  <div class="form-group">
-                    <label>Dirección</label>
-                    <ValidationProvider name="dirección" rules="required" v-slot="{ errors }">
-                          <textarea v-model="form.direccion"  type="text" class="form-control" placeholder=" "></textarea>
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row>
-            <hr>
-            <b-row class="mb-2">
-               <b-col>
-                   <label>Imagen</label>
-                   <div id="preview mb-2">
-                     <img v-if="url" width="100%" style="float:center!importan" class="rounded"  :src="url" />
-                   </div>
-                    <b-form-file
-                        v-model="file"
-                        placeholder="Seleccione su image..."
-                        drop-placeholder="Drop file here..."
-                        @change="onFileChange"
-                    ></b-form-file>
-               </b-col>
-            </b-row>     
         </ValidationObserver>
+           
+
         <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Guardar</button>
         <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Editar</button>
-     </b-modal>
+
+      </b-modal>
+   
   </Layout>
 </template>
 
 <script>
+///https://www.npmjs.com/package/vue-html2pdf
+////https://vuejs.org/v2/guide/transitions.html;
 import "vue-select/dist/vue-select.css";
 import vSelect from "vue-select";
 import vue2Dropzone from "vue2-dropzone";
@@ -207,7 +252,7 @@ import {mapState,mapMutations, mapActions} from 'vuex'
 import { ValidationProvider, ValidationObserver } from "vee-validate";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
-
+import VueHtml2pdf from 'vue-html2pdf'
 
 /**
  * Dashboard component
@@ -219,7 +264,8 @@ export default {
     PageHeader,
     ValidationProvider,
     ValidationObserver,
-    vSelect
+    vSelect,
+    VueHtml2pdf
   },
   data() {
     return {
@@ -254,32 +300,43 @@ export default {
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
-      fields: ["nombre","actions"],
+      fields: ["titulo","presupuesto","empresa","estado","actions"],
       proyectos: [], 
       areas: [],
+      proyectos: [],
+      empresas: [],
       clientes: [],
-      regionales: [],
+      clien: [],
       regional: [],
+      cliente:'',
+      client:'',
       editMode:false,
       form:{
-        'nombre':'',
-	    'cargo_contacto':'',
-	    'rubro':'',
-	    'logo':'',
-	    'numero_empleados':'',
-	    'procentaje_mujeres':'',
-	    'volumen_facturacion':'',
-	    'direccion':'',
-	    'fundada':'',
+      'titulo':'',
+      'iniciativa':'',
+      'descripcion_iniciativa':[],
+      'promotor':'',
+	    'promotores': [],
+      'metas': [],
+      'objetivo':'',
+	    'objetivos': [],
+      'presupuesto':'',
+       'empresa_id':'',
       }
     }
   },
-  computed:{
-        ...mapState(['counter'])
-   },
-  created(){
-    this.listarproyectos();
+
+  watch: {
+    cliente: function (val) {
+      this.form.cliente_id=val;
+      this.listarEmpresas();
+    },
+    client: function (val) {
+      this.form.cliente_id=val;
+      this.listarProyectos();
+    }
   },
+
   methods: {
      ...mapActions(['guardarUsuario']),
     async submit() {
@@ -289,59 +346,91 @@ export default {
       if (!this.editMode) {
         this.$refs.form.validate().then(esValido => {
             if (esValido) {
-              this.agregarEmpresa();
+              this.agregarProyecto();
             } else {
             }
           });        
       }else{
         this.$refs.form.validate().then(esValido => {
         if (esValido) {
-          this.editarEmpresa();
+          this.editarProyecto();
         } else {
           
         }
       });
       }
    },
-       onFiltered(filteredItems) {
+    cargarPromotor(){
+      this.form.promotores.push({
+       nombre:this.form.promotor,
+      });
+    },
+    eliminarpromotor(index){
+       this.form.promotores.splice(index, 1);  
+    },
+    cargarObjetivo(){
+      this.form.objetivos.push({
+       nombre:this.form.objetivo,
+      });
+    },
+    eliminarObjetivo(index){
+       this.form.objetivos.splice(index, 1);  
+    },
+    cargarIniciativa(){
+      this.form.descripcion_iniciativa.push({
+       nombre:this.form.iniciativa,
+      });
+    },
+    eliminarIniciativa(index){
+       this.form.descripcion_iniciativa.splice(index, 1);  
+    },
+    onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-   async agregarEmpresa(){
+   async agregarProyecto(){
      let data = new FormData();
       var formulario = this.form;
-      for (var key in formulario) {
-        data.append(key,formulario[key]);
-      }
-      if (this.file) {
-        data.append('filename',this.file);
-       }
+
+     for ( var key in formulario) {
+            if (key=='descripcion_iniciativa') {
+                data.append(key,JSON.stringify(formulario[key]));
+            }else if (key=='promotores') {
+                data.append(key,JSON.stringify(formulario[key]));
+            }else if (key=='objetivos') {
+                data.append(key,JSON.stringify(formulario[key]));
+            }else{
+                data.append(key,formulario[key]);
+            }
+        }
        await  this.axios.post('api/proyectos', data, {
            headers: {
             'Content-Type': 'multipart/form-data'
            }}).then(response => {
             if (response.status==200) {
                this.$swal('Creado!!!','','success');
-               this.listarproyectos();
+               this.listarProyectos();
                this.$root.$emit("bv::hide::modal", "modal", "#btnShow");
                ///limpiar el formulario
-                for (var key in formulario) {
-                   this.form[key]="";
-                 }
               }
             }).catch(e => {
                 this.$swal('Nose pudo crear!!!','','warning');
             });
       },
-    async editarEmpresa(){
+    async editarProyecto(){
      let data = new FormData();
       var formulario = this.form;
-      for (var key in formulario) {
-        data.append(key,formulario[key]);
-      }
-      if (this.file) {
-       data.append('filename',this.file);
+      for ( var key in formulario) {
+              if (key=='descripcion_iniciativa') {
+                  data.append(key,JSON.stringify(formulario[key]));
+              }else if (key=='promotores') {
+                  data.append(key,JSON.stringify(formulario[key]));
+              }else if (key=='objetivos') {
+                  data.append(key,JSON.stringify(formulario[key]));
+              }else{
+                  data.append(key,formulario[key]);
+              }
       }
       await  this.axios.put('api/proyectos', data, {
            headers: {
@@ -349,7 +438,7 @@ export default {
               }}).then(response => {
             if (response.status==200) {
                this.$swal('Editado con exito','','success');
-               this.listarproyectos();
+               this.listarProyectos();
                this.$root.$emit("bv::hide::modal", "modal", "#btnShow");
                ///limpiar el formulario
                 for (var key in formulario) {
@@ -364,24 +453,46 @@ export default {
     setear(id) {
       for (let index = 0; index < this.proyectos.length; index++) {
         if (this.proyectos[index].id===id) {
-        this.form.id=this.proyectos[index].id;
-        this.form.nombre=this.proyectos[index].nombre;
-	    this.form.cargo_contacto=this.proyectos[index].cargo_contacto;
-	    this.form.rubro=this.proyectos[index].rubro;
-	    this.form.logo=this.proyectos[index].logo;
-	    this.form.numero_empleados=this.proyectos[index].numero_empleados;
-	    this.form.procentaje_mujeres=this.proyectos[index].procentaje_mujeres;
-	    this.form.volumen_facturacion=this.proyectos[index].volumen_facturacion;
-	    this.form.direccion=this.proyectos[index].direccion;
-	    this.form.fundada=this.proyectos[index].fundada;
-        this.form.cliente_id=this.proyectos[index].cliente_id;
-        this.url=this.proyectos[index].logo;
+        this.cliente=this.proyectos[index].empresa.cliente_id;
+          this.form.id=this.proyectos[index].id;
+          this.form.numero=this.proyectos[index].numero;
+          this.form.titulo=this.proyectos[index].titulo;
+          this.form.presupuesto=this.proyectos[index].presupuesto;
+          this.form.promotores=JSON.parse(this.proyectos[index].promotores);
+          this.form.objetivos=JSON.parse(this.proyectos[index].objetivos);
+          this.form.descripcion_iniciativa=JSON.parse(this.proyectos[index].descripcion_iniciativa);
+          this.form.justificacion=this.proyectos[index].justificacion;
+          this.form.empresa_id=this.proyectos[index].empresa_id;
+          this.form.cliente_id=this.proyectos[index].empresa.cliente_id;
           this.$root.$emit("bv::show::modal", "modal", "#btnShow");
           return;
         }
       }
     },
-     async eliminarempresa(id){
+    verdocumento(id) {
+      for (let index = 0; index < this.proyectos.length; index++) {
+        if (this.proyectos[index].id===id) {
+        this.cliente=this.proyectos[index].empresa.cliente_id;
+          this.form.id=this.proyectos[index].id;
+          this.form.numero=this.proyectos[index].numero;
+          this.form.titulo=this.proyectos[index].titulo;
+          this.form.presupuesto=this.proyectos[index].presupuesto;
+          this.form.promotores=JSON.parse(this.proyectos[index].promotores);
+          this.form.objetivos=JSON.parse(this.proyectos[index].objetivos);
+          this.form.descripcion_iniciativa=JSON.parse(this.proyectos[index].descripcion_iniciativa);
+          this.form.justificacion=this.proyectos[index].justificacion;
+          this.form.empresa_id=this.proyectos[index].empresa_id;
+          this.form.cliente_id=this.proyectos[index].empresa.cliente_id;
+          this.$root.$emit("bv::show::modal", "modal_ver", "#btnShow");
+       
+          return;
+        }
+      }
+    },
+     generateReport () {
+            this.$refs.html2Pdf.generatePdf()
+     },
+     async eliminarProyecto(id){
         let data = new FormData();
         data.append('id',id);
         await this.axios.post('api/proyectos/delete',data, {
@@ -394,7 +505,7 @@ export default {
                       '',
                       'success'
                 );
-                this.listarproyectos();
+                this.listarProyectos();
                 }
               }).catch(e => {
                 console.log(e.response.data.menssage);
@@ -403,7 +514,7 @@ export default {
       }, 
       eliminar(id){
         this.$swal({
-          title: 'Desea borrar esta empresa?',
+          title: 'Desea borrar esta proyecto?',
           icon: 'question',
           iconHtml: '',
           confirmButtonText: 'Si',
@@ -412,23 +523,37 @@ export default {
           showCloseButton: true
         }).then((result) => {
           if (result.isConfirmed) {
-            this.eliminarempresa(id);
+            this.eliminarProyecto(id);
           }
         })
       },
-  async  listarproyectos(){
-    await  this.axios.get('api/proyectos')
+  async  listarclientes(){
+    await  this.axios.get('api/clientes')
       .then((response) => {
-        this.proyectos = response.data;
+        this.clientes = response.data;
+        this.clien = response.data;
       })
       .catch((e)=>{
         console.log('error' + e);
       })
     },
-  async  listarClientes(){
-    await  this.axios.get('api/clientes')
+ async  listarEmpresas(){
+    let data = new FormData();
+    data.append('cliente_id',this.form.cliente_id);
+    await  this.axios.post('api/empresas/listar',data)
       .then((response) => {
-        this.clientes = response.data;
+        this.empresas = response.data;
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+  async  listarProyectos(){
+    let data = new FormData();
+    data.append('cliente_id',this.form.cliente_id);
+    await  this.axios.post('api/proyectos/listar',data)
+      .then((response) => {
+        this.proyectos = response.data;
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -474,8 +599,8 @@ export default {
   },
     created(){
 	  this.session();
-      this.listarproyectos();
-      this.listarClientes();
+      this.listarclientes();
+     // this.listarProyectos();
     },
     computed: {
     rows() {

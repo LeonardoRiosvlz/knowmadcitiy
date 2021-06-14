@@ -191,7 +191,7 @@
         <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Guardar</button>
         <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Editar</button>
      </b-modal>
-
+  <pre>{{clientes}}</pre>
   </Layout>
 </template>
 
@@ -362,7 +362,6 @@ export default {
       for (let index = 0; index < this.clientes.length; index++) {
         if (this.clientes[index].id===id) {
           this.form.id=this.clientes[index].id;
-          this.form.logo=this.clientes[index].logo;
           this.form.nombre=this.clientes[index].nombre;
           this.form.direccion=this.clientes[index].direccion;
           this.form.telefono=this.clientes[index].telefono;
