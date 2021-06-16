@@ -16,6 +16,7 @@
                  
             
               </div>
+
           </div>
           <div class="card-body">
             <h4 class="card-title"></h4>
@@ -78,6 +79,8 @@
                   </template>
                   <b-dropdown-item-button@click="editMode=true;setear(data.item.id)">Editar</b-dropdown-item-button>
                   <b-dropdown-item-button@click="editMode=true;eliminar(data.item.id)">Eliminar</b-dropdown-item-button>
+                  
+                  <!--<b-dropdown-item-button@clic="generateReport()">Ver/Descargar Proyecto</b-dropdown-item-button>-->
                   <b-dropdown-item-button@click="editMode=true;verdocumento(data.item.id)">Ver</b-dropdown-item-button>
                 </b-dropdown>
                 </template>
@@ -100,29 +103,142 @@
 
         <b-modal id="modal_ver" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
           <div>
-            <button @click="generateReport()">ver</button>
+            <h4 align="center">USE EL SIGUIENTE BOTÓN PARA VER O DESCARGAR EL PROYECTO DE NOMBRE:</h4>  
+            
+            <div align="center"><h3>{{form.titulo}}</h3><br><button class="btn btn-flat btn-info" @click="generateReport()">Ver/Descargar {{form.titulo}}</button></div>
+            
             <vue-html2pdf
                 :show-layout="false"
                 :float-layout="true"
-                :enable-download="true"
+                :enable-download="false"
                 :preview-modal="true"
-                :paginate-elements-by-height="1400"
-                filename="hee hee"
+                paginate-elements-by-height="1200"
+                filename="Proyecto"
                 :pdf-quality="2"
-                :manual-pagination="false"
+                :manual-pagination="true"
                 pdf-format="a4"
-                pdf-orientation="landscape"
-                pdf-content-width="800px"
-        
+                pdf-orientation="portrait"
+                pdf-content-width="100%"
+                margin="150"
                 @progress="onProgress($event)"
+                @startPagination="startPagination()"
+                @hasPaginated="hasPaginated()"
                 @hasStartedGeneration="hasStartedGeneration()"
                 @hasGenerated="hasGenerated($event)"
                 ref="html2Pdf"
             >
                 <section slot="pdf-content">
-                    <pre>{{form}}</pre>
+        <div align="center" style="margin-left:;">
+          <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8"><img src="@/assets/images/Logo-Knowmadcity-final.png" alt="" width="250" height="120">
+              <br>
+              <br><h3>MODELO DE FICHA DE PROYECTOS DE RECUPERACIÓN (“Iniciativas”)</h3>
+              <br><h3>DESCRIPCIÓN DE LAS REFORMAS Y LAS INVERSIONES</h3>
+              <br>
+              <h4>Titulo: {{form.titulo}}</h4>
+              <br><br>
+            </div>
+            <div class="col-lg-2"></div>
+
+            <div class="row" style="width:80%;">
+              
+                <div class="col-lg 4 offset-lg-4" style="border: solid, 3px, #000">
+                  <h4 align="center">1- Descripción de la iniciativa: </h4>
+                </div>
+
+                <div class="col-lg 4">
+                  <ol>
+                    <li align="left" v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} 
+                    </li>
+                  </ol>
+                </div>
+
+                <hr style="border: solid, 3px, #000">
+
+                <div class="col-lg 6 offset-lg-4">
+                  <h4 align="center"><h4 align="center">2-Justificación de la necesidad: principales retos y oportunidades: </h4> </h4>
+                </div>
+
+                <div class="col-lg 6">
+                  <p align="justify">{{form.justificacion}}</p>
+                <br><br>
+                </div>
+
+            
+            </div>
+            <div class="row" style="width:80%;">
+
+                <div class="col-lg 6 offset-lg-3">
+                  <h4 align="center">3-Objetivos de la iniciativa: </h4>  <p align="justify">{{form.justificacion}}</p>
+                </div>
+
+                <div class="col-lg 6">
+                 <h4>4-Breve descripción de la iniciativa</h4>
+                    <ol>
+                      <li align="left" v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} 
+                      </li>
+                    </ol>
+                </div>
+            </div>
+
+
+            
+
+          </div>   
+        </div>     
+
+
+        <div class="html2pdf__page-break"/>
+
+                  <section class="pdf-item">
+                                 <div class="row" style="width:80%;">
+              
+                <div class="col-lg 4 offset-lg-4" style="border: solid, 3px, #000">
+                  <h4 align="center">5-Dimensión digital y ecológica de la iniciativa </h4>
+                </div>
+
+                <div class="col-lg 4">
+                  <p>Dimensión Digital:</p>
+                  <p>Dimensión Ecológica:</p>
+                </div>
+
+                <hr style="border: solid, 3px, #000">
+            </div> 
+             <div class="row" style="width:80%;">
+              
+                <div class="col-lg 4 offset-lg-4" style="border: solid, 3px, #000">
+                  <h4 align="center">6- Calendario e Hitos: </h4>
+                </div>
+
+                <div class="col-lg 4">
+                  <ol>
+                    <li align="left" v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} 
+                    </li>
+                  </ol>
+                </div>
+
+                <hr style="border: solid, 3px, #000">
+            </div> 
+                         <div class="row" style="width:80%;">
+              
+                <div class="col-lg 4 offset-lg-4" style="border: solid, 3px, #000">
+                  <h4 align="center">7- Presupuesto: </h4>
+                </div>
+
+                <div class="col-lg 4">
+                  <h4> {{form.presupuesto}} </h4> 
+                                      
+                </div>
+
+                <hr style="border: solid, 3px, #000">
+            </div>
+                  </section>    
                 </section>
+                
+                
             </vue-html2pdf>
+
           </div>
         </b-modal>
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
@@ -241,6 +357,7 @@
    
   </Layout>
 </template>
+
 
 <script>
 ///https://www.npmjs.com/package/vue-html2pdf
