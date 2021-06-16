@@ -271,7 +271,18 @@
                   </ValidationProvider>
                 </div>
               </b-col>
-              </b-row> 
+              </b-row>
+            <b-row>
+              <b-col>
+                <div class="form-group">
+                  <label>Descripción corta </label>
+                  <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
+                        <textarea v-model="form.descripcion"  type="text" class="form-control" placeholder=" "></textarea>
+                        <span style="color:red">{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </div>
+              </b-col>
+              </b-row>  
               <b-row>
                 <div class="col-11">
                   <div class="form-group">
@@ -433,6 +444,7 @@ export default {
       'iniciativa':'',
       'descripcion_iniciativa':[],
       'promotor':'',
+      'descripcion':'',
 	    'promotores': [],
       'metas': [],
       'objetivo':'',
@@ -579,6 +591,7 @@ export default {
           this.form.objetivos=JSON.parse(this.proyectos[index].objetivos);
           this.form.descripcion_iniciativa=JSON.parse(this.proyectos[index].descripcion_iniciativa);
           this.form.justificacion=this.proyectos[index].justificacion;
+          this.form.descripcion=this.proyectos[index].descripcion;
           this.form.empresa_id=this.proyectos[index].empresa_id;
           this.form.cliente_id=this.proyectos[index].empresa.cliente_id;
           this.$root.$emit("bv::show::modal", "modal", "#btnShow");
