@@ -1,10 +1,10 @@
 <script>
 import { layoutComputed } from "@/state/helpers";
-import Vertical from "./vertical";
+//import Vertical from "./vertical";
 import Horizontal from "./horizontal";
 
 export default {
-  components: { Vertical, Horizontal },
+  components: { /*Vertical,*/ Horizontal },
   data() {
     return {};
   },

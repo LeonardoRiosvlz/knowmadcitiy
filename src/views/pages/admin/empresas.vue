@@ -1,16 +1,16 @@
 <template>
-  <Layout>
+  <Layout class="authentication-bg">
     <PageHeader :title="title" :items="items" />
     <div class="clearfix mb-3">
       <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear empresas</b-button>
     </div>
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card" style="background-color:rgba(0,0,0,0.5); color:#fff;">
           <div class="row p-2">
               <div class="col-3 pl-3">
-                  <label>Cliente</label>
-                    <v-select v-model="client" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
+                  <label>Filtrar Empresas por Clientes</label>
+                    <v-select v-model="client" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" aria-placeholder="Seleccione su cliente" style="background-color:rgba(255,255,255,0.5); color:#fff; border-radius:25px;"></v-select>
               </div>
           </div>
           <div class="card-body">
@@ -19,8 +19,8 @@
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
                   <label class="d-inline-flex align-items-center">
-                    Show&nbsp;
-                    <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
+                    Mostrar&nbsp;
+                    <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;Empresas
                   </label>
                 </div>
               </div>
@@ -28,11 +28,11 @@
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_filter" class="dataTables_filter text-md-right">
                   <label class="d-inline-flex align-items-center">
-                    Search:
+                    Buscar o filtrar empresa:
                     <b-form-input
                       v-model="filter"
-                      type="search"
-                      placeholder="Search..."
+                      type="Buscar o filtrar empresa"
+                      placeholder="Buscar o filtrar empresa..."
                       class="form-control form-control-sm ml-2"
                     ></b-form-input>
                   </label>
@@ -92,7 +92,13 @@
 
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de empresas" ok-only>
           <ValidationObserver ref="form">
-            <b-row>
+
+ 
+
+            <form-wizard next-button-text="Siguiente" back-button-text="Anterior" finish-button-text="---"  color="#7fa3a3" transition="fade">
+            <!---Paso 1--->
+            <tab-content title="Datos de Cliente y descripción de la Empresa"  subtitle="Paso 1" icon="ri-user-3-fill">
+                          <b-row>
               <b-col>
                 <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
                   <label>Cliente {{form.dependencia}}</label>
@@ -141,8 +147,25 @@
                     </div>
                 </b-col>
               </b-row>
-              <b-row>
-                <b-col>
+            </tab-content >
+            <!--Paso 2-->
+            <tab-content title="Datos de empleados y logo de la Empresa"  subtitle="Paso 1" icon="ri-lock-password-fill" >
+                <b-row class="mb-2">
+
+                  <b-col>
+                    <label>Logo de la Empresa</label>
+                      <div id="preview mb-2">
+                      <img v-if="url" width="30%" align="center" style="float:center!importan" class="rounded"  :src="url" />
+                      </div>
+                        <b-form-file
+                            v-model="file"
+                            placeholder="Seleccione el logo..."
+                            drop-placeholder="Drop file here..."
+                            @change="onFileChange"
+                        ></b-form-file>
+                  </b-col>
+
+                     <b-col>
                   <div class="form-group">
                     <label>Numero de empleados </label>
                     <ValidationProvider name="numero de empleados" rules="required" v-slot="{ errors }">
@@ -151,7 +174,7 @@
                     </ValidationProvider>
                     </div>
                 </b-col>
-              </b-row>
+                </b-row>
               <b-row>
                <b-col>
                   <div class="form-group">
@@ -184,23 +207,15 @@
                 </b-col>
             </b-row>
             <hr>
-            <b-row class="mb-2">
-               <b-col>
-                   <label>Imagen</label>
-                   <div id="preview mb-2">
-                     <img v-if="url" width="100%" style="float:center!importan" class="rounded"  :src="url" />
-                   </div>
-                    <b-form-file
-                        v-model="file"
-                        placeholder="Seleccione su image..."
-                        drop-placeholder="Drop file here..."
-                        @change="onFileChange"
-                    ></b-form-file>
-               </b-col>
-            </b-row>     
+ 
+            </tab-content>
+            <!--Paso 3-->
+            <tab-content title="Crear/Actualizar Empresa"  subtitle="Paso 3" icon="ri-check-fill" >
+             <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Crear Empresa</button>
+             <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Guardar Cambios</button>
+            </tab-content>
+            </form-wizard>     
         </ValidationObserver>
-        <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Guardar</button>
-        <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Editar</button>
      </b-modal>
   </Layout>
 </template>
@@ -213,6 +228,11 @@ import {mapState,mapMutations, mapActions} from 'vuex'
 import { ValidationProvider, ValidationObserver } from "vee-validate";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
+import VueFormWizard from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+// Local
+import {FormWizard, TabContent} from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 
 /**
@@ -225,7 +245,9 @@ export default {
     PageHeader,
     ValidationProvider,
     ValidationObserver,
-    vSelect
+    vSelect,
+         FormWizard,
+    TabContent
   },
   data() {
     return {

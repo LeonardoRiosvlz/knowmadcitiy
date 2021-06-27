@@ -3,20 +3,33 @@
 // 
 
 .table {
-  th {
-      font-weight: $font-weight-bold;
+  th, td {
+    vertical-align: middle !important;
+    font: bold 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
   }
+  
 }
 
 //Table centered
 .table-centered {
   td,th {
       vertical-align: middle !important;
+      font: bold 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+      color: #fff;
+      font-weight: 700;
+      white-space: nowrap;
   }
+
 }
 
 .table-nowrap {
   th, td {
+    color: #fff;
+    padding: 8px 16px;
+    border-bottom: 1px solid #C1DAD7;
     white-space: nowrap;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <Layout>
+  <Layout  class="authentication-bg">
     <PageHeader :title="title" :items="items" />
     <div class="clearfix mb-3">
       <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear proyectos</b-button>
@@ -7,12 +7,12 @@
 
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card" style="background-color:rgba(0,0,0,0.5); color:#fff;">
             <div class="row p-2">
-              <div class="col-3 pl-3">
+              <div class="col-4 pl-4">
   
-                  <label>Cliente</label>
-                    <v-select v-model="client" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
+                  <label>Seleccione el cliente para filtrar sus proyectos</label>
+                    <v-select v-model="client" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre"  style="background-color:rgba(255,255,255,0.5); color:#fff; border-radius:25px;"></v-select>
                  
             
               </div>
@@ -24,8 +24,8 @@
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
                   <label class="d-inline-flex align-items-center">
-                    Show&nbsp;
-                    <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
+                    Mostrar&nbsp;
+                    <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;Proyectos
                   </label>
                 </div>
               </div>
@@ -33,11 +33,11 @@
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_filter" class="dataTables_filter text-md-right">
                   <label class="d-inline-flex align-items-center">
-                    Search:
+                    Buscar:
                     <b-form-input
                       v-model="filter"
                       type="search"
-                      placeholder="Search..."
+                      placeholder="Escriba el nombre del proyecto aqui..."
                       class="form-control form-control-sm ml-2"
                     ></b-form-input>
                   </label>
@@ -71,17 +71,18 @@
                 <span v-else class="badge badge-danger">Inactivo</span>
                </template> 
                 <template v-slot:cell(actions)="data">
-
+                
                 <b-dropdown size="sm" class="">
                   <template v-slot:button-content>
-                    Action
+                    Acciones
                     <i class="mdi mdi-chevron-down"></i>
                   </template>
-                  <b-dropdown-item-button@click="editMode=true;setear(data.item.id)">Editar</b-dropdown-item-button>
-                  <b-dropdown-item-button@click="editMode=true;eliminar(data.item.id)">Eliminar</b-dropdown-item-button>
+                  <b-dropdown-item-button@click="editMode=true;setear(data.item.id)">Editar Proyecto</b-dropdown-item-button>
+                  <b-dropdown-item-button@click="editMode=true;eliminar(data.item.id)">Eliminar Proyecto</b-dropdown-item-button>
                   
                   <!--<b-dropdown-item-button@clic="generateReport()">Ver/Descargar Proyecto</b-dropdown-item-button>-->
-                  <b-dropdown-item-button@click="editMode=true;verdocumento(data.item.id)">Ver</b-dropdown-item-button>
+                  <b-dropdown-item-button@click="editMode=true;verdocumento(data.item.id)">Verr/Descargar Proyecto</b-dropdown-item-button>
+                    
                 </b-dropdown>
                 </template>
               </b-table>
@@ -99,6 +100,7 @@
           </div>
         </div>
       </div>
+
     </div>
 
         <b-modal id="modal_ver" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
@@ -238,134 +240,141 @@
                 
                 
             </vue-html2pdf>
-
+            
           </div>
         </b-modal>
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
           <ValidationObserver ref="form">
-            <b-row>
-              <b-col>
-                <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
-                  <label>Cliente</label>
-                    <v-select v-model="cliente" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
-                    <span style="color:red">{{ errors[0] }}</span>
-                </ValidationProvider>
-              </b-col>
-            </b-row>
-             <b-row>
-              <b-col>
-                <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
-                  <label>Empresas </label>
-                    <v-select v-model="form.empresa_id" :options="empresas" :reduce="empresas => empresas.id"  :getOptionLabel="option => option.nombre" ></v-select>
-                    <span style="color:red">{{ errors[0] }}</span>
-                </ValidationProvider>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col>
-                <div class="form-group">
-                  <label>Titulo </label>
-                  <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
-                        <input v-model="form.titulo"  type="text" class="form-control" placeholder=" ">
-                        <span style="color:red">{{ errors[0] }}</span>
-                  </ValidationProvider>
-                </div>
-              </b-col>
-              </b-row>
-            <b-row>
-              <b-col>
-                <div class="form-group">
-                  <label>Descripción corta </label>
-                  <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
-                        <textarea v-model="form.descripcion"  type="text" class="form-control" placeholder=" "></textarea>
-                        <span style="color:red">{{ errors[0] }}</span>
-                  </ValidationProvider>
-                </div>
-              </b-col>
-              </b-row>  
-              <b-row>
-                <div class="col-11">
-                  <div class="form-group">
-                    <label>Descripción de la iniciativa </label>
-                        <input v-model="form.iniciativa"  type="text" class="form-control" placeholder=" ">
-                    </div>
-                </div >
-                <div class="col-1 py-4">
-                  <label></label>
-                  <button class="btn btn-success " @click="cargarIniciativa()" :disabled="form.iniciativa===''">+</button>
-                </div >
-              </b-row>
-               <b-row>
-                <ol>
-                  <li v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">X</button></li>
-                </ol>
-              </b-row>
-              </b-row> 
-              <b-row>
-              <b-col>
-                <div class="form-group">
-                  <label>Justificación de la necesidad </label>
-                  <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
-                        <textarea v-model="form.justificacion"  type="text" class="form-control" placeholder=" "></textarea>
-                        <span style="color:red">{{ errors[0] }}</span>
-                  </ValidationProvider>
-                </div>
-              </b-col>
-              </b-row>      
-              <b-row>
-                <div class="col-11">
-                  <div class="form-group">
-                    <label>Promotores </label>
-                        <input v-model="form.promotor"  type="text" class="form-control" placeholder=" ">
-                    </div>
-                </div >
-                <div class="col-1 py-4">
-                  <label></label>
-                  <button class="btn btn-success " @click="cargarPromotor()" :disabled="form.promotor===''">+</button>
-                </div >
-              </b-row>
-              <b-row>
-                <ol>
-                  <li v-for="(promotor, index) in form.promotores" :key="index">{{promotor.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarpromotor(index)">X</button></li>
-                </ol>
-              </b-row>
-              <b-row>
-                <div class="col-11">
-                  <div class="form-group">
-                    <label>Objetivos de la iniciativa </label>
-                        <input v-model="form.objetivo"  type="text" class="form-control" placeholder=" ">
-                    </div>
-                </div >
-                <div class="col-1 py-4">
-                  <label></label>
-                  <button class="btn btn-success " @click="cargarObjetivo()" :disabled="form.objetivo===''">+</button>
-                </div >
-              </b-row>
-              <b-row>
-               
-                <ol>
-                  <li v-for="(objetivo, index) in form.objetivos" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarObjetivo(index)">X</button></li>
-                </ol>
-              </b-row>
-              <b-row>
-                <b-col>
-                  <div class="form-group">
-                    <label>Presupuesto</label>
-                    <ValidationProvider name="numero de empleados" rules="required" v-slot="{ errors }">
-                            <input v-model="form.presupuesto"  type="text" class="form-control" placeholder=" ">
+          <form-wizard next-button-text="Siguiente" back-button-text="Anterior" finish-button-text="---"  color="#7fa3a3" transition="fade">
+            <!--Paso 2-->
+            <tab-content title="Seleccionar Cliente y empresa"  subtitle="Paso 1" icon="ri-user-3-fill" >
+                            <b-row>
+                      <b-col>
+                        <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
+                          <label>Cliente</label>
+                            <v-select v-model="cliente" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
                             <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                    </div>
-                </b-col>
-              </b-row>
+                        </ValidationProvider>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
+                          <label>Empresas </label>
+                            <v-select v-model="form.empresa_id" :options="empresas" :reduce="empresas => empresas.id"  :getOptionLabel="option => option.nombre" ></v-select>
+                            <span style="color:red">{{ errors[0] }}</span>
+                        </ValidationProvider>
+                      </b-col>
+                    </b-row>
+            </tab-content>
+            <!--Paso 2-->
+            <tab-content title="Descripción del Proyecto"  subtitle="Paso 2" icon="ri-building-2-fill">
+                    <b-row>
+                      <b-col>
+                        <div class="form-group">
+                          <label>Titulo del Proyecto </label>
+                          <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
+                                <input v-model="form.titulo"  type="text" class="form-control" placeholder=" ">
+                                <span style="color:red">{{ errors[0] }}</span>
+                          </ValidationProvider>
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <div class="form-group">
+                          <label>Descripción corta </label>
+                          <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
+                                <textarea v-model="form.descripcion"  type="text" class="form-control" placeholder=" "></textarea>
+                                <span style="color:red">{{ errors[0] }}</span>
+                          </ValidationProvider>
+                        </div>
+                      </b-col>
+                    </b-row>  
+                    <b-row>
+                    <b-col>
+                        <label>Descripción de la iniciativa </label>
+                            <input v-model="form.iniciativa"  type="text" class="form-control" placeholder=" " size="2">
+                    </b-col>
+                    <b-col>            
+                    <button class="btn btn-success " @click="cargarIniciativa()" :disabled="form.iniciativa===''">Añadir +</button> 
+                    </b-col>
+                    <b-col>
+                       <ol>
+                         <li v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
+                       </ol>
+                    </b-col>
+                    </b-row>
+       
+            </tab-content>
+            <!--Paso 3-->
+            <tab-content title="Justificación del proyecto"  subtitle="Paso 3"  icon="ri-currency-fill">
+                          <b-row>
+                      <b-col>
+                        <div class="form-group">
+                          <label>Justificación de la necesidad </label>
+                          <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
+                                <textarea v-model="form.justificacion"  type="text" class="form-control" placeholder=" "></textarea>
+                                <span style="color:red">{{ errors[0] }}</span>
+                          </ValidationProvider>
+                        </div>
+                      </b-col>
+                      </b-row>      
+                      <b-row>
+                        <div class="col-11">
+                          <div class="form-group">
+                            <label>Promotores </label>
+                                <input v-model="form.promotor"  type="text" class="form-control" placeholder=" ">
+                            </div>
+                        </div >
+                        <div class="col-1 py-4">
+                          <label></label>
+                          <button class="btn btn-success " @click="cargarPromotor()" :disabled="form.promotor===''">+</button>
+                        </div >
+                      </b-row>
+                      <b-row>
+                        <ol>
+                          <li v-for="(promotor, index) in form.promotores" :key="index">{{promotor.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarpromotor(index)">X</button></li>
+                        </ol>
+                      </b-row>
+                      <b-row>
+                        <div class="col-11">
+                          <div class="form-group">
+                            <label>Objetivos de la iniciativa </label>
+                                <input v-model="form.objetivo"  type="text" class="form-control" placeholder=" ">
+                            </div>
+                        </div >
+                        <div class="col-1 py-4">
+                          <label></label>
+                          <button class="btn btn-success " @click="cargarObjetivo()" :disabled="form.objetivo===''">+</button>
+                        </div >
+                      </b-row>
+                      <b-row>
+                      
+                        <ol>
+                          <li v-for="(objetivo, index) in form.objetivos" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarObjetivo(index)">X</button></li>
+                        </ol>
+                      </b-row>
+                      <b-row>
+                        <b-col>
+                          <div class="form-group">
+                            <label>Presupuesto</label>
+                            <ValidationProvider name="numero de empleados" rules="required" v-slot="{ errors }">
+                                    <input v-model="form.presupuesto"  type="text" class="form-control" placeholder=" ">
+                                    <span style="color:red">{{ errors[0] }}</span>
+                            </ValidationProvider>
+                            </div>
+                        </b-col>
+                      </b-row>
+            </tab-content>
+            <!--Paso 4-->
+            <tab-content title="Guardar Proyecto"  subtitle="Paso 4" icon="ri-save-2-fill">
+              <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Crear Proyecto</button>
+              <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Guardar Cambios</button>
+            </tab-content>
+          </form-wizard>
         </ValidationObserver>
-           
-
-        <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Guardar</button>
-        <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Editar</button>
-
       </b-modal>
-   
   </Layout>
 </template>
 
@@ -381,6 +390,14 @@ import { ValidationProvider, ValidationObserver } from "vee-validate";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import VueHtml2pdf from 'vue-html2pdf'
+import VueFormWizard from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+
+
+// Local
+
+import {FormWizard, TabContent} from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 /**
  * Dashboard component
@@ -393,8 +410,11 @@ export default {
     ValidationProvider,
     ValidationObserver,
     vSelect,
-    VueHtml2pdf
+    VueHtml2pdf,
+    FormWizard,
+    TabContent
   },
+    
   data() {
     return {
       title: "Administracion",
@@ -465,24 +485,36 @@ export default {
       this.listarProyectos();
     }
   },
-
+  props:{
+      finishButtonText: {
+    type: String,
+    default: 'Completar',
+    hidden: true
+  },
+  },
   methods: {
+
      ...mapActions(['guardarUsuario']),
     async submit() {
       console.log("email submitted!");
+      
     },
     switchLoc(){
       if (!this.editMode) {
+        
         this.$refs.form.validate().then(esValido => {
             if (esValido) {
               this.agregarProyecto();
+              
             } else {
             }
           });        
       }else{
+        
         this.$refs.form.validate().then(esValido => {
         if (esValido) {
           this.editarProyecto();
+         
         } else {
           
         }
@@ -738,4 +770,7 @@ export default {
     },
   },
 }
+
+
+
 </script>

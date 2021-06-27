@@ -9,6 +9,7 @@ body[data-layout-size="boxed"] {
         max-width: $boxed-layout-width;
         margin: 0 auto;
         box-shadow: $box-shadow;
+        height: 100%;
     }
 
     #page-topbar {
@@ -34,8 +35,16 @@ body[data-layout-size="boxed"] {
 body[data-layout="horizontal"][data-layout-size="boxed"]{
     #page-topbar, #layout-wrapper, .footer {
         max-width: 100%;
+        height: auto;
+        //background-color: #505d69;
+        background-image: url("../images/new-bg.jpg");
+        background-size: cover; 
     }
     .container-fluid, .navbar-header {
+        background-image: url("../images/new-bg.jpg");
+    background-size: cover; 
         max-width: $boxed-layout-width;
+        height: 720px;
+        background-color: #505d69;
     }
 }

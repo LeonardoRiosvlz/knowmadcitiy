@@ -1,43 +1,47 @@
+
+
 <template>
-  <Layout>
-    <PageHeader :title="title" :items="items" />
+  <Layout  class="authentication-bg">
+    <PageHeader :title="title" :items="items"  />
     <div class="clearfix mb-3">
       <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear cliente</b-button>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
+    <div class="row ">
+      <div class="col-12 ">
+        <div class="card " style="background-color:rgba(0,0,0,0.5); color:#fff;">
           <div class="card-body">
             <h4 class="card-title"></h4>
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_length" class="dataTables_length">
+                <div id="tickets-table_length" class="dataTables_length ">
                   <label class="d-inline-flex align-items-center">
-                    Show&nbsp;
-                    <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
+                    Mostrar&nbsp;
+                    <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;Clientes
                   </label>
                 </div>
               </div>
-              <!-- Search -->
-              <div class="col-sm-12 col-md-6">
+              <!-- Buscar Cliente -->
+              <div class="col-sm-12 col-md-6 ">
                 <div id="tickets-table_filter" class="dataTables_filter text-md-right">
                   <label class="d-inline-flex align-items-center">
-                    Search:
+                    Buscar Cliente:
                     <b-form-input
                       v-model="filter"
-                      type="search"
-                      placeholder="Search..."
+                      type="Buscar Cliente"
+                      placeholder="Buscar Cliente..."
                       class="form-control form-control-sm ml-2"
                     ></b-form-input>
                   </label>
                 </div>
               </div>
-              <!-- End search -->
+              <!-- End Buscar Cliente -->
             </div>
             <!-- Table -->
-            <div class="table-responsive mb-0">
+            <div class="table-responsive mb-0 " style="color:#fff;">
 
               <b-table
+              
+                light
                 :items="clientes"
                 :fields="fields"
                 responsive="sm"
@@ -46,8 +50,10 @@
                 :sort-by.sync="sortBy"
                 :sort-desc.sync="sortDesc"
                 :filter="filter"
+                variant="danger"
                 :filter-included-fields="filterOn"
                 @filtered="onFiltered"
+                 style="color:#fff;"
               >
               <template v-slot:cell(status)="data">
                 <span v-if="data.item.user.status==='activo'" class="badge badge-success">Activo</span>
@@ -79,13 +85,12 @@
         </div>
       </div>
     </div>
-
-
-
-
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de clientes" ok-only>
           <ValidationObserver ref="form">
-            <b-row>
+            <form-wizard next-button-text="Siguiente" back-button-text="Anterior" finish-button-text="---"  color="#7fa3a3" transition="fade">
+            <!---Paso 1--->
+            <tab-content title="Datos Personales"  subtitle="Paso 1" icon="ri-user-3-fill">
+              <b-row>
               <b-col>
                 <div class="form-group">
                   <label>Nombre </label>
@@ -138,8 +143,10 @@
                   </div>
                 </b-col>
             </b-row>
-            <hr>
-              <b-row >
+            </tab-content >
+            <!--Paso 2-->
+            <tab-content title="Estado de Cliente"  subtitle="Paso 1" icon="ri-lock-password-fill" >
+               <b-row >
                 <b-col>
                   <div class="form-group">
                     <label>Estatus</label>
@@ -186,12 +193,17 @@
                         @change="onFileChange"
                     ></b-form-file>
                </b-col>
-            </b-row>     
+            </b-row> 
+            </tab-content>
+            <!--Paso 3-->
+            <tab-content title="Finalizar"  subtitle="Paso 1" icon="ri-check-fill" >
+             <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Crear Cliente</button>
+             <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Guardar Cambios</button>
+            </tab-content>
+            </form-wizard>    
         </ValidationObserver>
-        <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Guardar</button>
-        <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Editar</button>
+       
      </b-modal>
-  
   </Layout>
 </template>
 
@@ -203,7 +215,11 @@ import {mapState,mapMutations, mapActions} from 'vuex'
 import { ValidationProvider, ValidationObserver } from "vee-validate";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
-
+import VueFormWizard from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+// Local
+import {FormWizard, TabContent} from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 /**
  * Dashboard component
@@ -215,7 +231,9 @@ export default {
     PageHeader,
     ValidationProvider,
     ValidationObserver,
-    vSelect
+    vSelect,
+     FormWizard,
+    TabContent
   },
   data() {
     return {
@@ -227,7 +245,8 @@ export default {
         {
           text: "Clientes",
           active: true
-        }
+        },
+        
       ],
      dropzoneOptions: {
         thumbnailWidth: 150,
@@ -319,7 +338,7 @@ export default {
             'Content-Type': 'multipart/form-data'
            }}).then(response => {
             if (response.status==200) {
-               this.$swal('Creado!!!','','success');
+               this.$swal('Cliente creado exitosamente','','success');
                this.listarclientes();
                this.$root.$emit("bv::hide::modal", "modal", "#btnShow");
                ///limpiar el formulario
@@ -328,7 +347,7 @@ export default {
                  }
               }
             }).catch(e => {
-                this.$swal('Nose pudo crear!!!','','warning');
+                this.$swal('Ocurrio un problema al crear el cliente','','warning');
             });
       },
     async editarCliente(){

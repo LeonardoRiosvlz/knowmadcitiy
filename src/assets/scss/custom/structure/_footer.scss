@@ -16,6 +16,7 @@
 
 @media (max-width: 992px) {
     .footer {
+        bottom: 0;
         left: 0;
     }
 }
@@ -23,12 +24,14 @@
 // Enlarge menu
 .vertical-collpsed {
     .footer {
+        bottom: 0;
         left: $sidebar-collapsed-width;
     }
 }
 
 body[data-layout="horizontal"] {
     .footer {
+        bottom: 0px;
         left: 0 !important;
     }  
 }

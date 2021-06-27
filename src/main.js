@@ -35,7 +35,7 @@ if(token) {
     delete axios.defaults.headers.common['authorization'];
 }
 
-axios.defaults.baseURL = 'https://knowmadcity.herokuapp.com/';
+axios.defaults.baseURL = 'https://knowmadcityapp.herokuapp.com/';
 //axios.defaults.baseURL = 'http://localhost:4000/';
 
 

@@ -8,8 +8,8 @@
 
 .authentication-bg{
     background-image: url("../images/new-bg.jpg");
-    height: 100vh;
-    background-size: cover;
+    background-size: cover;    
+    height: 760px;    
     background-position: center;
     .bg-overlay{
          position: fixed; /* Sit on top of the page content */
@@ -34,9 +34,24 @@
             display: none;
     }
 }
-
-.authentication-page-content{
+.authentication-bg-clients{
+    background-image: url("../images/authentication-bg.jpg");
     height: 100vh;
+    background-size: cover;
+    background-position: center;
+    
+    .centerimg{
+        margin-top:10%;
+        display:block;
+        margin-left: 10%;
+    }
+
+    @media (max-width: 991px) {
+            display: none;
+    }
+}
+.authentication-page-content{
+    height: 100%;
     display: flex;
     margin-left: 5%;
 }
@@ -64,10 +79,6 @@
         color: $primary;
     }
 }
-
-
-
-
 
 // authentication home icon
 .home-btn {

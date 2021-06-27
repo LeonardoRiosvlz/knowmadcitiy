@@ -1,36 +1,34 @@
 
-<template>
-  <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div class="row">
-      <div class="col-xl-8">
-        <Stat />
-        <RevenueAnalytics />
-      </div>
-      <div class="col-xl-4">
-        <SalesAnalytics />
-        <EarningReport />
-      </div>
+<template style="background-color:black;">
+  <Layout  class="authentication-bg" style="">
+  <PageHeader  style="color:#fff;" :title="title" />
+   <div class="container">
+      <h3   style="color:#fff;">Gestion de Clientes, Empresas y Proyectos:</h3><br>
+        <div class="row">
+          <div class="col-sm-6" >
+            <div class="card" style="background-color:rgba(0,0,0,0.5);">
+              <div class="card-body" style="color:#fff;">
+                <h5 class="card-title"  style="color:#fff;">GESTIONAR</h5>
+                <div class="row">
+                  <div class="col-lg-12 offset-1">
+                    <a href="/clientes" class="btn btn-outline-secondary btn-flat">Clientes</a> |
+                    <a href="/empresas" class="btn btn-outline-secondary btn-flat">Empresas de clientes</a> |
+                    <a href="/proyectos" class="btn btn-outline-secondary btn-flat">Proyectos de Clientes</a>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          
+          <div class="col-sm-6" >
+           
+            </div>
+        </div>
     </div>
-    <div class="row">
-      <div class="col-lg-4">
-        <Sources />
-      </div>
-      <div class="col-lg-4">
-        <RecentActivity />
-      </div>
-      <div class="col-lg-4">
-        <RevenueLocation />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-4">
-        <Chat />
-      </div>
-      <div class="col-lg-8">
-        <Transaction />
-      </div>
-    </div>
+   </div>
+        
+   
+
   </Layout>
 </template>
 
@@ -39,7 +37,6 @@ import {mapState,mapMutations, mapActions} from 'vuex'
 import { ValidationProvider, ValidationObserver } from "vee-validate";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
-
 import Stat from "./widget";
 import RevenueAnalytics from "./revenue";
 import SalesAnalytics from "./sales-analytics";
@@ -72,7 +69,7 @@ export default {
       title: "Dashboard",
       items: [
         {
-          text: "Nazox"
+          text: "KnowmadCity"
         },
         {
           text: "Dashboard",

@@ -8,7 +8,7 @@ export const menuItems = [
             {
                 id: 2,
                 label: 'Clientes',
-                icon: 'ri-file-copy-2-line',
+                icon: 'ri-user-line align-middle mr-1',
                 link: '/clientes'
             },
              {

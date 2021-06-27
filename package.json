@@ -57,6 +57,7 @@
     "vue-select": "^3.11.2",
     "vue-slide-bar": "^1.2.0",
     "vue-star-rating": "^1.7.0",
+    "vue-step-wizard": "^0.1.17",
     "vue-sweetalert2": "^4.1.1",
     "vue-switches": "^2.0.1",
     "vue-youtube": "^1.4.0",
