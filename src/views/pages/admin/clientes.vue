@@ -4,7 +4,7 @@
   <Layout  class="authentication-bg">
     <PageHeader :title="title" :items="items"  />
     <div class="clearfix mb-3">
-      <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear cliente</b-button>
+      <b-button class="float-right btn-info" left @click="$bvModal.show('modal');resete();editMode=false;">Crear cliente</b-button>
     </div>
     <div class="row ">
       <div class="col-12 ">
@@ -319,6 +319,12 @@ export default {
       });
       }
    },
+    resete(){
+        var formulario = this.form;
+        for (var key in formulario) {
+             this.form[key]="";
+       }
+      },
        onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;

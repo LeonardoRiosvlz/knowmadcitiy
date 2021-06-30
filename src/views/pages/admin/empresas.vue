@@ -2,7 +2,7 @@
   <Layout class="authentication-bg">
     <PageHeader :title="title" :items="items" />
     <div class="clearfix mb-3">
-      <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear empresas</b-button>
+      <b-button class="float-right btn-info" left @click="$bvModal.show('modal');resete();editMode=false;">Crear empresas</b-button>
     </div>
     <div class="row">
       <div class="col-12">
@@ -217,6 +217,7 @@
             </form-wizard>     
         </ValidationObserver>
      </b-modal>
+  
   </Layout>
 </template>
 
@@ -342,6 +343,12 @@ export default {
       });
       }
    },
+    resete(){
+        var formulario = this.form;
+        for (var key in formulario) {
+             this.form[key]="";
+       }
+      },
        onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
@@ -354,6 +361,7 @@ export default {
         data.append(key,formulario[key]);
       }
       if (this.file) {
+        console.log(this.file);
         data.append('filename',this.file);
        }
        await  this.axios.post('api/empresas', data, {
@@ -380,6 +388,7 @@ export default {
         data.append(key,formulario[key]);
       }
       if (this.file) {
+        console.log(this.file);
        data.append('filename',this.file);
       }
       await  this.axios.put('api/empresas', data, {

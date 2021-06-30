@@ -1,4 +1,5 @@
 <script>
+import {mapState,mapMutations, mapActions} from 'vuex'
 import simplebar from "simplebar-vue";
 import i18n from "../i18n";
 import { layoutComputed } from "@/state/helpers";
@@ -16,6 +17,8 @@ export default {
   },
   computed: {
     ...layoutComputed,
+    ...mapState(['usuarioDB','cliente'])
+
   },
   components: { simplebar },
   data() {
@@ -78,6 +81,12 @@ export default {
         }
       }
     },
+     ...mapActions(['cerrarSession','cargar','SetCliente']),
+    salir(){
+      localStorage.removeItem('token');
+      this.$router.push({ name: '/' });
+      this.cerrarSession();
+     },
     toggleRightSidebar() {
       this.$parent.toggleRightSidebar();
     },
@@ -388,9 +397,9 @@ export default {
             {{ $t("navbar.dropdown.kevin.list.lockscreen") }}
           </a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item text-danger" href="/logout">
+          <a class="dropdown-item text-danger"  @click="salir()">
             <i class="ri-shut-down-line align-middle mr-1 text-danger"></i>
-            {{ $t("navbar.dropdown.kevin.list.logout") }}
+            {{ $t('navbar.dropdown.kevin.list.logout') }}
           </a>
         </b-dropdown>       
       </div>

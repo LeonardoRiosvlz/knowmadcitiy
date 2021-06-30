@@ -2,7 +2,7 @@
   <Layout  class="authentication-bg">
     <PageHeader :title="title" :items="items" />
     <div class="clearfix mb-3">
-      <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear proyectos</b-button>
+      <b-button class="float-right btn-info" left @click="$bvModal.show('modal');resete();editMode=false;">Crear proyectos</b-button>
     </div>
 
     <div class="row">
@@ -375,6 +375,7 @@
           </form-wizard>
         </ValidationObserver>
       </b-modal>
+  
   </Layout>
 </template>
 
@@ -475,6 +476,7 @@ export default {
     }
   },
 
+
   watch: {
     cliente: function (val) {
       this.form.cliente_id=val;
@@ -499,6 +501,20 @@ export default {
       console.log("email submitted!");
       
     },
+    resete(){
+      var formulario = this.form;
+     for ( var key in formulario) {
+            if (key=='descripcion_iniciativa') {
+                this.form.descripcion_iniciativa=[];
+            }else if (key=='promotores') {
+                this.form.promotores=[];
+            }else if (key=='objetivos') {
+                this.form.objetivos=[];
+            }else{
+                this.form[key]="";
+            }
+        }
+      },
     switchLoc(){
       if (!this.editMode) {
         
