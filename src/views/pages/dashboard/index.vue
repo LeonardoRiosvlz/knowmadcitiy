@@ -1,6 +1,6 @@
 
 <template style="background-color:black;">
-  <Layout  class="authentication-bg" style="">
+  <Layout  class="authentication-bg-clients" style="">
   <PageHeader  style="color:#fff;" :title="title" />
    <div class="container">
       <h3   style="color:#fff;">Gestion de Clientes, Empresas y Proyectos:</h3><br>
@@ -8,12 +8,15 @@
           <div class="col-sm-6" >
             <div class="card" style="background-color:rgba(0,0,0,0.5);">
               <div class="card-body" style="color:#fff;">
-                <h5 class="card-title"  style="color:#fff;">GESTIONAR</h5>
+                
                 <div class="row">
-                  <div class="col-lg-12 offset-1">
-                    <a href="/clientes" class="btn btn-outline-secondary btn-flat">Clientes</a> |
-                    <a href="/empresas" class="btn btn-outline-secondary btn-flat">Empresas de clientes</a> |
-                    <a href="/proyectos" class="btn btn-outline-secondary btn-flat">Proyectos de Clientes</a>
+                  <div class="col-lg-12 offset">
+                  <div class="col-lg-12"> <a href="/clientes" class="btn btn-outline-info btn-flat btn-block ">Clientes</a><br></div>
+                  <div class="col-lg-12"> <a href="/empresas" class="btn btn-outline-info btn-flat btn-block ">Empresas de clientes</a><br> </div>
+                  <div class="col-lg-12">  <a href="/proyectos" class="btn btn-outline-info btn-flat btn-block ">Proyectos de Clientes</a><br></div>
+                   
+                   
+                  
                   </div>
                 </div>
                 </div>
