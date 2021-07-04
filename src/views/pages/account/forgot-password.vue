@@ -22,35 +22,24 @@ export default {
     ...authMethods,
     // Try to register the user in with the email, fullname
     // and password they provided.
-    tryToReset() {
-      this.submitted = true;
-      // stop here if form is invalid
-      this.$v.$touch();
-
-      if (this.$v.$invalid) {
-        return;
-      } else {
-        if (process.env.VUE_APP_DEFAULT_AUTH === "firebase") {
-          this.tryingToReset = true;
-          // Reset the authError if it existed.
-          this.error = null;
-          return (
-            this.resetPassword({
-              email: this.email
-            })
-              // eslint-disable-next-line no-unused-vars
-              .then(token => {
-                this.tryingToReset = false;
-                this.isResetError = false;
-              })
-              .catch(error => {
-                this.tryingToReset = false;
-                this.error = error ? error : "";
-                this.isResetError = true;
-              })
-          );
-        }
-      }
+   async tryToReset() {
+        let data = new FormData();
+        data.append('email',this.email);
+       await  this.axios.post('api/auth/forgot-password', data).then(response => {
+            if (response.status==200) {
+               this.$swal('Email enviado!',
+                          'hemos enviado un email con un link para recuperacion de contraseña',
+                          'success');
+              return;                
+              }
+            }).catch(e => {
+              console.log(e);
+              this.$swal({
+                        icon: 'error',
+                        title: 'Oops...',
+                        html: 'Algo ha salido mal, usuario no pertenece a nuestra plataforma'
+                      });
+           });   
     }
   }
 };
