@@ -157,6 +157,23 @@ export default [
         },
     }, 
     {
+        path: '/proyecto/:id',
+        name: 'proyecto',
+        component: () => import('../views/pages/admin/proyecto'),
+        meta: {
+            beforeEnter: (to, from, next) => {
+                if (!store.state.usuarioDB) {
+                    console.log(store.state.usuarioDB);
+                    // Redirect to the home page instead
+                    next({ name: 'login' })
+                } else {
+                    // Continue to the login page
+                   next()
+                }
+            }
+        },
+    }, 
+    {
         path: '/areas',
         name: 'areas',
         component: () => import('../views/pages/admin/areas'),

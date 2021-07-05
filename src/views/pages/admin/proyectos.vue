@@ -81,7 +81,7 @@
                   <b-dropdown-item-button@click="editMode=true;eliminar(data.item.id)">Eliminar Proyecto</b-dropdown-item-button>
                   
                   <!--<b-dropdown-item-button@clic="generateReport()">Ver/Descargar Proyecto</b-dropdown-item-button>-->
-                  <b-dropdown-item-button@click="editMode=true;verdocumento(data.item.id)">Verr/Descargar Proyecto</b-dropdown-item-button>
+                  <b-dropdown-item-button><a :href="'proyecto/'+data.item.id">Ver</a></b-dropdown-item-button>
                     
                 </b-dropdown>
                 </template>
@@ -107,9 +107,14 @@
         <b-modal id="modal_ver" false size="xl" hide-footer  title="Gestión de proyectos" ok-only>
           <div>
             <h4 align="center">USE EL SIGUIENTE BOTÓN PARA VER O DESCARGAR EL PROYECTO DE NOMBRE:</h4>  
-            
+           
+              <VueDocPreview :value="form.archivo" type="office" />
           </div>
         </b-modal>
+
+
+
+
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
           <ValidationObserver ref="form">
           <form-wizard next-button-text="Siguiente" back-button-text="Anterior" finish-button-text="---"  color="#7fa3a3" transition="fade">
@@ -263,8 +268,8 @@
           </form-wizard>
         </ValidationObserver>
       </b-modal>
-  <vue-pdf-app pdf="http://localhost:4000/public/1625462210418-77876707471397628.pdf"></vue-pdf-app>
- 
+
+      
   </Layout>
 </template>
 
@@ -282,15 +287,12 @@ import PageHeader from "@/components/page-header";
 import VueHtml2pdf from 'vue-html2pdf'
 import VueFormWizard from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
-import VuePdfApp from "vue-pdf-app";
-// import this to use default icons for buttons
-import "vue-pdf-app/dist/icons/main.css";
 
 // Local
 
 import {FormWizard, TabContent} from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
-
+import VueDocPreview from 'vue-doc-preview'
 /**
  * Dashboard component
  */
@@ -305,7 +307,7 @@ export default {
     VueHtml2pdf,
     FormWizard,
     TabContent,
-    VuePdfApp
+    VueDocPreview,
   },
     
   data() {
@@ -542,6 +544,7 @@ export default {
           this.form.empresa_id=this.proyectos[index].empresa_id;
           this.form.archivo=this.proyectos[index].archivo;
           this.form.cliente_id=this.proyectos[index].empresa.cliente_id;
+          this.form.aprueba_id=this.proyectos[index].aprueba_id;
           this.$root.$emit("bv::show::modal", "modal", "#btnShow");
           return;
         }
@@ -562,6 +565,7 @@ export default {
           this.form.empresa_id=this.proyectos[index].empresa_id;
           this.form.archivo=this.proyectos[index].archivo;
           this.form.cliente_id=this.proyectos[index].empresa.cliente_id;
+           this.form.aprueba_id=this.proyectos[index].empresa.aprueba_id;
           this.$root.$emit("bv::show::modal", "modal_ver", "#btnShow");
        
           return;
