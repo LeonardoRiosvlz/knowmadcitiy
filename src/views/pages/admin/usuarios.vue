@@ -50,15 +50,24 @@
                 :filter-included-fields="filterOn"
                 @filtered="onFiltered"
               >
-              
-                <template v-slot:cell(actions)="data">
-
+              <template v-slot:cell(tipo)="data">
+                  <b-badge v-if="data.item.tipo === 'Master'" variant="success">Administrador </b-badge>
+                  <b-badge v-else variant="info">Supervisor</b-badge>
+              </template>
+              <template v-slot:cell(status)="data">
+                  <b-badge v-if="data.item.status === 'Activo'" variant="success">ACTIVO </b-badge>
+                  <b-badge v-else variant="danger">INACTIVO</b-badge>
+              </template>
+              <template v-slot:cell(actions)="data">
                 <b-dropdown size="sm" class="">
                   <template v-slot:button-content>
                     Action
                     <i class="mdi mdi-chevron-down"></i>
                   </template>
-                  <b-dropdown-item-button@click="editMode=true;setear(data.item.id)">Editar</b-dropdown-item-button>
+                    <b-dropdown-item-button @click="editMode=true;ver=false;setear(data.item.id)"> Editar </b-dropdown-item-button>
+                    <b-dropdown-item-button @click="eliminarCargo(data.item.id)"> Desvincular </b-dropdown-item-button>
+                    <b-dropdown-item-button @click="eliminarCargo(data.item.id)"> Eliminar </b-dropdown-item-button>
+                    <b-dropdown-item-button @click="editMode=false;ver=true;setear(data.item.id)"> Ver </b-dropdown-item-button>
                 </b-dropdown>
                 </template>
               </b-table>
@@ -93,32 +102,13 @@
                   </ValidationProvider>
                 </div>
               </b-col>
-              <b-col>
-                <div class="form-group">
-                  <label>Apellido</label>
-                  <ValidationProvider name="apellido" rules="required|alpha_spaces" v-slot="{ errors }">
-                        <input v-model="form.apellido"  type="text" class="form-control" placeholder=" ">
-                        <span style="color:red">{{ errors[0] }}</span>
-                  </ValidationProvider>
-                </div>
-              </b-col>
               </b-row>
               <b-row>
                 <b-col>
                   <div class="form-group">
                     <label>Email</label>
                     <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
-                          <input v-model="form.email" @keyup="setEmail()" type="text" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-        
-                <b-col>
-                  <div class="form-group">
-                    <label>Telefono</label>
-                    <ValidationProvider name="telefono" rules="required" v-slot="{ errors }">
-                          <input v-model="form.telefono"  type="text" class="form-control" placeholder=" ">
+                          <input v-model="form.email" @keyup="setEmail()" type="text" class="form-control" placeholder=" " :disabled="editMode">
                           <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
                   </div>
@@ -130,74 +120,15 @@
                     <label>Tipo</label>
                     <ValidationProvider name="tipo" rules="required" v-slot="{ errors }">
                           <select v-model="form.tipo" @change="setRoles()" name="tipo" class="form-control form-control-lg" >
-                              <option value="Administrador">Administrador</option>
-                              <option value="Coordinador">Coordinador</option>
-                              <option value="Tecnico">T&eacute;cnico</option>
-                          </select>
-                          <span style="color:red">{{ errors[0] }}</span>
-                          
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-        
-                <b-col>
-                  <div class="form-group">
-                    <label>Sexo</label>
-                    <ValidationProvider name="sexo" rules="required" v-slot="{ errors }">
-                          <select v-model="form.sexo"  name="tipo" class="form-control form-control-lg" >
-                              <option value="Masculino">Masculino</option>
-                              <option value="Femenino">Femenino</option>
+                              <option value="Master">Administrador</option>
+                              <option value="Administrador">Supervisor</option>
                           </select>
                           <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
                   </div>
                 </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                  <div class="form-group">
-                    <label>Dirección</label>
-                    <ValidationProvider name="direccion" rules="required" v-slot="{ errors }">
-                        <b-form-textarea
-                            id="textarea"
-                            v-model="form.direccion"
-                            placeholder=""
-                            rows="3"
-                            max-rows="6">
-                        </b-form-textarea>
-                        <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>  
             </b-row>
             <hr>
-             <b-row v-if="form.tipo==='Tecnico'||form.tipo==='Coordinador'">
-                <b-col>
-                  <div class="form-group">
-                    <label>Entidad</label>
-                    <ValidationProvider name="entidad" rules="required" v-slot="{ errors }">
-                          <select v-model="form.entidad"  name="tipo" class="form-control form-control-lg" >
-                              <option value="Si">Si</option>
-                              <option value="No">No</option>
-                          </select>
-                          <span style="color:red">{{ errors[0] }}</span>
-                          
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-                <b-col v-if="form.tipo==='Tecnico'||form.tipo==='Coordinador'">
-                  <div class="form-group">
-                    <label>Cargo</label>
-                    <ValidationProvider name="cargo" rules="required" v-slot="{ errors }">
-                          <select v-model="form.cargo"  name="tipo" class="form-control form-control-lg" >
-                              <option value="Coordinador">Coordinador</option>
-                              <option value="Tecnico">Tecnico</option>
-                          </select>
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row>
               <b-row >
                 <b-col>
                   <div class="form-group">
@@ -211,76 +142,7 @@
                     </ValidationProvider>
                   </div>
                 </b-col>
-                <b-col v-if="form.tipo==='Tecnico'">
-                  <div class="form-group">
-                    <label>Tipo Tecnico</label>
-                    <ValidationProvider name="tipo_tecnico" rules="required" v-slot="{ errors }">
-                          <select v-model="form.tipo_tecnico"  name="tipo" class="form-control form-control-lg" >
-                              <option value="Nomina">Nomina</option>
-                              <option value="Contratista">Contratista</option>
-                          </select>
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
             </b-row>
-            <b-row v-if="form.tipo==='Tecnico'&& form.tipo_tecnico==='Contratista'">
-                <b-col>
-                  <div class="form-group">
-                    <label>Nombre Cuenta</label>
-                    <ValidationProvider name="nonmbre cuenta" rules="required" v-slot="{ errors }">
-                          <input v-model="form.nombre_cuenta"  type="text" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-                <b-col>
-                  <div class="form-group">
-                    <label>Tipo De Cuenta</label>
-                    <ValidationProvider name="tipo de cuenta" rules="required" v-slot="{ errors }">
-                          <select v-model="form.tipo_cuenta"  name="tipo de cuenta" class="form-control form-control-lg" >
-                              <option value="Ahorro">Ahorro</option>
-                              <option value="Corriente">Corriente</option>
-                          </select>
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row>  
-            <b-row v-if="form.tipo==='Tecnico'&& form.tipo_tecnico==='Contratista'">
-                <b-col>
-                  <div class="form-group">
-                    <label>Cuenta</label>
-                    <ValidationProvider name="cuenta" rules="required" v-slot="{ errors }">
-                          <input v-model="form.cuenta"  type="text" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row>  
-            <b-row v-if="form.tipo==='Tecnico'">
-                <b-col>
-                  <div class="form-group">
-                    <label>Codigo</label>
-                    <ValidationProvider name="codigo" rules="required" v-slot="{ errors }">
-                          <input v-model="form.codigo"  type="text" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-                <b-col>
-                    <div class="form-group">
-                    <label>Regional</label>
-                    <ValidationProvider name="regional" rules="required" v-slot="{ errors }">
-                          <select v-model="form.regional"  name="entidad_id" class="form-control "  :disabled="ver">
-                              <option></option>
-                              <option :value="regionales.id" v-for="regionales in regionales" :key="regionales.id">{{regionales.nombre}}</option>
-                          </select>
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                    </div>
-                </b-col>
-            </b-row>  
             <b-row v-if="!editMode">
                 <b-col>
                   <div class="form-group">
@@ -301,15 +163,6 @@
                   </div>
                 </b-col>
             </b-row> 
-            <b-row>
-              <b-col>
-                <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
-                  <label>Area dependiente {{form.dependencia}}</label>
-                    <v-select v-model="form.dependencia" :options="users" :reduce="users => users.id"  :getOptionLabel="option => option.nombre+' '+option.apellido" ></v-select>
-                    <span style="color:red">{{ errors[0] }}</span>
-                </ValidationProvider>
-              </b-col>
-            </b-row>
             <b-row class="mb-2">
                <b-col>
                    <label>Imagen</label>
@@ -321,18 +174,6 @@
                         placeholder="Seleccione su image..."
                         drop-placeholder="Drop file here..."
                         @change="onFileChange"
-                    ></b-form-file>
-               </b-col>
-                <b-col>
-                    <label>Firma</label>
-                   <div id="preview mb-2">
-                     <img v-if="firma" width="100%" style="float:center!importan" class="rounded"  :src="url_firma" />
-                   </div>
-                    <b-form-file
-                        v-model="firma"
-                        placeholder="Seleccione su firma..."
-                        drop-placeholder="Drop file here..."
-                        @change="onFileChangeFirma"
                     ></b-form-file>
                </b-col>
             </b-row>     
@@ -399,7 +240,7 @@ export default {
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
-      fields: ["nombre","apellido", "email", "cargo", "actions"],
+      fields: ["nombre","tipo","status",  "actions"],
       users: [], 
       areas: [],
       cargos: [],
@@ -473,10 +314,7 @@ export default {
       if (this.file) {
         data.append('filename',this.file);
        }
-      if (this.firma) {
-        data.append('firma',this.firma);
-       }
-       await  this.axios.post('api/auth/signup', data, {
+       await  this.axios.post('api/user/create', data, {
            headers: {
             'Content-Type': 'multipart/form-data'
            }}).then(response => {
@@ -490,7 +328,7 @@ export default {
                  }
               }
             }).catch(e => {
-                this.$swal('Nose pudo crear!!!','','warning');
+                this.$swal('Nose pudo crear este email esta siendo usado por otro usuario','','warning');
             });
       },
     async editarUsuario(){
@@ -502,10 +340,7 @@ export default {
       if (this.file) {
        data.append('filename',this.file);
       }
-      if (this.firma) {
-        data.append('firma',this.firma);
-       }
-      await  this.axios.post('api/auth/update', data, {
+      await  this.axios.post('api/user/update', data, {
            headers: {
             'Content-Type': 'multipart/form-data'
               }}).then(response => {
@@ -554,7 +389,7 @@ export default {
       }
     },
   async  listarUsers(){
-    await  this.axios.get('user/all')
+    await  this.axios.get('api/user/all')
       .then((response) => {
         this.users = response.data.rows;
       })
@@ -571,26 +406,8 @@ export default {
           console.log('error' + e);
         })
     },
-   async listarCargos(){
-      await  this.axios.get('api/cargos')
-        .then((response) => {
-          this.cargos = response.data.rows;
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
-     },
     setEmail(){
       this.form.username=this.form.email;
-    },
-    async  listarregional(){
-      await  this.axios.get('api/regional')
-        .then((response) => {
-          this.regionales = response.data.rows;
-        })
-        .catch((e)=>{
-          console.log('error' + e);
-        })
     },
     setRoles(){
       if (this.form.tipo==="Administrador") {
@@ -630,8 +447,6 @@ export default {
     created(){
 		  this.session();
       this.listarUsers();
-      this.listarCargos();
-      this.listarregional();
     },
     computed: {
     rows() {

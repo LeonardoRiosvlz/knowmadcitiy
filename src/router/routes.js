@@ -89,6 +89,23 @@ export default [
         },
     },   
     {
+        path: '/usuarios',
+        name: 'usuarios',
+        component: () => import('../views/pages/admin/usuarios'),
+        meta: {
+            beforeEnter: (to, from, next) => {
+                if (!store.state.usuarioDB) {
+                    console.log(store.state.usuarioDB);
+                    // Redirect to the home page instead
+                    next({ name: 'login' })
+                } else {
+                    // Continue to the login page
+                   next()
+                }
+            }
+        },
+    },
+    {
         path: '/clientes',
         name: 'clientes',
         component: () => import('../views/pages/admin/clientes'),

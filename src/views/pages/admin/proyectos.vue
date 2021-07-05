@@ -87,6 +87,7 @@
                 </template>
               </b-table>
             </div>
+            
             <div class="row">
               <div class="col">
                 <div class="dataTables_paginate paging_simple_numbers float-right">
@@ -103,143 +104,9 @@
 
     </div>
 
-        <b-modal id="modal_ver" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
+        <b-modal id="modal_ver" false size="xl" hide-footer  title="Gestión de proyectos" ok-only>
           <div>
             <h4 align="center">USE EL SIGUIENTE BOTÓN PARA VER O DESCARGAR EL PROYECTO DE NOMBRE:</h4>  
-            
-            <div align="center"><h3>{{form.titulo}}</h3><br><button class="btn btn-flat btn-info" @click="generateReport()">Ver/Descargar {{form.titulo}}</button></div>
-            
-            <vue-html2pdf
-                :show-layout="false"
-                :float-layout="true"
-                :enable-download="false"
-                :preview-modal="true"
-                paginate-elements-by-height="1200"
-                filename="Proyecto"
-                :pdf-quality="2"
-                :manual-pagination="true"
-                pdf-format="a4"
-                pdf-orientation="portrait"
-                pdf-content-width="100%"
-                margin="150"
-                @progress="onProgress($event)"
-                @startPagination="startPagination()"
-                @hasPaginated="hasPaginated()"
-                @hasStartedGeneration="hasStartedGeneration()"
-                @hasGenerated="hasGenerated($event)"
-                ref="html2Pdf"
-            >
-                <section slot="pdf-content">
-        <div align="center" style="margin-left:;">
-          <div class="row">
-            <div class="col-lg-2"></div>
-            <div class="col-lg-8"><img src="@/assets/images/Logo-Knowmadcity-final.png" alt="" width="250" height="120">
-              <br>
-              <br><h3>MODELO DE FICHA DE PROYECTOS DE RECUPERACIÓN (“Iniciativas”)</h3>
-              <br><h3>DESCRIPCIÓN DE LAS REFORMAS Y LAS INVERSIONES</h3>
-              <br>
-              <h4>Titulo: {{form.titulo}}</h4>
-              <br><br>
-            </div>
-            <div class="col-lg-2"></div>
-
-            <div class="row" style="width:80%;">
-              
-                <div class="col-lg 4 offset-lg-4" style="border: solid, 3px, #000">
-                  <h4 align="center">1- Descripción de la iniciativa: </h4>
-                </div>
-
-                <div class="col-lg 4">
-                  <ol>
-                    <li align="left" v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} 
-                    </li>
-                  </ol>
-                </div>
-
-                <hr style="border: solid, 3px, #000">
-
-                <div class="col-lg 6 offset-lg-4">
-                  <h4 align="center"><h4 align="center">2-Justificación de la necesidad: principales retos y oportunidades: </h4> </h4>
-                </div>
-
-                <div class="col-lg 6">
-                  <p align="justify">{{form.justificacion}}</p>
-                <br><br>
-                </div>
-
-            
-            </div>
-            <div class="row" style="width:80%;">
-
-                <div class="col-lg 6 offset-lg-3">
-                  <h4 align="center">3-Objetivos de la iniciativa: </h4>  <p align="justify">{{form.justificacion}}</p>
-                </div>
-
-                <div class="col-lg 6">
-                 <h4>4-Breve descripción de la iniciativa</h4>
-                    <ol>
-                      <li align="left" v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} 
-                      </li>
-                    </ol>
-                </div>
-            </div>
-
-
-            
-
-          </div>   
-        </div>     
-
-
-        <div class="html2pdf__page-break"/>
-
-                  <section class="pdf-item">
-                                 <div class="row" style="width:80%;">
-              
-                <div class="col-lg 4 offset-lg-4" style="border: solid, 3px, #000">
-                  <h4 align="center">5-Dimensión digital y ecológica de la iniciativa </h4>
-                </div>
-
-                <div class="col-lg 4">
-                  <p>Dimensión Digital:</p>
-                  <p>Dimensión Ecológica:</p>
-                </div>
-
-                <hr style="border: solid, 3px, #000">
-            </div> 
-             <div class="row" style="width:80%;">
-              
-                <div class="col-lg 4 offset-lg-4" style="border: solid, 3px, #000">
-                  <h4 align="center">6- Calendario e Hitos: </h4>
-                </div>
-
-                <div class="col-lg 4">
-                  <ol>
-                    <li align="left" v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} 
-                    </li>
-                  </ol>
-                </div>
-
-                <hr style="border: solid, 3px, #000">
-            </div> 
-                         <div class="row" style="width:80%;">
-              
-                <div class="col-lg 4 offset-lg-4" style="border: solid, 3px, #000">
-                  <h4 align="center">7- Presupuesto: </h4>
-                </div>
-
-                <div class="col-lg 4">
-                  <h4> {{form.presupuesto}} </h4> 
-                                      
-                </div>
-
-                <hr style="border: solid, 3px, #000">
-            </div>
-                  </section>    
-                </section>
-                
-                
-            </vue-html2pdf>
             
           </div>
         </b-modal>
@@ -250,7 +117,7 @@
             <tab-content title="Seleccionar Cliente y empresa"  subtitle="Paso 1" icon="ri-user-3-fill" >
                             <b-row>
                       <b-col>
-                        <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
+                        <ValidationProvider name="cliente" rules="required" v-slot="{ errors }">
                           <label>Cliente</label>
                             <v-select v-model="cliente" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
                             <span style="color:red">{{ errors[0] }}</span>
@@ -259,10 +126,19 @@
                     </b-row>
                     <b-row>
                       <b-col>
-                        <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
+                        <ValidationProvider name="empresas" rules="required" v-slot="{ errors }">
                           <label>Empresas </label>
                             <v-select v-model="form.empresa_id" :options="empresas" :reduce="empresas => empresas.id"  :getOptionLabel="option => option.nombre" ></v-select>
                             <span style="color:red">{{ errors[0] }}</span>
+                        </ValidationProvider>
+                      </b-col>
+                    </b-row>                    
+                    <b-row>
+                      <b-col>
+                        <ValidationProvider name="Aprueba" rules="required" v-slot="{ errors }">
+                            <label>Aprueba</label>
+                               <v-select v-model="form.aprueba_id" :options="users" :reduce="users => users.id"  :getOptionLabel="option => option.nombre" ></v-select>
+                              <span style="color:red">{{ errors[0] }}</span>
                         </ValidationProvider>
                       </b-col>
                     </b-row>
@@ -366,6 +242,18 @@
                             </div>
                         </b-col>
                       </b-row>
+                      <b-row>
+                        <b-col>
+                            <label>Version PDF</label>
+                              <b-form-file
+                                  v-model="file"
+                                  placeholder="Seleccione su archivo pdf..."
+                                  drop-placeholder="Drop file here..."
+                                  @change="onFileChange"
+                              ></b-form-file>
+                        </b-col>
+                      </b-row>
+
             </tab-content>
             <!--Paso 4-->
             <tab-content title="Guardar Proyecto"  subtitle="Paso 4" icon="ri-save-2-fill">
@@ -375,7 +263,8 @@
           </form-wizard>
         </ValidationObserver>
       </b-modal>
-  
+  <vue-pdf-app pdf="http://localhost:4000/public/1625462210418-77876707471397628.pdf"></vue-pdf-app>
+ 
   </Layout>
 </template>
 
@@ -393,7 +282,9 @@ import PageHeader from "@/components/page-header";
 import VueHtml2pdf from 'vue-html2pdf'
 import VueFormWizard from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
-
+import VuePdfApp from "vue-pdf-app";
+// import this to use default icons for buttons
+import "vue-pdf-app/dist/icons/main.css";
 
 // Local
 
@@ -413,7 +304,8 @@ export default {
     vSelect,
     VueHtml2pdf,
     FormWizard,
-    TabContent
+    TabContent,
+    VuePdfApp
   },
     
   data() {
@@ -456,7 +348,7 @@ export default {
       empresas: [],
       clientes: [],
       clien: [],
-      regional: [],
+      users: [],
       cliente:'',
       client:'',
       editMode:false,
@@ -471,7 +363,8 @@ export default {
       'objetivo':'',
 	    'objetivos': [],
       'presupuesto':'',
-       'empresa_id':'',
+      'empresa_id':'',
+      'aprueba_id':'',
       }
     }
   },
@@ -581,6 +474,9 @@ export default {
                 data.append(key,formulario[key]);
             }
         }
+      if (this.file) {
+        data.append('filename',this.file);
+       }
        await  this.axios.post('api/proyectos', data, {
            headers: {
             'Content-Type': 'multipart/form-data'
@@ -608,6 +504,9 @@ export default {
               }else{
                   data.append(key,formulario[key]);
               }
+      }
+      if (this.file) {
+        data.append('filename',this.file);
       }
       await  this.axios.put('api/proyectos', data, {
            headers: {
@@ -641,6 +540,7 @@ export default {
           this.form.justificacion=this.proyectos[index].justificacion;
           this.form.descripcion=this.proyectos[index].descripcion;
           this.form.empresa_id=this.proyectos[index].empresa_id;
+          this.form.archivo=this.proyectos[index].archivo;
           this.form.cliente_id=this.proyectos[index].empresa.cliente_id;
           this.$root.$emit("bv::show::modal", "modal", "#btnShow");
           return;
@@ -660,6 +560,7 @@ export default {
           this.form.descripcion_iniciativa=JSON.parse(this.proyectos[index].descripcion_iniciativa);
           this.form.justificacion=this.proyectos[index].justificacion;
           this.form.empresa_id=this.proyectos[index].empresa_id;
+          this.form.archivo=this.proyectos[index].archivo;
           this.form.cliente_id=this.proyectos[index].empresa.cliente_id;
           this.$root.$emit("bv::show::modal", "modal_ver", "#btnShow");
        
@@ -754,6 +655,15 @@ export default {
            this.form.roles="1"
       }
     },
+   async  listarUsers(){
+    await  this.axios.get('api/user/admin')
+      .then((response) => {
+        this.users = response.data.rows;
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
@@ -778,6 +688,7 @@ export default {
     created(){
 	  this.session();
       this.listarclientes();
+      this.listarUsers();
      // this.listarProyectos();
     },
     computed: {
