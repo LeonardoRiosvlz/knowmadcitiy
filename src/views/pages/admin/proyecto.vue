@@ -1,13 +1,132 @@
 <template>
-  <Layout  class="authentication-bg">
+  <Layout  class="authentication-bg-clients">
     <PageHeader :title="title" :items="items" />
-        <button @click="word=!word">versiones</button>
-        <div v-if="word"><VueDocPreview :value="proyectos.archivo" type="office" /></div>
-        <div v-else><pre>{{proyectos}}</pre></div>
-
-  
         
+       <div class="row">
+          <div class="col-lg-6">
+          
+              <div class="row">
+                <div class="col-lg-12">
+                <h4 class="text-white">Información del Proyecto: {{proyectos.titulo}} </h4>
+                  <div class="card border-secondary" ><br>
+                          <p align="center">
+                            <img  width="150"  height="150" style="float:center!importan" class="rounded"   v-bind:src="proyectos.empresa.logo" />
+                          </p>
+                      
+                          <div class="card-body">
+                            <h5 class="card-title" align="center">{{proyectos.titulo}}</h5>
+                            <p algn="center">Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> Estado del Proyecto: <span class="badge badge-warning">{{form.status}} </span></p>
+                          <p class="card-text" align="justify">Descripción: {{proyectos.descripcion}} </p>
+                          <p class="card-text" align="justify">Presupuesto: {{proyectos.presupuesto}} </p>
+                          </div>
+                          <div class="">
+                              <p align="center"><b-button v-b-modal.modal-1>Ver proyecto Completo</b-button></p> 
+                          </div><br>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+          <div class="col-lg-6">
+              <h4 class="text-white">Soporte del Proyecto:</h4>
+              <div ><VueDocPreview :value="proyectos.archivo" type="office" /></div>
+          </div>
+       </div>
+       
+      
+
+        <div >
+
+            
+        </div>   
+            <b-modal id="modal-1" size="lg" hidde-footer>
+                <div class="card border-secondary">
+                    <img v-if="url" width="100%" style="float:center!importan" class="rounded"  :src="url" />
+                      <div class="card-body"> 
+                      <p align="center "><img  width="150"  height="150" style="float:center!importan" class="rounded"   v-bind:src="proyectos.empresa.logo" /></p>
+                          
+                        <h5 class="card-title" align="center">Título del Proyecto: {{form.titulo}}</h5>
+                          <p algn="center">Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> - Fecha de Creación de Proyecto: <span class="badge badge-info">{{proyectos.created_at}}</span> - Estado del Proyecto: <span class="badge badge-warning">{{proyectos.status}} </span></p>
+                            <div class="row">
+                              <div class="col-lg-6">
+                                <p class="card-text" align="justify">Descripción: {{proyectos.descripcion}} </p></div>
+                                  <div class="col-lg-6">
+                                    <p class="card-text" align="justify">Descripción de la Iniciativa: 
+                                          <ol>
+                                            <li v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
+                                          </ol>
+                                    </p><br><br>
+                                  </div>
+                                  <div class="col-lg-6">Promotores: </div>
+                                  <div class="col-lg-6">Objetivos: </div><br><br>
+                                  <div class="col-lg-6">Observaciones: </div>
+                                  <div class="col-lg-6">Justificación</div><br><br>
+                                  <div class="col-lg-12">
+                                    <div class="row">
+                                      <div class="col-lg-6">Metas: {{proyectos.metas}} </div>
+                                      <div class="col-lg-6"></div>
+                                    </div>
+                                  </div><br><br>
+                            </div>
+                      <!--
+                            "id": "fce4ef4b-3e66-4c2c-89ea-741ccdec3b7b",
+                            "numero": "null",
+                            "titulo": "Molinos de vientos",
+                            "status": "Pendiente",
+                            "presupuesto": "150000",
+                            "proyectos_propuestos": null,
+                            "promotores": "[{\"nombre\":\"Nokia\"},{\"nombre\":\"Movistar\"}]",
+                            "objetivos": "[{\"nombre\":\" Ecenas bibendu acum suscipit duifusce teger mauris augueph.\"},{\"nombre\":\" Ecenas bibendu acum suscipit duifusce tegek.\"}]",
+                            "metas": null,
+                            "descripcion_iniciativa": "[{\"nombre\":\" Ecenas bibendu acum suscipit duifusce teger mauris augueph.\"},{\"nombre\":\" Ecenas bibendu acum suscipit duifusce teger mauris augueph.\"}]",
+                            "archivo": "https://plataformaknowmad.herokuapp.com/public/1625495397045-126825126Ficha Next GEN CARM_Dirección General Mar Menor_Balnearios_ (1) (1).docx",
+                            "descripcion": "Dolornu himena mus eu fringi fringi. Sellus auguesed vulput metusqui sollic at que quiscras roin ulla. Proin aenean facilis sque adipisci sceleris class. Llam tempor uisque laciniai telluset sedlorem scras  odiophas ellus. Hendre lobortis euismodd ras ntum mattis lum. Lectusa lacusaen imperdie duifusce erossed vestib convalli. Lobortis id ullamcor isised isse roin. Tesque suspendi necinte massacra elitpr lla nullam itur lectusin varius. Ecenas bibendu acum suscipit duifusce teger mauris augueph.",
+                            "oservaciones": null,
+                            "justificacion": "Dolornu himena mus eu fringi fringi. Sellus auguesed vulput metusqui sollic at que quiscras roin ulla. Proin aenean facilis sque adipisci sceleris class. Llam tempor uisque laciniai telluset sedlorem scras odiophas ellus. Hendre lobortis euismodd ras ntum mattis lum. Lectusa lacusaen imperdie duifusce erossed vestib convalli. Lobortis id ullamcor isised isse roin. Tesque suspendi necinte massacra elitpr lla nullam itur lectusin varius. Ecenas bibendu acum suscipit duifusce teger mauris augueph. ",
+                            "created_at": "2021-07-05T05:16:51.000Z",
+                            "updated_at": "2021-07-05T14:29:58.000Z",
+                            "empresa_id": 1,
+                            "elabora_id": 1,
+                            "aprueba_id": 1,
+                            "empresa": {
+                              "id": 1,
+                              "nombre": "Facebook",
+                              "cargo_contacto": "CEO",
+                              "rubro": "Telecomunicaciones",
+                              "logo": "https://plataformaknowmad.herokuapp.com/public/1624939287091-168123839ATH.jpg",
+                              "numero_empleados": "23",
+                              "procentaje_mujeres": "30",
+                              "volumen_facturacion": "volument de facturacion",
+                              "direccion": "direccion de la emrpesa",
+                              "fundada": "2021-06-09",
+                              "created_at": "2021-06-12T21:28:31.000Z",
+                              "updated_at": "2021-06-29T04:01:27.000Z",
+                              "cliente_id": 1
+                      -->
+                    
+                        <p class="card-text"><small class="text-muted">Presupuesto: {{proyectos.presupuesto}}</small></p>
+                      </div>
+                </div>
+            </b-modal>
+              <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          2021 © 
+        </div>
+        <div class="col-sm-6">
+          <div class="text-sm-right d-none d-sm-block">
+            Desarrollado por
+            © Innova Tu Hotel
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
   </Layout>
+
+
+
 </template>
 
 
@@ -21,9 +140,10 @@ import {mapState,mapMutations, mapActions} from 'vuex'
 import { ValidationProvider, ValidationObserver } from "vee-validate";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
-import VueHtml2pdf from 'vue-html2pdf'
+import VueHtml2pdf from 'vue-html2pdf';
 import VueFormWizard from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+
 
 // Local
 
@@ -49,13 +169,13 @@ export default {
     
   data() {
     return {
-      title: "Administracion",
+      title: "Proyecto",
       items: [
         {
           text: "Gestión corporativa"
         },
         {
-          text: "proyectos",
+          text: "proyecto",
           active: true
         }
       ],
@@ -266,27 +386,25 @@ export default {
               this.$swal('ocurrio un problema','','warning');
             });
      },
-    setear(id) {
-      for (let index = 0; index < this.proyectos.length; index++) {
-        if (this.proyectos[index].id===id) {
-        this.cliente=this.proyectos[index].empresa.cliente_id;
-          this.form.id=this.proyectos[index].id;
-          this.form.numero=this.proyectos[index].numero;
-          this.form.titulo=this.proyectos[index].titulo;
-          this.form.presupuesto=this.proyectos[index].presupuesto;
-          this.form.promotores=JSON.parse(this.proyectos[index].promotores);
-          this.form.objetivos=JSON.parse(this.proyectos[index].objetivos);
-          this.form.descripcion_iniciativa=JSON.parse(this.proyectos[index].descripcion_iniciativa);
-          this.form.justificacion=this.proyectos[index].justificacion;
-          this.form.descripcion=this.proyectos[index].descripcion;
-          this.form.empresa_id=this.proyectos[index].empresa_id;
-          this.form.archivo=this.proyectos[index].archivo;
-          this.form.cliente_id=this.proyectos[index].empresa.cliente_id;
-          this.form.aprueba_id=this.proyectos[index].aprueba_id;
-          this.$root.$emit("bv::show::modal", "modal", "#btnShow");
+    setear() {
+
+        //this.cliente=this.proyectos[index].empresa.cliente_id;
+          this.form.id=this.proyectos.id;
+          this.form.numero=this.proyectos.numero;
+          this.form.titulo=this.proyectos.titulo;
+          this.form.status=this.proyectos.status;
+          this.form.presupuesto=this.proyectos.presupuesto;
+          this.form.promotores=JSON.parse(this.proyectos.promotores);
+          this.form.objetivos=JSON.parse(this.proyectos.objetivos);
+          this.form.descripcion_iniciativa=JSON.parse(this.proyectos.descripcion_iniciativa);
+          this.form.justificacion=this.proyectos.justificacion;
+          this.form.descripcion=this.proyectos.descripcion;
+          this.form.empresa_id=this.proyectos.empresa_id;
+          this.form.archivo=this.proyectos.archivo;
+          this.form.cliente_id=this.proyectos.empresa.cliente_id;
+          this.form.aprueba_id=this.proyectos.aprueba_id;
           return;
-        }
-      }
+
     },
     verdocumento(id) {
       for (let index = 0; index < this.proyectos.length; index++) {
@@ -376,6 +494,7 @@ export default {
     await  this.axios.post('api/proyectos/find',data)
       .then((response) => {
         this.proyectos = response.data;
+        this.setear();
       })
       .catch((e)=>{
         console.log('error' + e);

@@ -1,59 +1,62 @@
 <script>
-import {mapState,mapMutations, mapActions} from 'vuex'
+
+import io from 'socket.io-client';
 import simplebar from "simplebar-vue";
 import i18n from "../i18n";
-import { layoutComputed } from "@/state/helpers";
-
+import {mapState,mapMutations, mapActions} from 'vuex'
+import moment from 'moment';
 export default {
-  props: {
-    type: {
-      type: String,
-      required: true,
-    },
-    width: {
-      type: String,
-      required: true,
-    },
-  },
-  computed: {
-    ...layoutComputed,
-    ...mapState(['usuarioDB','cliente'])
-
-  },
-  components: { simplebar },
   data() {
     return {
+      socket : io('https://plataformaknowmad.herokuapp.com/'),
+      canal: '',
+      user: '',
+      message: '',
+      messages: [],
+      clientes: [],
+      notificaciones: [],
       languages: [
-        {
-          flag: require("@/assets/images/flags/us.jpg"),
-          language: "en",
-          title: "English",
-        },
-        {
-          flag: require("@/assets/images/flags/french.jpg"),
-          language: "fr",
-          title: "French",
-        },
-        {
-          flag: require("@/assets/images/flags/spain.jpg"),
-          language: "es",
-          title: "spanish",
-        },
-        {
-          flag: require("@/assets/images/flags/chaina.png"),
-          language: "zh",
-          title: "Chinese",
-        },
-        {
-          flag: require("@/assets/images/flags/arabic.png"),
-          language: "ar",
-          title: "Arabic",
-        },
       ],
-      current_language: "en",
+      current_language: "en"
     };
   },
+  components: { simplebar },
+  computed:{
+    ...mapState(['usuarioDB','cliente'])
+ },
+    filters: {
+        capitalize: function (value) {
+          if (!value) return ''
+          let fecha = moment();
+          value ="hace " +fecha.diff(value, 'minutes')+ " minutos."; 
+          
+          return value
+        }
+    },
   methods: {
+    sendMessage(e) {
+        e.preventDefault();
+        //console.log(this.socket.id);
+        this.socket.emit('servidor', {
+            user: this.user,
+            message: this.message,
+            usuario: this.socket.id
+        });
+        this.message = ''
+    }, 
+    ...mapActions(['cerrarSession','cargar','SetCliente']),
+    cambiarCliente(index){
+      console.log("h2y");
+      this.SetCliente(index);
+    },
+     salir(){
+      localStorage.removeItem('token');
+      this.$router.push({ name: '/' });
+      this.cerrarSession();
+     },
+    toggleMenu() {
+      this.$parent.toggleMenu();
+    },
     initFullScreen() {
       document.body.classList.toggle("fullscreen-enable");
       if (
@@ -81,73 +84,83 @@ export default {
         }
       }
     },
-     ...mapActions(['cerrarSession','cargar','SetCliente']),
-    salir(){
-      localStorage.removeItem('token');
-      this.$router.push({ name: '/' });
-      this.cerrarSession();
-     },
     toggleRightSidebar() {
       this.$parent.toggleRightSidebar();
-    },
-    toggleMenu() {
-      let element = document.getElementById("topnav-menu-content");
-      element.classList.toggle("show");
     },
     setLanguage(locale) {
       i18n.locale = locale;
       this.current_language = i18n.locale;
     },
-  },
-  mounted() {
-    this.value = this.languages.find((x) => x.language === i18n.locale);
-    this.text = this.value.title;
-    this.flag = this.value.flag;
-  },
-  watch: {
-    type: {
-      immediate: true,
-      handler(newVal, oldVal) {
-        if (newVal !== oldVal) {
-          switch (newVal) {
-            case "dark":
-              document.body.setAttribute("data-topbar", "dark");
-              break;
-            case "light":
-              document.body.setAttribute("data-topbar", "light");
-              document.body.removeAttribute("data-layout-size", "boxed");
-              break;
-            case "colored":
-              document.body.setAttribute("data-topbar", "colored");
-              document.body.removeAttribute("data-layout-size", "boxed");
-              break;
-            default:
-              document.body.setAttribute("data-topbar", "dark");
-              break;
+  async chanel(index){
+      let data = new FormData();
+      data.append("canal",index);
+      await this.axios.put('api/user/canal', data).then(response => {
+        if (response.status==200) {
           }
-        }
-      },
+        }).catch(e => { 
+    });
     },
-    width: {
-      immediate: true,
-      handler(newVal, oldVal) {
-        if (newVal !== oldVal) {
-          switch (newVal) {
-            case "boxed":
-              document.body.setAttribute("data-layout-size", "boxed");
-              break;
-            case "fluid":
-              document.body.setAttribute("data-layout-mode", "fluid");
-              document.body.removeAttribute("data-layout-size");
-              break;
-            default:
-              document.body.setAttribute("data-layout-mode", "fluid");
-              break;
+    async listarNotificaciones(index){
+      await this.axios.get('api/notificacion/').then(response => {
+        if (response.status==200) {
+            this.notificaciones=response.data.rows;
           }
-        }
-      },
+        }).catch(e => { 
+    });
+    },
+   async  listarContactos(){
+      await this.axios.get('api/clientes')
+        .then((response) => {
+          this.clientes = response.data.rows;
+        })
+        .catch((e)=>{
+          console.log('error' + e);
+        })
     },
   },
+mounted(){
+      if (localStorage.getItem('cliente')) {
+          let client=localStorage.getItem('cliente');
+          client=JSON.parse(client)
+          this.cambiarCliente(client);
+          console.log(client);
+          }
+},
+  created(){
+      this.listarContactos();
+      
+      this.listarNotificaciones();
+      this.socket.on('connect', () => {
+        this.chanel(this.socket.id)
+      });
+      this.socket.on('cliente', (data) => {
+        console.log(data);
+        this.listarNotificaciones();
+        this.$notify({
+          group: 'foo',
+          title: 'Nueva notificacion',
+          text: 'Hola tienes una nueva notificacion!'
+        });
+        this.cargar();
+      });
+      this.socket.on('chat', (data) => {
+        console.log(this.usuarioDB.id);
+         console.log(data);
+        if (data==this.usuarioDB.id) {
+          this.cargar();
+       }else{
+        this.$notify({
+          group: 'foo',
+          title: 'Nuevo chat',
+          text: 'Hola tienes una nueva notificacion!'
+        });
+        this.cargar();
+       }
+        this.listarNotificaciones();
+        
+      });
+
+  }
 };
 </script>
 
@@ -327,7 +340,7 @@ export default {
             <a href class="text-reset notification-item">
               <div class="media">
                 <img
-                  src="@/assets/images/users/avatar-4.jpg"
+                  src="@/assets/images/users/perfil.png"
                   class="mr-3 rounded-circle avatar-xs"
                   alt="user-pic"
                 />
@@ -370,31 +383,16 @@ export default {
           <template v-slot:button-content>
             <img
               class="rounded-circle header-profile-user"
-              src="@/assets/images/users/avatar-2.jpg"
+              src="@/assets/images/users/perfil.png"
               alt="Header Avatar"
             />
-            <span class="d-none d-xl-inline-block ml-1">{{
-              $t("navbar.dropdown.kevin.text")
-            }}</span>
+            <span class="d-none d-xl-inline-block ml-1">{{usuarioDB.nombre}} </span>
             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
           </template>
           <!-- item-->
-          <a class="dropdown-item" href="#">
+          <a class="dropdown-item" href="/perfil">
             <i class="ri-user-line align-middle mr-1"></i>
-            {{ $t("navbar.dropdown.kevin.list.profile") }}
-          </a>
-          <a class="dropdown-item" href="#">
-            <i class="ri-wallet-2-line align-middle mr-1"></i>
-            {{ $t("navbar.dropdown.kevin.list.mywallet") }}
-          </a>
-          <a class="dropdown-item d-block" href="#">
-            <span class="badge badge-success float-right mt-1">11</span>
-            <i class="ri-settings-2-line align-middle mr-1"></i>
-            {{ $t("navbar.dropdown.kevin.list.settings") }}
-          </a>
-          <a class="dropdown-item" href="#">
-            <i class="ri-lock-unlock-line align-middle mr-1"></i>
-            {{ $t("navbar.dropdown.kevin.list.lockscreen") }}
+           Mi perfil
           </a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger"  @click="salir()">

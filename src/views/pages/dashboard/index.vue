@@ -27,11 +27,30 @@
            
             </div>
         </div>
+        <div>  <pre> {{usuarioDB}} </pre> </div>
+        <br><br><br>
+    </div>    
+    <div class="container">
+    
+      <div class="row">
+ <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          2021 © 
+        </div>
+        <div class="col-sm-6">
+          <div class="text-sm-right d-none d-sm-block">
+            Desarrollado por
+            © Innova Tu Hotel
+          </div>
+        </div>
+      </div>
     </div>
-   </div>
-        
-   
-
+</footer>
+      </div>
+    
+    </div>
   </Layout>
 </template>
 
@@ -69,13 +88,13 @@ export default {
   },
   data() {
     return {
-      title: "Dashboard",
+      title: "Home",
       items: [
         {
           text: "KnowmadCity"
         },
         {
-          text: "Dashboard",
+          text: "Home",
           active: true
         }
       ]

@@ -139,7 +139,7 @@
               <b-row>
                 <b-col>
                   <div class="form-group">
-                    <label>Rubro </label>
+                    <label>Actividad o sector de la Empresa </label>
                     <ValidationProvider name="rubro" rules="required" v-slot="{ errors }">
                             <input v-model="form.rubro"  type="text" class="form-control" placeholder=" ">
                             <span style="color:red">{{ errors[0] }}</span>
@@ -252,7 +252,7 @@ export default {
   },
   data() {
     return {
-      title: "Administracion",
+      title: "Administracion de Empresas",
       items: [
         {
           text: "Gestión corporativa"

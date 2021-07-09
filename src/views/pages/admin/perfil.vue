@@ -1,57 +1,46 @@
 <template>
-  <Layout>
+  <Layout class="authentication-bg-clients">
     <PageHeader :title="title" :items="items" />
     <div class="row">
       <div class="col-md-3">
-        <div class="card p-4">
+        <div class="card p-4" style="background-color: rgba(0,0,0,0.5);color: white;">
           <div class=" px-3 row justify-content-center">
             <img src="@/assets/images/perfil.png" width="200px" height="200px" style="border-radius:100%" alt="">
           </div>
-                    <b-card
-            no-body
-            style="max-width: 20rem;"
-            :img-src="usuarioDB.imagen"
-            img-alt="Image"
-            img-top
-            class="rounded"
-        >
-            <b-card-body>
-              <b-card-sub-title class="mb-2">{{usuarioDB.nombre}} {{usuarioDB.apellido}}</b-card-sub-title>
-            </b-card-body>
-            <b-list-group flush>
-            <b-list-group-item @click="editar()">Editar Perfil</b-list-group-item>
-            <b-list-group-item @click="setPass()">Editar Pass</b-list-group-item>
-            </b-list-group>
+                <b-card
+                    no-body
+                    style="max-width: 20rem;background-color: rgba(0,0,0,0.5);color: white;"
+                    :img-src="usuarioDB.imagen"
+                    img-alt="Image"
+                    img-top
+                    class="rounded"
+                   >
+                    <b-card-body style="background-color: rgba(0,0,0,0.5);color: white;" class="text-white">
+                      <b-card-sub-title class="mb-2 text-white">{{usuarioDB.nombre}} {{usuarioDB.apellido}}</b-card-sub-title>
+                    </b-card-body>
+                    <b-list-group flush style="background-color: rgba(0,0,0,0.5);color: white;" class="text-white">
+                    <b-list-group-item @click="editar()" style="background-color: rgba(0,0,0,0.5);color: white;" class="text-white">Editar Perfil</b-list-group-item>
+                    <b-list-group-item @click="setPass()" style="background-color: rgba(0,0,0,0.5);color: white;" class="text-white">Editar Pass</b-list-group-item>
+                    </b-list-group>
 
-            <b-card-footer>This is a footer</b-card-footer>
-        </b-card>
+                    <b-card-footer style="background-color: rgba(0,0,0,0.5);color: white;" class="text-white"><a href="" class="btn btn-outline-secondary" @click="salir()"> Cerrar Sesión</a></b-card-footer>
+                </b-card>
         </div>
       </div>
       
-    <div class="col-md-8">
-      <div class="card">
+    <div class="col-md-8" style="background-color:rbga(0,0,0,0.6);">
+      <div class="card"  style="background-color: rgba(0,0,0,0.5);color: white;">
         <div class="p-4 row justify-content-between">
           <div class=" px-3">
-            <h3 class="mb-2 nombre">Daniela Rodriguez</h3>
-            <p>Gerente de Biocenter</p>
+            <h3 class="mb-2 nombre text-white">{{usuarioDB.nombre}}</h3>
+            <p>Correo: {{usuarioDB.email}}</p>
           </div>
-          <h5 class="mb-0">{{usuarioDB.rol}}</h5>
+          <h5 class="mb-0 text-white">Tipo de Usuario: {{usuarioDB.rol}}</h5>
+          
         </div>
       </div>
       </div>
     </div>
-      
-      
-    
-
-
-
-
-
-
-
-
-
     <b-modal id="modal" false size="lg"  title="Gestión de usuarios"  hide-footer>
           <ValidationObserver ref="form">
             <b-row>
@@ -67,20 +56,12 @@
                 <div class="form-group">
                   <label>Nombre {{editMode}}</label>
                   <ValidationProvider name="nombre" rules="required|alpha_spaces" v-slot="{ errors }">
-                        <input v-model="form.nombre"  type="text" class="form-control" placeholder=" ">
+                        <input v-model="usuarioDB.nombre"  type="text" class="form-control" placeholder=" ">
                         <span style="color:red">{{ errors[0] }}</span>
                   </ValidationProvider>
                 </div>
               </b-col>
-              <b-col>
-                <div class="form-group">
-                  <label>Apellido</label>
-                  <ValidationProvider name="apellido" rules="required|alpha_spaces" v-slot="{ errors }">
-                        <input v-model="form.apellido"  type="text" class="form-control" placeholder=" ">
-                        <span style="color:red">{{ errors[0] }}</span>
-                  </ValidationProvider>
-                </div>
-              </b-col>
+
               </b-row>
               <b-row>
                 <b-col>
@@ -146,7 +127,22 @@
 
         <button class="btn btn-block btn-success" @click="switchLocPass()">Editar Contraseña</button>
      </b-modal>
-      {{user}}
+
+       <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          2021 © 
+        </div>
+        <div class="col-sm-6">
+          <div class="text-sm-right d-none d-sm-block">
+            Desarrollado por
+            © Innova Tu Hotel
+          </div>
+        </div>
+      </div>
+    </div>
+</footer>
   </Layout>
  
 </template>
@@ -172,7 +168,7 @@ export default {
   },
   data() {
     return {
-      title: "Administracion",
+      title: "Gestio de perfil",
       items: [
         {
           text: "Perfil"
@@ -240,7 +236,7 @@ export default {
           }
         },
     async listarUsers(){
-     await this.axios.get('user/pefil')
+     await this.axios.get('/pefil')
       .then((response) => {
         this.user = response.data;
         console.log(response.data,)
@@ -250,7 +246,7 @@ export default {
       })
     },
     editar(){
-          this.form.nombre=this.user.nombre;
+          this.form.nombre=this.usuarioDB.nombre;
           this.form.apellido=this.user.apellido;
           this.form.email=this.user.email;
           this.form.telefono=this.user.telefono;
@@ -298,7 +294,7 @@ export default {
           for (var key in formulario) {
                data.append(key,formulario[key]);
            }
-           await this.axios.put('user/pefil', data).then(response => {
+           await this.axios.put('/pefil', data).then(response => {
                   if (response.status==200) {
                      this.$swal('Usuario Editardo','','success');
                      this.guardarUsuario(response.data.accessToken);  

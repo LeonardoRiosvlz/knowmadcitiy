@@ -16,7 +16,20 @@
                  
             
               </div>
+              <div class="col-4 pl-4">
+                            <!-- Search -->
 
+              
+              <label class="d-inline-flex align-items-center">
+                    Buscar: escriba el nombre del proyecto</label>
+                    <b-form-input
+                      v-model="filter"
+                      type="search"
+                      placeholder="Escriba el nombre del proyecto aqui..."
+                      class="form-control form-control-sm ml-2"
+                    style="background-color:rgba(255,255,255,0.5); color:#fff; border-radius:25px;"></b-form-input>
+                  <!-- End search -->
+              </div>
           </div>
           <div class="card-body">
             <h4 class="card-title"></h4>
@@ -27,23 +40,10 @@
                     Mostrar&nbsp;
                     <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;Proyectos
                   </label>
+                  
                 </div>
               </div>
-              <!-- Search -->
-              <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-                  <label class="d-inline-flex align-items-center">
-                    Buscar:
-                    <b-form-input
-                      v-model="filter"
-                      type="search"
-                      placeholder="Escriba el nombre del proyecto aqui..."
-                      class="form-control form-control-sm ml-2"
-                    ></b-form-input>
-                  </label>
-                </div>
-              </div>
-              <!-- End search -->
+
             </div>
             <!-- Table -->
             <div class="table-responsive mb-0">
@@ -64,12 +64,9 @@
                 {{data.item.empresa.nombre}}
               </template>
               <template v-slot:cell(estado)="data">
-                {{data.item.status}}
+                 <span v-if="data.item.status==='aprobado'" class="badge badge-success">Aprobado</span>
+                <span v-else class="badge badge-warning">Pendiente</span>
               </template>
-              <template v-slot:cell(status)="data">
-                <span v-if="data.item.user.status==='activo'" class="badge badge-success">Activo</span>
-                <span v-else class="badge badge-danger">Inactivo</span>
-               </template> 
                 <template v-slot:cell(actions)="data">
                 
                 <b-dropdown size="sm" class="">
@@ -101,8 +98,7 @@
           </div>
         </div>
       </div>
-
-    </div>
+    </div><br><br><br>
 
         <b-modal id="modal_ver" false size="xl" hide-footer  title="Gestión de proyectos" ok-only>
           <div>
@@ -112,13 +108,27 @@
           </div>
         </b-modal>
 
-
-
-
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
           <ValidationObserver ref="form">
           <form-wizard next-button-text="Siguiente" back-button-text="Anterior" finish-button-text="---"  color="#7fa3a3" transition="fade">
-            <!--Paso 2-->
+            <!--Paso 0-->
+            <tab-content title="Bienvenido"  subtitle="Paso 1" icon="ri-star-3-fill">
+                    <b-row>
+                    <b-col>
+                      <p align="center"><h5 align="center">Bienvenido al Formulario de creación de Proyectos</h5></p>
+                      <p align="justify">
+                        <b>En el siguiente formulario podrá agregar, editar o actualizar el proyecto segun el cliente y la empresa que lo haya solicitado</b> 
+                      </p>
+                    </b-col>
+                      <b-col>
+                      
+                      <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="450" height="250" alt=""></p>
+                        
+                      </b-col>
+                    </b-row>
+            
+            </tab-content>
+            <!--Paso 1-->
             <tab-content title="Seleccionar Cliente y empresa"  subtitle="Paso 1" icon="ri-user-3-fill" >
                             <b-row>
                       <b-col>
@@ -249,7 +259,7 @@
                       </b-row>
                       <b-row>
                         <b-col>
-                            <label>Version PDF</label>
+                            <label>Soporte del Proyecto</label>
                               <b-form-file
                                   v-model="file"
                                   placeholder="Seleccione su archivo pdf..."
@@ -269,7 +279,21 @@
         </ValidationObserver>
       </b-modal>
 
-      
+  <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          2021 © 
+        </div>
+        <div class="col-sm-6">
+          <div class="text-sm-right d-none d-sm-block">
+            Desarrollado por
+            © Innova Tu Hotel
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
   </Layout>
 </template>
 
@@ -312,7 +336,7 @@ export default {
     
   data() {
     return {
-      title: "Administracion",
+      title: "Administración de Proyectos",
       items: [
         {
           text: "Gestión corporativa"
@@ -535,6 +559,7 @@ export default {
           this.form.id=this.proyectos[index].id;
           this.form.numero=this.proyectos[index].numero;
           this.form.titulo=this.proyectos[index].titulo;
+          this.form.status=this.proyectos.status;
           this.form.presupuesto=this.proyectos[index].presupuesto;
           this.form.promotores=JSON.parse(this.proyectos[index].promotores);
           this.form.objetivos=JSON.parse(this.proyectos[index].objetivos);
@@ -557,6 +582,7 @@ export default {
           this.form.id=this.proyectos[index].id;
           this.form.numero=this.proyectos[index].numero;
           this.form.titulo=this.proyectos[index].titulo;
+          this.form.status=this.proyectos.status;
           this.form.presupuesto=this.proyectos[index].presupuesto;
           this.form.promotores=JSON.parse(this.proyectos[index].promotores);
           this.form.objetivos=JSON.parse(this.proyectos[index].objetivos);
@@ -597,7 +623,7 @@ export default {
       }, 
       eliminar(id){
         this.$swal({
-          title: 'Desea borrar esta proyecto?',
+          title: 'Desea borrar este proyecto?',
           icon: 'question',
           iconHtml: '',
           confirmButtonText: 'Si',

@@ -89,7 +89,7 @@ export default {
 </script>
 
 <template>
-  <div class="topnav"  style="background-color:transparent; color:#fff;">
+  <div class="topnav"  style="background-color:rbga(0,0,0,0.6); color:#fff;">
     <div class="container-fluid">
       <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
         <div class="collapse navbar-collapse" id="topnav-menu-content">

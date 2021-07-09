@@ -55,8 +55,9 @@
                 @filtered="onFiltered"
                  style="color:#fff;"
               >
-              <template v-slot:cell(status)="data">
-                <span v-if="data.item.user.status==='activo'" class="badge badge-success">Activo</span>
+              <template v-slot:cell(estado)="data">
+                <span v-if="data.item.status==='activo'" class="badge badge-success">Activo</span>
+                
                 <span v-else class="badge badge-danger">Inactivo</span>
                </template> 
                 <template v-slot:cell(actions)="data">
@@ -88,6 +89,23 @@
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de clientes" ok-only>
           <ValidationObserver ref="form">
             <form-wizard next-button-text="Siguiente" back-button-text="Anterior" finish-button-text="---"  color="#7fa3a3" transition="fade">
+             <!--Paso 0-->
+            <tab-content title="Bienvenido"  subtitle="Paso 1" icon="ri-star-3-fill">
+                    <b-row>
+                    <b-col>
+                      <p align="center"><h5 align="center">Bienvenido al Formulario de creación de Clientes</h5></p>
+                      <p align="justify">
+                        <b>En el siguiente formulario podrá agregar, editar o actualizar los clientes segun el cliente y la empresa que lo haya solicitado</b> 
+                      </p>
+                    </b-col>
+                      <b-col>
+                      
+                      <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="450" height="250" alt=""></p>
+                        
+                      </b-col>
+                    </b-row>
+            
+            </tab-content>
             <!---Paso 1--->
             <tab-content title="Datos Personales"  subtitle="Paso 1" icon="ri-user-3-fill">
               <b-row>
@@ -204,7 +222,23 @@
         </ValidationObserver>
        
      </b-modal>
+         <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          2021 © 
+        </div>
+        <div class="col-sm-6">
+          <div class="text-sm-right d-none d-sm-block">
+            Desarrollado por
+            © Innova Tu Hotel
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
   </Layout>
+
 </template>
 
 <script>
@@ -237,7 +271,7 @@ export default {
   },
   data() {
     return {
-      title: "Administracion",
+      title: "Administracion de Clientes",
       items: [
         {
           text: "Gestión corporativa"
@@ -269,7 +303,7 @@ export default {
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
-      fields: ["nombre","telefono", "email", "status","actions"],
+      fields: ["nombre","telefono", "email", "estado","actions"],
       clientes: [], 
       areas: [],
       cargos: [],
@@ -345,7 +379,7 @@ export default {
            }}).then(response => {
             if (response.status==200) {
                this.$swal('Cliente creado exitosamente','','success');
-               this.listarclientes();
+               this.listarClientes();
                this.$root.$emit("bv::hide::modal", "modal", "#btnShow");
                ///limpiar el formulario
                 for (var key in formulario) {

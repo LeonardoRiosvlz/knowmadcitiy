@@ -1,21 +1,21 @@
 
 <template>
-  <Layout>
+  <Layout  class="authentication-bg">
     <PageHeader :title="title" :items="items" />
     <div class="clearfix mb-3">
       <b-button class="float-right btn-info" left @click="$bvModal.show('modal');editMode=false;">Crear Usuario</b-button>
     </div>
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card " style="background-color:rgba(0,0,0,0.5); color:#fff;">
           <div class="card-body">
             <h4 class="card-title"></h4>
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
                   <label class="d-inline-flex align-items-center">
-                    Show&nbsp;
-                    <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
+                    Mostrar &nbsp;
+                    <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp; usuarios
                   </label>
                 </div>
               </div>
@@ -23,12 +23,12 @@
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_filter" class="dataTables_filter text-md-right">
                   <label class="d-inline-flex align-items-center">
-                    Search:
+                    Buscar:
                     <b-form-input
                       v-model="filter"
-                      type="search"
-                      placeholder="Search..."
-                      class="form-control form-control-sm ml-2"
+                      type="Buscar Usuario"
+                      placeholder="Buscar Usuario..."
+                      class="form-control form-control-sm ml-2" style="background-color:rgba(255,255,255,0.5); color:#fff; border-radius:25px;"
                     ></b-form-input>
                   </label>
                 </div>
@@ -50,13 +50,13 @@
                 :filter-included-fields="filterOn"
                 @filtered="onFiltered"
               >
-              <template v-slot:cell(tipo)="data">
+              <template v-slot:cell(Tipo_de_Usuario)="data">
                   <b-badge v-if="data.item.tipo === 'Master'" variant="success">Administrador </b-badge>
                   <b-badge v-else variant="info">Supervisor</b-badge>
               </template>
-              <template v-slot:cell(status)="data">
-                  <b-badge v-if="data.item.status === 'Activo'" variant="success">ACTIVO </b-badge>
-                  <b-badge v-else variant="danger">INACTIVO</b-badge>
+              <template v-slot:cell(estado)="form">
+                  <b-badge v-if="form.item.status === 'activo'" variant="success"> Activo </b-badge>
+                  <b-badge v-else variant="danger"> Inactivo </b-badge>
               </template>
               <template v-slot:cell(actions)="data">
                 <b-dropdown size="sm" class="">
@@ -64,16 +64,15 @@
                     Action
                     <i class="mdi mdi-chevron-down"></i>
                   </template>
-                    <b-dropdown-item-button @click="editMode=true;ver=false;setear(data.item.id)"> Editar </b-dropdown-item-button>
-                    <b-dropdown-item-button @click="eliminarCargo(data.item.id)"> Desvincular </b-dropdown-item-button>
-                    <b-dropdown-item-button @click="eliminarCargo(data.item.id)"> Eliminar </b-dropdown-item-button>
-                    <b-dropdown-item-button @click="editMode=false;ver=true;setear(data.item.id)"> Ver </b-dropdown-item-button>
+                    <b-dropdown-item-button @click="editMode=true;ver=false;setear(data.item.id)"> Editar Usuario</b-dropdown-item-button>
+                    <b-dropdown-item-button @click="eliminarCargo(data.item.id)"> Eliminar Usuario</b-dropdown-item-button>
+                    <b-dropdown-item-button @click="editMode=false;ver=true;setear(data.item.id)"> Ver Usuario</b-dropdown-item-button>
                 </b-dropdown>
                 </template>
               </b-table>
             </div>
             <div class="row">
-              <div class="col">
+              <div class="col-sm">
                 <div class="dataTables_paginate paging_simple_numbers float-right">
                   <ul class="pagination pagination-rounded mb-0">
                     <!-- pagination -->
@@ -87,12 +86,12 @@
       </div>
     </div>
 
-
-
-
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de usuarios" ok-only>
           <ValidationObserver ref="form">
-            <b-row>
+          <form-wizard next-button-text="Siguiente" back-button-text="Anterior" finish-button-text="---"  color="#7fa3a3" transition="fade">
+            <!--Paso 1-->
+            <tab-content title="Información de usuario"  subtitle="Paso 1" icon="ri-user-3-fill" >
+                           <b-row>
               <b-col>
                 <div class="form-group">
                   <label>Nombre </label>
@@ -114,60 +113,12 @@
                   </div>
                 </b-col>
             </b-row>
-             <b-row>
-                <b-col>
-                  <div class="form-group">
-                    <label>Tipo</label>
-                    <ValidationProvider name="tipo" rules="required" v-slot="{ errors }">
-                          <select v-model="form.tipo" @change="setRoles()" name="tipo" class="form-control form-control-lg" >
-                              <option value="Master">Administrador</option>
-                              <option value="Administrador">Supervisor</option>
-                          </select>
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row>
-            <hr>
-              <b-row >
-                <b-col>
-                  <div class="form-group">
-                    <label>Estatus</label>
-                    <ValidationProvider name="status" rules="required" v-slot="{ errors }">
-                          <select v-model="form.status"  name="tipo" class="form-control form-control-lg" >
-                              <option value="activo">Activo</option>
-                              <option value="inactivo">Inactivo</option>
-                          </select>
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row>
-            <b-row v-if="!editMode">
-                <b-col>
-                  <div class="form-group">
-                    <label>Contraseña</label>
-                    <ValidationProvider name="password" rules="required" v-slot="{ errors }">
-                          <input v-model="form.password"  type="password" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-                 <b-col>
-                  <div class="form-group">
-                    <label>Confirmar contraseña</label>
-                    <ValidationProvider name="repass" rules="required|confirmed:password" v-slot="{ errors }">
-                          <input v-model="form.repass"  type="password" class="form-control" placeholder=" ">
-                          <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-                </b-col>
-            </b-row> 
-            <b-row class="mb-2">
+                        <b-row class="mb-2">
                <b-col>
                    <label>Imagen</label>
                    <div id="preview mb-2">
-                     <img v-if="url" width="100%" style="float:center!importan" class="rounded"  :src="url" />
+                   <p align="center"><img v-if="url" width="200" height="200" style="float:center!importan" class="rounded"  :src="url" /></p>
+                     
                    </div>
                     <b-form-file
                         v-model="file"
@@ -176,12 +127,95 @@
                         @change="onFileChange"
                     ></b-form-file>
                </b-col>
-            </b-row>     
+            </b-row> 
+                     
+            </tab-content>
+            <!--Paso 2-->
+            <tab-content title="Tipo de Usuario"  subtitle="Paso 2" icon="ri-apps-2-fill">
+                <ValidationObserver ref="form">
+                
+                  <b-row>
+                      <b-col>
+                        <div class="form-group">
+                          <label>Tipo</label>
+                          <ValidationProvider name="tipo" rules="required" v-slot="{ errors }">
+                                <select v-model="form.tipo" @change="setRoles()" name="tipo" class="form-control form-control-lg" >
+                                    <option value="Master">Administrador</option>
+                                    <option value="Administrador">Supervisor</option>
+                                </select>
+                                <span style="color:red">{{ errors[0] }}</span>
+                          </ValidationProvider>
+                        </div>
+                      </b-col>
+                  </b-row>
+                  <hr>
+                    <b-row >
+                      <b-col>
+                        <div class="form-group">
+                          <label>Estatus</label>
+                          <ValidationProvider name="status" rules="required" v-slot="{ errors }">
+                                <select v-model="form.status"  name="tipo" class="form-control form-control-lg" >
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                                <span style="color:red">{{ errors[0] }}</span>
+                          </ValidationProvider>
+                        </div>
+                      </b-col>
+                  </b-row>
+                  <b-row v-if="!editMode">
+                      <b-col>
+                        <div class="form-group">
+                          <label>Contraseña</label>
+                          <ValidationProvider name="password" rules="required" v-slot="{ errors }">
+                                <input v-model="form.password"  type="password" class="form-control" placeholder=" ">
+                                <span style="color:red">{{ errors[0] }}</span>
+                          </ValidationProvider>
+                        </div>
+                      </b-col>
+                      <b-col>
+                        <div class="form-group">
+                          <label>Confirmar contraseña</label>
+                          <ValidationProvider name="repass" rules="required|confirmed:password" v-slot="{ errors }">
+                                <input v-model="form.repass"  type="password" class="form-control" placeholder=" ">
+                                <span style="color:red">{{ errors[0] }}</span>
+                          </ValidationProvider>
+                        </div>
+                      </b-col>
+                  </b-row> 
+          
+              </ValidationObserver>
+       
+            </tab-content>
+            <!--Paso 4-->
+
+
+            <tab-content title="Crear/Actualizar Usuario"  subtitle="Paso 4" icon="ri-save-2-fill">
+               <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Crear Usuario</button>
+        <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Editar Usuario</button>
+            </tab-content>
+          </form-wizard>
         </ValidationObserver>
-        <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Guardar</button>
-        <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Editar</button>
+
+     
      </b-modal>
 
+
+  <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6">
+          2021 © 
+        </div>
+        <div class="col-sm-6">
+          <div class="text-sm-right d-none d-sm-block">
+            Desarrollado por
+            © Innova Tu Hotel
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
   </Layout>
 </template>
 
@@ -193,7 +227,13 @@ import {mapState,mapMutations, mapActions} from 'vuex'
 import { ValidationProvider, ValidationObserver } from "vee-validate";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
+import VueFormWizard from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
+// Local
+
+import {FormWizard, TabContent} from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 /**
  * Dashboard component
@@ -205,17 +245,21 @@ export default {
     PageHeader,
     ValidationProvider,
     ValidationObserver,
-    vSelect
+    vSelect,
+    FormWizard,
+    TabContent,
   },
   data() {
     return {
-      title: "Administracion",
+      title: "Administracion de usuarios",
       items: [
         {
-          text: "Gestión corporativa"
+          text: "Gestión corporativa",
+          color:"#ffffff",
         },
         {
           text: "Usuarios",
+          color:"#ffffff",
           active: true
         }
       ],
@@ -235,12 +279,12 @@ export default {
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
-      pageOptions: [10, 25, 50, 100],
+      pageOptions: [5,10, 25, 50, 100],
       filter: null,
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
-      fields: ["nombre","tipo","status",  "actions"],
+      fields: ["nombre","Tipo_de_Usuario","estado","actions"],
       users: [], 
       areas: [],
       cargos: [],
@@ -250,20 +294,20 @@ export default {
       form:{
           'id':'',
           'area_id':'',
-          'nombre':'leowradosasdadas',
-          'username':'era2718asasdasd',
-          'apellido':'Rios',
-          'email':'lonwer@isdaasda.com',
-          'telefono':'787979',
-          'tipo':'Administrador',
-          'sexo':'Masculino',
-          'entidad':'No',
-          'cargo':'Coordinador',
-          'codigo':'7894',
-          'foto':'imge',
-          'password':'Alfayomega',
-          'repass':'Alfayomega',
-          'roles':'3',
+          'nombre':'',
+          'username':'',
+          'apellido':'',
+          'email':'',
+          'telefono':'',
+          'tipo':'',
+          'sexo':'',
+          'entidad':'',
+          'cargo':'',
+          'codigo':'',
+          'foto':'',
+          'password':'',
+          'repass':'',
+          'roles':'',
           'direccion':'',
           'regional':'',
           'status':'',
