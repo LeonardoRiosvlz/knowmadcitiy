@@ -1,12 +1,82 @@
+
 <script>
+
+import {mapState,mapMutations, mapActions} from 'vuex'
+import vue2Dropzone from "vue2-dropzone";
+import { ValidationProvider, ValidationObserver } from "vee-validate";
+import PageHeader from "@/components/page-header";
 import { layoutMethods } from "@/state/helpers";
 import { menuItems } from "./horizontal-menu";
 
 export default {
+    components: {
+    vueDropzone: vue2Dropzone,
+    PageHeader,
+  },
   data() {
     return {
-      menuItems: menuItems
-    };
+      menuItems: menuItems,
+       dropzoneOptions: {
+        thumbnailWidth: 150,
+        maxFilesize: 0.5,
+        headers: { "My-Awesome-Header": "header value" }
+      },
+      ver:false,
+      url:"",
+      url_firma:"",
+      modal: true,
+      file:null,
+      firma:null,
+      email: "",
+      password: "",
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 10,
+      pageOptions: [10, 25, 50, 100],
+      filter: null,
+      client: null,
+      filterOn: [],
+      sortBy: "age",
+      sortDesc: false,
+      fields: ["nombre","actions"],
+      empresas: [], 
+      areas: [],
+      clientes: [],
+      regionales: [],
+      regional: [],
+      editMode:false,
+      form:{
+        'nombre':'',
+	    'cargo_contacto':'',
+	    'rubro':'',
+	    'logo':'',
+	    'numero_empleados':'',
+	    'procentaje_mujeres':'',
+	    'volumen_facturacion':'',
+	    'direccion':'',
+	    'fundada':'',
+      },
+    }
+
+  },
+    watch: {
+    cliente: function (val) {
+      this.form.cliente_id=val;
+      this.listarEmpresas();
+    },
+    client: function (val) {
+      this.form.cliente_id=val;
+      this.listarEmpresa();
+    }
+  },
+  created(){
+    this.listarempresas();
+  },
+  computed:{
+    ...mapState(['usuarioDB']),
+    rows() {
+      return this.empresas.length;
+    },
   },
   mounted() {
     var links = document.getElementsByClassName("side-nav-link-ref");
@@ -47,7 +117,27 @@ export default {
   },
   methods: {
     ...layoutMethods,
-
+       ...mapActions(['guardarUsuario']),
+  async listarEmpresa(){
+    let data = new FormData();
+    data.append('cliente_id',this.usuarioDB.cliente[0].id);
+    await this.axios.post('api/empresas/listar',data)
+      .then((response) => {
+        this.empresas = response.data;
+      })
+      .catch((e)=>{
+        console.log('error' + e);
+      })
+    },
+	session(){
+		if (localStorage.getItem('token')) {
+			const token=localStorage.getItem('token');
+			this.guardarUsuario(token);
+			
+		}else{
+		   this.$router.push({ name: '/login' });
+		}
+	},
     /**
      * Menu clicked show the submenu
      */
@@ -84,15 +174,19 @@ export default {
       document.body.removeAttribute("data-topbar", "light");
       document.body.setAttribute("data-topbar", "dark");
     }
-  }
+  },
+    created(){
+		  this.session();
+      this.listarEmpresa();
+    },
 };
 </script>
 
 <template>
-  <div class="topnav"  style="background-color:rbga(0,0,0,0.6); color:#fff;">
+  <div class="topnav"  style=" color:#fff;">
     <div class="container-fluid">
       <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
-        <div class="collapse navbar-collapse" id="topnav-menu-content">
+        <div class="collapse navbar-collapse" id="topnav-menu-content" v-if="usuarioDB.rol==='Master'">
           <ul class="navbar-nav">
             <li class="nav-item dropdown" v-for="(item, index) of menuItems" :key="index">
               <router-link
@@ -148,6 +242,21 @@ export default {
             </li>
             
           </ul>
+        </div>
+
+        <div class="collapse navbar-collapse navbar-nav" id="topnav-menu-content" v-if="usuarioDB.rol==='Cliente'">
+
+         <b-nav-item-dropdown text="Gestión" class="text-black" >
+         <b-dropdown-item href="/home" class="nav-item dropdown">Dashboard</b-dropdown-item>
+         <b-dropdown-item href="/empresas_clientes">Mis Empresas</b-dropdown-item>
+            <b-nav-item-dropdown id="topnav-menu-content" text="Mis Proyectos" class="nav-item dropdown" style="margin-left:25px;">
+              <b-dropdown-item v-for="empresas in empresas" :key="empresas.id" :href="'/proyectos_empresas/'+empresas.id" class="nav-item">{{empresas.nombre}}</b-dropdown-item>
+              </b-nav-item-dropdown>
+            </b-nav-item-dropdown>
+          <b-nav-item href="#" disabled v-b-tooltip.hover.bottom title="En Construcción" > Grupo de Trabajo</b-nav-item>
+          <b-nav-item href="#" disabled v-b-tooltip.hover.bottom title="En Construcción" > Calendario de Sesiones</b-nav-item>
+          <b-nav-item href="#" disabled v-b-tooltip.hover.bottom title="En Construcción" > Grupo de Asesores</b-nav-item>
+
         </div>
       </nav>
     </div>

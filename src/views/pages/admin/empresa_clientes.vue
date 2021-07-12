@@ -8,13 +8,33 @@
             <div class="card-body">
                 <h5 class="card-title">{{empresas.nombre}}</h5>
                 <p class="card-text">Proyectos relacionados {{empresas.proyectos.length}}</p>
-                <a :href="'/proyectos_empresas/'+empresas.id" class="btn btn-primary">ir</a>
+                <a :href="'/proyectos_empresas/'+empresas.id" class="btn btn-primary">Ver proyectos</a>
             </div>
           </div>
         </div>
         
     </div>
+     <div class="container">
+         <div class="row">
+            <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      2021 © 
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="text-sm-right d-none d-sm-block">
+                        Desarrollado por
+                        © Innova Tu Hotel
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </footer>
+      </div>
     
+    </div>
+    <br><br><br><br><br><br>  
     
   </Layout>
 </template>
@@ -45,7 +65,7 @@ export default {
     ValidationProvider,
     ValidationObserver,
     vSelect,
-         FormWizard,
+    FormWizard,
     TabContent
   },
   data() {

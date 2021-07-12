@@ -179,13 +179,13 @@ export default {
               }
             }).catch(e => {
               console.log(e);
-              if (e.response.status===500) {
+              if (e.response.status===401) {
                      this.$swal({
                         icon: 'error',
                         title: 'Oops...',
                         html: 'Algo ha salido mal, usuario o contraseña incorrectos<br>¿No recuerdas tus Credenciales?',
                         confirmButtonText: 'Reintentar',
-                        footer: '<a href="#">Recuperar Cuenta</a>'
+                        footer: '<a href="/forgot-password">Recuperar Cuenta</a>'
                       });
               }
               if (e.response.status===403) {

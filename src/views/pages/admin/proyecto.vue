@@ -8,7 +8,7 @@
               <div class="row">
                 <div class="col-lg-12">
                 <h4 class="text-white">Información del Proyecto: {{proyectos.titulo}} </h4>
-                  <div class="card border-secondary" ><br>
+                  <div class="card border-secondary p-3" ><br>
                           <p align="center">
                             <img  width="150"  height="150" style="float:center!importan" class="rounded"   v-bind:src="proyectos.empresa.logo" />
                           </p>
@@ -18,9 +18,22 @@
                             <p algn="center">Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> Estado del Proyecto: <span class="badge badge-warning">{{form.status}} </span></p>
                           <p class="card-text" align="justify">Descripción: {{proyectos.descripcion}} </p>
                           <p class="card-text" align="justify">Presupuesto: {{proyectos.presupuesto}} </p>
+                          <p align="justify" class="card-text">Descripción de la iniciativa:
+                            <br>
+                            <ol>
+                            <li v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
+                            </ol>
+                          </p>
+                          <p align="justify" class="card-text">Objetivos:
+                            <br>
+                            <ol>
+                            <li v-for="(iniciativa, index) in form.objetivos" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
+                            </ol>
+                          </p>
+
                           </div>
                           <div class="">
-                              <p align="center"><b-button v-b-modal.modal-1>Ver proyecto Completo</b-button></p> 
+                              <p align="center"><b-button v-b-modal.modal-1>Ver Descripción Completa</b-button></p> 
                           </div><br>
                   </div>
                 </div>
@@ -58,7 +71,9 @@
                                     </p><br><br>
                                   </div>
                                   <div class="col-lg-6">Promotores: </div>
-                                  <div class="col-lg-6">Objetivos: </div><br><br>
+                                  <div class="col-lg-6">Objetivos: <ol>
+                                            <li v-for="(objetivoss, index) in form.obejtivos" :key="index">{{objtivoss.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
+                                          </ol> </div><br><br>
                                   <div class="col-lg-6">Observaciones: </div>
                                   <div class="col-lg-6">Justificación</div><br><br>
                                   <div class="col-lg-12">
@@ -68,41 +83,6 @@
                                     </div>
                                   </div><br><br>
                             </div>
-                      <!--
-                            "id": "fce4ef4b-3e66-4c2c-89ea-741ccdec3b7b",
-                            "numero": "null",
-                            "titulo": "Molinos de vientos",
-                            "status": "Pendiente",
-                            "presupuesto": "150000",
-                            "proyectos_propuestos": null,
-                            "promotores": "[{\"nombre\":\"Nokia\"},{\"nombre\":\"Movistar\"}]",
-                            "objetivos": "[{\"nombre\":\" Ecenas bibendu acum suscipit duifusce teger mauris augueph.\"},{\"nombre\":\" Ecenas bibendu acum suscipit duifusce tegek.\"}]",
-                            "metas": null,
-                            "descripcion_iniciativa": "[{\"nombre\":\" Ecenas bibendu acum suscipit duifusce teger mauris augueph.\"},{\"nombre\":\" Ecenas bibendu acum suscipit duifusce teger mauris augueph.\"}]",
-                            "archivo": "https://plataformaknowmad.herokuapp.com/public/1625495397045-126825126Ficha Next GEN CARM_Dirección General Mar Menor_Balnearios_ (1) (1).docx",
-                            "descripcion": "Dolornu himena mus eu fringi fringi. Sellus auguesed vulput metusqui sollic at que quiscras roin ulla. Proin aenean facilis sque adipisci sceleris class. Llam tempor uisque laciniai telluset sedlorem scras  odiophas ellus. Hendre lobortis euismodd ras ntum mattis lum. Lectusa lacusaen imperdie duifusce erossed vestib convalli. Lobortis id ullamcor isised isse roin. Tesque suspendi necinte massacra elitpr lla nullam itur lectusin varius. Ecenas bibendu acum suscipit duifusce teger mauris augueph.",
-                            "oservaciones": null,
-                            "justificacion": "Dolornu himena mus eu fringi fringi. Sellus auguesed vulput metusqui sollic at que quiscras roin ulla. Proin aenean facilis sque adipisci sceleris class. Llam tempor uisque laciniai telluset sedlorem scras odiophas ellus. Hendre lobortis euismodd ras ntum mattis lum. Lectusa lacusaen imperdie duifusce erossed vestib convalli. Lobortis id ullamcor isised isse roin. Tesque suspendi necinte massacra elitpr lla nullam itur lectusin varius. Ecenas bibendu acum suscipit duifusce teger mauris augueph. ",
-                            "created_at": "2021-07-05T05:16:51.000Z",
-                            "updated_at": "2021-07-05T14:29:58.000Z",
-                            "empresa_id": 1,
-                            "elabora_id": 1,
-                            "aprueba_id": 1,
-                            "empresa": {
-                              "id": 1,
-                              "nombre": "Facebook",
-                              "cargo_contacto": "CEO",
-                              "rubro": "Telecomunicaciones",
-                              "logo": "https://plataformaknowmad.herokuapp.com/public/1624939287091-168123839ATH.jpg",
-                              "numero_empleados": "23",
-                              "procentaje_mujeres": "30",
-                              "volumen_facturacion": "volument de facturacion",
-                              "direccion": "direccion de la emrpesa",
-                              "fundada": "2021-06-09",
-                              "created_at": "2021-06-12T21:28:31.000Z",
-                              "updated_at": "2021-06-29T04:01:27.000Z",
-                              "cliente_id": 1
-                      -->
                     
                         <p class="card-text"><small class="text-muted">Presupuesto: {{proyectos.presupuesto}}</small></p>
                       </div>
