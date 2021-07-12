@@ -2,7 +2,7 @@
 <template style="background-color:black;">
   <Layout  class="authentication-bg-clients" style="">
   <PageHeader  style="color:#fff;" :title="title" />
-   <div class="container">
+   <div class="container" v-if="usuarioDB.rol==='Master'">
       <h3   style="color:#fff;">Gestion de Clientes, Empresas y Proyectos:</h3><br>
         <div class="row">
           <div class="col-sm-6" >
@@ -27,9 +27,36 @@
            
             </div>
         </div>
-        <div>  <pre> {{usuarioDB}} </pre> </div>
+        <div>  </div>
         <br><br><br>
-    </div>    
+    </div>   
+       <div class="container" v-if="usuarioDB.rol==='Cliente'">
+      <h3   style="color:#fff;">Bienvenido {{usuarioDB.nombre}}</h3><br>
+        <div class="row">
+          <div class="col-sm-6" >
+            <div class="card" style="background-color:rgba(0,0,0,0.5);">
+              <div class="card-body" style="color:#fff;">
+                
+                <div class="row">
+                  <div class="col-lg-12 offset">
+                  <div class="col-lg-12"> <a href="/empresas_clientes" class="btn btn-outline-info btn-flat btn-block ">Mis Empresas</a><br> </div>
+                  <div class="col-lg-12">  <a href="/proyectos" class="btn btn-outline-info btn-flat btn-block ">Mis Proyectos</a><br></div>
+                   
+                   
+                  
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          
+          <div class="col-sm-6" >
+           
+            </div>
+        </div>
+        <div>  </div>
+        <br><br><br>
+    </div>  
     <div class="container">
     
       <div class="row">
@@ -101,7 +128,7 @@ export default {
     };
   },
   computed:{
-    ...mapState(['counter'])
+    ...mapState(['usuarioDB'])
   },
   methods:{
     ...mapActions(['guardarUsuario']),

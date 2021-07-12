@@ -8,7 +8,7 @@ import moment from 'moment';
 export default {
   data() {
     return {
-      socket : io('https://plataformaknowmad.herokuapp.com/'),
+      socket : io('http://localhost:4000/'),
       canal: '',
       user: '',
       message: '',
@@ -46,7 +46,6 @@ export default {
     }, 
     ...mapActions(['cerrarSession','cargar','SetCliente']),
     cambiarCliente(index){
-      console.log("h2y");
       this.SetCliente(index);
     },
      salir(){
@@ -95,9 +94,16 @@ export default {
       let data = new FormData();
       data.append("canal",index);
       await this.axios.put('api/user/canal', data).then(response => {
+        console.log(response);
         if (response.status==200) {
+
           }
         }).catch(e => { 
+          if (e.response.status==403) {
+            localStorage.removeItem('token');
+            this.$router.push({ name: '/' });
+            this.cerrarSession();
+          }
     });
     },
     async listarNotificaciones(index){
@@ -123,7 +129,6 @@ mounted(){
           let client=localStorage.getItem('cliente');
           client=JSON.parse(client)
           this.cambiarCliente(client);
-          console.log(client);
           }
 },
   created(){

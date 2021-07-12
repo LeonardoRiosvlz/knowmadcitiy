@@ -54,9 +54,9 @@
             <b-row>
               <b-col>
                 <div class="form-group">
-                  <label>Nombre {{editMode}}</label>
+                  <label>Nombre</label>
                   <ValidationProvider name="nombre" rules="required|alpha_spaces" v-slot="{ errors }">
-                        <input v-model="usuarioDB.nombre"  type="text" class="form-control" placeholder=" ">
+                        <input v-model="form.nombre"  type="text" class="form-control" placeholder=" ">
                         <span style="color:red">{{ errors[0] }}</span>
                   </ValidationProvider>
                 </div>
@@ -73,24 +73,32 @@
                     </ValidationProvider>
                   </div>
                 </b-col>
+            </b-row> 
             </b-row>
-             <b-row>
-      
+              <b-row>
                 <b-col>
                   <div class="form-group">
-                    <label>Sexo</label>
-                    <ValidationProvider name="sexo" rules="required" v-slot="{ errors }">
-                          <select v-model="form.sexo"  name="tipo" class="form-control form-control-lg" >
-                              <option value="Masculino">Masculino</option>
-                              <option value="Femenino">Femenino</option>
-                          </select>
+                    <label>Fax</label>
+                    <ValidationProvider name="telefono" rules="required" v-slot="{ errors }">
+                          <input v-model="form.fax"  type="text" class="form-control" placeholder=" ">
                           <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
                   </div>
                 </b-col>
-            </b-row>          
+            </b-row> 
+            </b-row>
+              <b-row>
+                <b-col>
+                  <div class="form-group">
+                    <label>Celular</label>
+                    <ValidationProvider name="telefono" rules="required" v-slot="{ errors }">
+                          <input v-model="form.celular"  type="text" class="form-control" placeholder=" ">
+                          <span style="color:red">{{ errors[0] }}</span>
+                    </ValidationProvider>
+                  </div>
+                </b-col>
+            </b-row>        
         </ValidationObserver>
-
       <button class="btn btn-block btn-success" @click="switchLoc()">Editar Perfil</button>
 
      </b-modal>
@@ -124,7 +132,7 @@
                 </b-col>
             </b-row>          
         </ValidationObserver>
-
+          
         <button class="btn btn-block btn-success" @click="switchLocPass()">Editar Contraseña</button>
      </b-modal>
 
@@ -236,26 +244,23 @@ export default {
           }
         },
     async listarUsers(){
-     await this.axios.get('/pefil')
+     await this.axios.get('api/cliente')
       .then((response) => {
         this.user = response.data;
-        console.log(response.data,)
+        console.log(response.data)
       })
       .catch((e)=>{
         console.log('error' + e);
       })
     },
     editar(){
-          this.form.nombre=this.usuarioDB.nombre;
-          this.form.apellido=this.user.apellido;
-          this.form.email=this.user.email;
+          this.form.nombre=this.user.nombre;
+          this.form.fax=this.user.fax;
+          this.form.id=this.user.id;
           this.form.telefono=this.user.telefono;
-          this.form.tipo=this.user.tipo;
-          this.form.sexo=this.user.sexo;
-          this.form.entidad=this.user.entidad;
-          this.form.cargo=this.user.cargo;
-          this.form.codigo=this.user.codigo;
+          this.form.celular=this.user.celular;
           this.form.imagen=this.user.imagen;
+          this.form.user_id=this.user.user_id;
           this.$root.$emit("bv::show::modal", "modal", "#btnShow");
           return;
     },
@@ -294,16 +299,14 @@ export default {
           for (var key in formulario) {
                data.append(key,formulario[key]);
            }
-           await this.axios.put('/pefil', data).then(response => {
+           await this.axios.put('api/cliente', data).then(response => {
                   if (response.status==200) {
                      this.$swal('Usuario Editardo','','success');
-                     this.guardarUsuario(response.data.accessToken);  
                      this.$root.$emit("bv::hide::modal", "modal", "#btnShow");
                           for (var key in formulario) {
                             this.form[key]="";
                           }}
                             }).catch(e => {
-                            console.log(e.response.data.menssage);
                             this.$swal('No se pudo editar','','warning');
            });
    },
@@ -313,7 +316,7 @@ export default {
           for (var key in formulario) {
                data.append(key,formulario[key]);
            }
-           await this.axios.put('auth/recover-password', data).then(response => {
+           await this.axios.put('api/auth/recover-password', data).then(response => {
                   if (response.status==200) {
                      this.$swal('Contraseña Editada','','success');
                      this.$root.$emit("bv::hide::modal", "modalPass", "#btnShow");

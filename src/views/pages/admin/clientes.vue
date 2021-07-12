@@ -56,7 +56,7 @@
                  style="color:#fff;"
               >
               <template v-slot:cell(estado)="data">
-                <span v-if="data.item.status==='activo'" class="badge badge-success">Activo</span>
+                <span v-if="data.item.user.status==='activo'" class="badge badge-success">Activo</span>
                 
                 <span v-else class="badge badge-danger">Inactivo</span>
                </template> 
@@ -165,6 +165,18 @@
             <!--Paso 2-->
             <tab-content title="Estado de Cliente"  subtitle="Paso 1" icon="ri-lock-password-fill" >
                <b-row >
+                <b-col>
+                  <div class="form-group">
+                    <label>Sector</label>
+                    <ValidationProvider name="status" rules="required" v-slot="{ errors }">
+                          <select v-model="form.sector"  name="tipo" class="form-control form-control-lg" >
+                              <option value="Público">Público</option>
+                              <option value="Privado">Privado</option>
+                          </select>
+                          <span style="color:red">{{ errors[0] }}</span>
+                    </ValidationProvider>
+                  </div>
+                </b-col>
                 <b-col>
                   <div class="form-group">
                     <label>Estatus</label>
@@ -303,7 +315,7 @@ export default {
       filterOn: [],
       sortBy: "age",
       sortDesc: false,
-      fields: ["nombre","telefono", "email", "estado","actions"],
+      fields: ["nombre","telefono", "email", "sector", "estado","actions"],
       clientes: [], 
       areas: [],
       cargos: [],
@@ -320,6 +332,7 @@ export default {
           'celular':'',
           'email':'', 
           'status':'', 
+          'sector':'', 
           'password':'',
       }
     }
@@ -327,9 +340,6 @@ export default {
   computed:{
         ...mapState(['counter'])
    },
-  created(){
-    this.listarclientes();
-  },
   methods: {
      ...mapActions(['guardarUsuario']),
     async submit() {
@@ -359,7 +369,7 @@ export default {
              this.form[key]="";
        }
       },
-       onFiltered(filteredItems) {
+    onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
@@ -421,11 +431,13 @@ export default {
       for (let index = 0; index < this.clientes.length; index++) {
         if (this.clientes[index].id===id) {
           this.form.id=this.clientes[index].id;
+          this.form.user_id=this.clientes[index].user_id;
           this.form.nombre=this.clientes[index].nombre;
           this.form.direccion=this.clientes[index].direccion;
           this.form.telefono=this.clientes[index].telefono;
           this.form.fax=this.clientes[index].fax;
           this.form.celular=this.clientes[index].celular;
+          this.form.sector=this.clientes[index].sector;
           this.form.email=this.clientes[index].email;
           this.form.status=this.clientes[index].user.status;
           this.url=this.clientes[index].logo;

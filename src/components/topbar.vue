@@ -194,7 +194,7 @@ import moment from 'moment';
 export default {
   data() {
     return {
-      socket : io('https://naun.herokuapp.com/'),
+      socket : '',
       canal: '',
       user: '',
       message: '',
@@ -232,7 +232,6 @@ export default {
     }, 
     ...mapActions(['cerrarSession','cargar','SetCliente']),
     cambiarCliente(index){
-      console.log("h2y");
       this.SetCliente(index);
     },
      salir(){
@@ -277,15 +276,6 @@ export default {
       i18n.locale = locale;
       this.current_language = i18n.locale;
     },
-  async chanel(index){
-      let data = new FormData();
-      data.append("canal",index);
-      await this.axios.put('api/user/canal', data).then(response => {
-        if (response.status==200) {
-          }
-        }).catch(e => { 
-    });
-    },
     async listarNotificaciones(index){
       await this.axios.get('api/notificacion/').then(response => {
         if (response.status==200) {
@@ -313,38 +303,8 @@ mounted(){
           }
 },
   created(){
-      this.listarContactos();
       
       this.listarNotificaciones();
-      this.socket.on('connect', () => {
-        this.chanel(this.socket.id)
-      });
-      this.socket.on('cliente', (data) => {
-        console.log(data);
-        this.listarNotificaciones();
-        this.$notify({
-          group: 'foo',
-          title: 'Nueva notificacion',
-          text: 'Hola tienes una nueva notificacion!'
-        });
-        this.cargar();
-      });
-      this.socket.on('chat', (data) => {
-        console.log(this.usuarioDB.id);
-         console.log(data);
-        if (data==this.usuarioDB.id) {
-          this.cargar();
-       }else{
-        this.$notify({
-          group: 'foo',
-          title: 'Nuevo chat',
-          text: 'Hola tienes una nueva notificacion!'
-        });
-        this.cargar();
-       }
-        this.listarNotificaciones();
-        
-      });
 
   }
 };

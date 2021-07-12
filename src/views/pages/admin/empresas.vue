@@ -217,7 +217,7 @@
             </form-wizard>     
         </ValidationObserver>
      </b-modal>
-  
+    <pre>{{usuarioDB}}</pre>
   </Layout>
 </template>
 
@@ -247,7 +247,7 @@ export default {
     ValidationProvider,
     ValidationObserver,
     vSelect,
-         FormWizard,
+    FormWizard,
     TabContent
   },
   data() {
@@ -305,7 +305,7 @@ export default {
     }
   },
   computed:{
-        ...mapState(['counter'])
+        ...mapState(['usuarioDB'])
    },
   watch: {
     cliente: function (val) {

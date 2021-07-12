@@ -53,6 +53,23 @@ export default [
         },
     },
     {
+        path: '/reset-password/:token',
+        name: 'reset-password',
+        component: () => import('../views/pages/account/reset-password'),
+        meta: {
+            beforeResolve(routeTo, routeFrom, next) {
+                // If the user is already logged in
+                if (store.getters['auth/loggedIn']) {
+                    // Redirect to the home page instead
+                    next({ name: 'home' })
+                } else {
+                    // Continue to the login page
+                    next()
+                }
+            },
+        },
+    },
+    {
         path: '/logout',
         name: 'logout',
         meta: {
@@ -139,6 +156,40 @@ export default [
             }
         },
     }, 
+    {
+        path: '/empresas_clientes',
+        name: 'empresas_clientes',
+        component: () => import('../views/pages/admin/empresa_clientes'),
+        meta: {
+            beforeEnter: (to, from, next) => {
+                if (!store.state.usuarioDB) {
+                    console.log(store.state.usuarioDB);
+                    // Redirect to the home page instead
+                    next({ name: 'login' })
+                } else {
+                    // Continue to the login page
+                   next()
+                }
+            }
+        },
+    },
+    {
+        path: '/proyectos_empresas/:id',
+        name: 'proyectos_empresas',
+        component: () => import('../views/pages/admin/proyectos_empresas'),
+        meta: {
+            beforeEnter: (to, from, next) => {
+                if (!store.state.usuarioDB) {
+                    console.log(store.state.usuarioDB);
+                    // Redirect to the home page instead
+                    next({ name: 'login' })
+                } else {
+                    // Continue to the login page
+                   next()
+                }
+            }
+        },
+    },
     {
         path: '/proyectos',
         name: 'proyectos',
