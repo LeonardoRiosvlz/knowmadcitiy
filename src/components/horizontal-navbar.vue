@@ -243,16 +243,28 @@ export default {
             
           </ul>
         </div>
+            
 
         <div class="collapse navbar-collapse navbar-nav" id="topnav-menu-content" v-if="usuarioDB.rol==='Cliente'">
-
-         <b-nav-item-dropdown text="Gestión" class="text-black" >
-         <b-dropdown-item href="/home" class="nav-item dropdown">Dashboard</b-dropdown-item>
-         <b-dropdown-item href="/empresas_clientes">Mis Empresas</b-dropdown-item>
-            <b-nav-item-dropdown id="topnav-menu-content" text="Mis Proyectos" class="nav-item dropdown" style="margin-left:25px;">
-              <b-dropdown-item v-for="empresas in empresas" :key="empresas.id" :href="'/proyectos_empresas/'+empresas.id" class="nav-item">{{empresas.nombre}}</b-dropdown-item>
-              </b-nav-item-dropdown>
-            </b-nav-item-dropdown>
+            <div v-if="usuarioDB.cliente[0].sector=='Público'">
+                <b-nav-item-dropdown text="Gestión" class="text-black" >
+                    <b-dropdown-item href="/home" class="nav-item dropdown">Dashboard</b-dropdown-item>
+                    <b-dropdown-item href="/empresas_clientes">Certificaciones</b-dropdown-item>
+                  <b-nav-item-dropdown id="topnav-menu-content" text="Financiación de Proyectos" class="nav-item dropdown" style="margin-left:25px;">
+                    <b-dropdown-item v-for="empresas in empresas" :key="empresas.id" :href="'/proyectos_empresas/'+empresas.id" class="nav-item">{{empresas.nombre}}</b-dropdown-item>
+                  </b-nav-item-dropdown>
+                </b-nav-item-dropdown>
+            </div>
+            <div v-else-if="usuarioDB.cliente[0].sector=='Privado'">
+                <b-nav-item-dropdown text="Gestión" class="text-black" >
+                    <b-dropdown-item href="/home" class="nav-item dropdown">Dashboard</b-dropdown-item>
+                    <b-dropdown-item href="/empresas_clientes">Certificaciones Empresariales</b-dropdown-item>
+                  <b-nav-item-dropdown id="topnav-menu-content" text="Licitación e Inversión" class="nav-item dropdown" style="margin-left:25px;">
+                    <b-dropdown-item v-for="empresas in empresas" :key="empresas.id" :href="'/proyectos_empresas/'+empresas.id" class="nav-item">{{empresas.nombre}}</b-dropdown-item>
+                  </b-nav-item-dropdown>
+                </b-nav-item-dropdown>
+            </div>
+         
           <b-nav-item href="#" disabled v-b-tooltip.hover.bottom title="En Construcción" > Grupo de Trabajo</b-nav-item>
           <b-nav-item href="#" disabled v-b-tooltip.hover.bottom title="En Construcción" > Calendario de Sesiones</b-nav-item>
           <b-nav-item href="#" disabled v-b-tooltip.hover.bottom title="En Construcción" > Grupo de Asesores</b-nav-item>

@@ -30,53 +30,94 @@
         <div>  </div>
         <br><br><br>
     </div>   
-       <div class="container" v-if="usuarioDB.rol==='Cliente'">
+       <div class="container" v-else-if="usuarioDB.rol==='Cliente'">
       <h3   style="color:#fff;">Bienvenido {{usuarioDB.nombre}}</h3><br>
         <div class="row">
-          <div class="col-sm-6" >
-            <div class="card" style="background-color:rgba(0,0,0,0.5);">
+          <div class="col-sm-4" >
+            <div class="card " style="">
               <div class="card-body" style="color:#fff;">
-                
+                 <p align="center"><h5 align="center">Sector Privado</h5></p>
                 <div class="row">
-                  <div class="col-lg-12 offset">
-                  <div class="col-lg-12"> <a href="/empresas_clientes" class="btn btn-outline-info btn-flat btn-block ">Mis Empresas</a><br> </div>
-                  <div class="col-lg-12" v-for="empresas in empresas" :key="empresas.id">  <a :href="'/proyectos_empresas/'+empresas.id" class="btn btn-outline-info btn-flat btn-block">Mis Proyectos</a><br></div>
-                   
-                   
-                  
+                  <div class="col-lg-12" v-if="usuarioDB.cliente[0].sector=='Público'">
+                      <div class="col-lg-12"  > 
+                        <a href="/empresas_clientes" class="btn btn-outline-info btn-flat btn-block ">Certificaciones</a><br> 
+                      </div>
+                      <div class="col-lg-12" v-for="empresas in empresas" :key="empresas.id">  
+                          <a :href="'/proyectos_empresas/'+empresas.id" class="btn btn-outline-info btn-flat btn-block">Financiación de Proyectos</a><br>
+                      </div>
+                      <div class="col-lg-12">
+                          <span class="d-inline-block btn-block" tabindex="0" v-b-tooltip.top title="En Construcción">
+                                <b-button variant="primary" class="btn btn-outline-info btn-flat btn-block" style="pointer-events: none;" disabled>Cursos</b-button>
+                          </span>
+                      </div>
                   </div>
+                  <div class="col-lg-12" v-else-if="usuarioDB.cliente[0].sector=='Privado'">
+                      <div class="col-lg-12"  > 
+                        <a href="/empresas_clientes" class="btn btn-outline-info btn-flat btn-block ">Certificaciones Empresariales</a><br> 
+                      </div>
+                      <div class="col-lg-12" v-for="empresas in empresas" :key="empresas.id">  
+                          <a :href="'/proyectos_empresas/'+empresas.id" class="btn btn-outline-info btn-flat btn-block">Licitación e Inversión</a><br>
+                      </div>
+                      <div class="col-lg-12">
+                          <span class="d-inline-block btn-block" tabindex="0" v-b-tooltip.top title="En Construcción">
+                                <b-button variant="primary" class="btn btn-outline-info btn-flat btn-block" style="pointer-events: none;" disabled>Proyectos arquitectónicos, turísticos y ambientales</b-button>
+                          </span>
+                      </div>
+                  </div>
+                 
                 </div>
                 </div>
               </div>
             </div>
           
-          <div class="col-sm-6" >
-           
+          <div class="col-sm-4" >
+              <div class="card">
+                  <div class="card-body">
+                      <div class="row">
+                        <div class="col-lg-12">
+                        <p align="center"><h5 align="center">Formación</h5></p>
+                            <div class="col-lg-12">
+                            
+                              <span class="d-inline-block btn-block" tabindex="0" v-b-tooltip.top title="En Construcción">
+                                <b-button variant="primary" class="btn btn-outline-info btn-flat btn-block" style="pointer-events: none;" disabled>Consultor Evolution Country</b-button>
+                              </span>
+                              <span class="d-inline-block btn-block" tabindex="0" v-b-tooltip.top title="En Construcción">
+                                <b-button variant="primary" class="btn btn-outline-info btn-flat btn-block" style="pointer-events: none;" disabled>Consultor Evolution City</b-button>
+                              </span>
+                              <span class="d-inline-block btn-block" tabindex="0" v-b-tooltip.top title="En Construcción">
+                                <b-button variant="primary" class="btn btn-outline-info btn-flat btn-block" style="pointer-events: none;" disabled>Consultor Evolution Construction</b-button>
+                              </span>
+                            </div>
+                        </div>
+                        
+                      </div>
+                  </div>
+              </div>
+
             </div>
+
         </div>
         <div>  </div>
         <br><br><br>
     </div>  
     <div class="container">
-    
       <div class="row">
- <footer class="footer dark" style="background-color:#505d69; color:#fff;">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-6">
-          2021 © 
-        </div>
-        <div class="col-sm-6">
-          <div class="text-sm-right d-none d-sm-block">
-            Desarrollado por
-            © Innova Tu Hotel
-          </div>
-        </div>
+        <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  2021 © 
+                </div>
+                <div class="col-sm-6">
+                  <div class="text-sm-right d-none d-sm-block">
+                    Desarrollado por
+                    © Innova Tu Hotel
+                  </div>
+                </div>
+              </div>
+            </div>
+        </footer>
       </div>
-    </div>
-</footer>
-      </div>
-    
     </div><br><br><br><br><br><br>
   </Layout>
 </template>
@@ -233,6 +274,7 @@ export default {
     await this.axios.post('api/empresas/listar',data)
       .then((response) => {
         this.empresas = response.data;
+        
       })
       .catch((e)=>{
         console.log('error' + e);
@@ -246,11 +288,27 @@ export default {
 		}else{
 		   this.$router.push({ name: '/login' });
 		}
-	}
+	},
+  setear() {
+
+        //this.cliente=this.proyectos[index].empresa.cliente_id;
+          this.form.id=this.usuarioDB.id;
+          this.form.rol=this.usuarioDB.rol;
+          this.form.imagen=this.usuarioDB.imagen;
+          this.form.email=this.usuarioDB.email;
+          this.form.nombre=this.usuarioDB.nombre;
+          this.form.cliente=JSON.parse(this.usuarioDB.cliente);
+          this.form.iat=this.usuarioDB.empresa.iat;
+          this.form.exp=this.usuarioDB.exp;
+          return;
+
+    },
   },
     created(){
 		  this.session();
       this.listarEmpresa();
     },
+    
 };
+
 </script>

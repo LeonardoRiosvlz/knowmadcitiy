@@ -1,6 +1,13 @@
 <template>
   <Layout class="authentication-bg">
-    <PageHeader title="Mis proyectos"  />
+  <div v-if="usuarioDB.cliente[0].sector=='Privado'">
+  <PageHeader title="Licitación e inversión"  />
+  </div>
+
+  <div v-else-if="usuarioDB.cliente[0].sector=='Público'">
+  <PageHeader title="Financiación de Proyectos"  />
+  </div>
+ 
     <div class="row">
         <div class="col-3" v-for="proyectos in proyectos" :key="proyectos.id">
           <div class="card p-3">

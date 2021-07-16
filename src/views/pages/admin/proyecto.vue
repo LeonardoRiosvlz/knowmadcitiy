@@ -1,112 +1,228 @@
-<template>
-  <Layout  class="authentication-bg-clients">
-    <PageHeader :title="title" :items="items" />
-        
-       <div class="row">
-          <div class="col-lg-6">
-          
-              <div class="row">
-                <div class="col-lg-12">
-                <h4 class="text-white">Información del Proyecto: {{proyectos.titulo}} </h4>
-                  <div class="card border-secondary p-3" ><br>
-                          <p align="center">
-                            <img  width="150"  height="150" style="float:center!importan" class="rounded"   v-bind:src="proyectos.empresa.logo" />
-                          </p>
-                      
-                          <div class="card-body">
-                            <h5 class="card-title" align="center">{{proyectos.titulo}}</h5>
-                            <p algn="center">Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> Estado del Proyecto: <span class="badge badge-warning">{{form.status}} </span></p>
-                          <p class="card-text" align="justify">Descripción: {{proyectos.descripcion}} </p>
-                          <p class="card-text" align="justify">Presupuesto: {{proyectos.presupuesto}} </p>
-                          <p align="justify" class="card-text">Descripción de la iniciativa:
-                            <br>
-                            <ol>
-                            <li v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
-                            </ol>
-                          </p>
-                          <p align="justify" class="card-text">Objetivos:
-                            <br>
-                            <ol>
-                            <li v-for="(iniciativa, index) in form.objetivos" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
-                            </ol>
-                          </p>
+<style>
+#pdf{
+  font-family: 'Courier New', Courier, monospace;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  color:#000;
+  width:5in;
+  height:5in;
+}
+ @media (min-width: 992px){
+   .modal-dialog{
+     width: 760px;
+   }
+ .modal-lg {
+   width: 700px;
+ } 
+ }
+ 
+</style> 
 
+<template>
+    <Layout  class="authentication-bg-clients">
+          <PageHeader :title="title" :items="items" />
+            <div class="row">
+            <!--Creación de vista de proyecto completo-->
+                <div class="col-lg-6 offset-3">
+                <h4 class="text-white">Información del Proyecto: {{proyectos.titulo}} </h4>
+                    <div class="header bg-white card" v-if="form.status==='Creado'">
+                                
+                          <div class="row">
+                                <div class="col-lg-6"><p></p>
+                                      <p align="center">
+                                        <img  width="150"  height="150" style="float:center!importan;" class="rounded"   v-bind:src="proyectos.empresa.logo" />
+                                      </p>
+                                </div>
+                                <div class="col-lg-6"><p></p>
+                                    <h4>Titulo del Proyecto:</h4>
+                                    <h5 class="title" align="center">{{proyectos.titulo}}</h5>
+                                      <p algn="center">
+                                        Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> <br>
+                                        Estado del Proyecto: <span class="badge badge-warning">{{form.status}} </span>  <br>
+                                        <span>Presupuesto: {{proyectos.presupuesto}}</span>
+                                      </p>
+                                </div>
+                                    
+                            <div class="col-lg-12">
+                                <p align="center"> <h6 align="center">Para descargar el soporte de este proyecto haga clic a continuación:</h6></p>
+                              <div class="" v-if="form.status==='Creado'">
+                                <p align="center"> 
+                                    <b-button id="show-btn" v-b-modal.modal-lg style="background-color:#fff;" class="btn bg-pdf" @click="$bvModal.show('bv-modal-example')"> <img src="@/assets/images/pdf.png" alt height="75" width="60" /></b-button> 
+                                  
+                                  </p>
+                              </div>
+                            <div class="" v-else>
+                                <div class="alert alert-warning">
+                                El Proyecto aún no ha sido aprobado
+                                </div>
+                            </div>
+                        <!-- <pre> {{form}} </pre>--> 
+                      </div>
                           </div>
-                          <div class="">
-                              <p align="center"><b-button v-b-modal.modal-1>Ver Descripción Completa</b-button></p> 
-                          </div><br>
+                      </div>                    
+                </div>
+                    <!--Modal para PDF-->
+                    <b-modal id="bv-modal-example" size="xl" class="modal-lg modal-md modal-dialog fade" hide-footer >
+                      <template #modal-title>
+                        <h4 class="">Información del Proyecto: {{proyectos.titulo}} </h4>
+                      </template>
+                      <div id="app" ref="document" style="bacground-color:#fff;" >
+                      <div class="border-secondary p-3" ><br>
+                      <div class="header">
+                          <div class="row">
+                            <div class="col-lg-6">
+                                  <p align="center">
+                                    <img  width="150"  height="150" style="float:center!importan;" class="rounded"   v-bind:src="proyectos.empresa.logo" />
+                                  </p>
+                            </div>
+                            <div class="col-lg-6">
+                                <h4>Titulo del Proyecto:</h4>
+                                <h5 class="title" align="center">{{proyectos.titulo}}</h5>
+                                  <p algn="center">
+                                    Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> <br>
+                                    Estado del Proyecto: <span class="badge badge-warning">{{form.status}} </span>  <br>
+                                    <span>Presupuesto: {{proyectos.presupuesto}}</span>
+                                  </p>
+                            </div>
+                          </div>
+                      </div>  
+                            <div class="body">
+                                <div class="row">
+                                <div class="col-lg-12"><br><br><br><h4 align="center"> <b>DESCRIPCIÓN DE LAS REFORMAS Y LAS INVERSIONES</b></h4><br><br></div>
+                                  <div class="col-lg-12 text-dark"><b>Descripción de la iniciativa:<br></b>
+                                  
+                                      <p class="card-text text-dark" align="justify"> <br>{{proyectos.descripcion}} </p>
+                                  </div>
+                                  <div class="col-lg-12 text-dark"><br><strong>Justificación de la necesidad: principales retos y oportunidades:</strong>
+                                      <p class="card-text" align="justify"> <br> {{proyectos.descripcion}} </p><br>
+                                  </div>
+                                  <div class="col-lg-6 text-dark"><br><b>Breve descripción de la iniciativa:</b>
+                                    <p align="justify" class="card-text">
+                                      <br>
+                                      <ol>
+                                        <li v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} </li>
+                                      </ol>
+                                    </p>
+                                  </div>
+                                  <div class="col-lg-6 text-dark"><b></b><b>Objetivos:</b>
+                                      <p align="justify" class="card-text">
+                                          <br>
+                                          <ol>
+                                            <li v-for="(iniciativa, index) in form.objetivos" :key="index">{{iniciativa.nombre}} </li>
+                                          </ol>
+                                      </p>
+                                  </div>
+                                  
+                                </div>
+                            </div>
+
+                            <!--Organizar bien la información para que no se monte encima de las hojas del PDF-->
+                        <div class="html2pdf__page-break"></div>
+                        <div class="body"> <br>
+                                <div class="col-lg-12"><br><p align="left"><h4>DIMENSIÓN DIGITAL Y ECOLÓGICA DE LA INICIATIVA:</h4>  </p>
+                                    <div class="row">
+                                      <div class="col-lg-6"><b>Dimensión Digital:</b>  <p></p>
+                                          <p algin="justify"> 
+                                             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatibus, excepturi nisi. Aliquam similique inventore, ducimus architecto unde fugiat quidem quasi quos officiis. Recusandae blanditiis sunt quisquam, quod excepturi tenetur incidunt.
+                                          </p>
+                                      </div>
+                                      <div class="col-lg-6"><b>Dimensión Ecológica:</b><p></p> 
+                                          <p algin="justify"> 
+                                             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatibus, excepturi nisi. Aliquam similique inventore, ducimus architecto unde fugiat quidem quasi quos officiis. Recusandae blanditiis sunt quisquam, quod excepturi tenetur incidunt.
+                                          </p>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                  <div class="table-responsive table-condensed">
+                                    <table class="table text-dark">
+                                      <tr class="table-primary">
+                                      <th class="col-3 text-dark">Actividad</th>
+                                      <th  class="col-3  text-dark col-2 d-inline-block">Hito</th>
+                                      <th class="col-3  text-dark">2020
+                                        <td class="bg-active text-dark">Q4</td>
+                                      </th>
+                                      <th class="col-3  text-dark">2021
+                                          <td class="bg-active text-dark">S1</td>
+                                          <td class="bg-active text-dark">S2</td>
+                                      </th>
+                                      <th class="col-3  text-dark">2022
+                                          <td class="bg-active text-dark">S1</td>
+                                          <td class="bg-active text-dark">S2</td>
+                                      </th>
+                                      <th class=" text-dark">2023
+                                          <td class="bg-active text-dark">S1</td>
+                                          <td class="bg-active text-dark">S2</td>
+                                      </th>
+                                      
+                                      </tr>
+                                    
+                                        <tr class="table-active">
+                                           <td class="table-active text-dark">Fase 1</td>
+                                          <td class="bg-active  text-dark d-inline-block col-2" scope="col"> 
+                                                 <p  align="justify" style="display:inline-block;">
+                                                 Diseño de plataformas
+                                                  </p> 
+                                                  </td>
+                                          <td class="bg-active  text-dark" >Fase 3</td>
+                                          
+                                        
+                                          
+                                        </tr>
+                                    </table>
+                                  </div>
+                                </div>
+                        
+                        </div>
+                            <br>
+                      </div>
+                  </div>
+                  <p align="center"> <button class="btn btn-outline-secondary" @click="exportToPDF">Descarcar Soporte del Proyecto</button></p>
+                      
+                    </b-modal>
+                <!--DEscargar PDF
+                <div class="col-lg-6 ">
+                <h4 class="text-white">Descargar Soporte del proyecto </h4>
+                    <div class="row bg-pdf"><br><br>
+                    <div class="col-lg-12 card">
+                    
+                      <div class="col-lg-12">
+              
+                        <div class="" v-if="form.status==='Creado'">
+                          <p align="center"> 
+                              <b-button id="show-btn" class="btn-small" @click="$bvModal.show('bv-modal-example')">Ver/Descargar Proyecto</b-button> 
+                             
+                            </p>
+                        </div>
+                      <div class="" v-else>
+                          <div class="alert alert-warning">
+                          El Proyecto aún no ha sido aprobado
+                          </div>
+                      </div>
+                   
+                      </div>
+                    </div>
+                      
+                  </div>
+
+                </div>-->
+            </div>  
+        <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  2021 © 
+                </div>
+                <div class="col-sm-6">
+                  <div class="text-sm-right d-none d-sm-block">
+                    Desarrollado por
+                    © Innova Tu Hotel
                   </div>
                 </div>
+              </div>
             </div>
-
-          </div>
-          <div class="col-lg-6">
-              <h4 class="text-white">Soporte del Proyecto:</h4>
-              <div ><VueDocPreview :value="proyectos.archivo" type="office" /></div>
-          </div>
-       </div>
-       
-      
-
-        <div >
-
-            
-        </div>   
-            <b-modal id="modal-1" size="lg" hidde-footer>
-                <div class="card border-secondary">
-                    <img v-if="url" width="100%" style="float:center!importan" class="rounded"  :src="url" />
-                      <div class="card-body"> 
-                      <p align="center "><img  width="150"  height="150" style="float:center!importan" class="rounded"   v-bind:src="proyectos.empresa.logo" /></p>
-                          
-                        <h5 class="card-title" align="center">Título del Proyecto: {{form.titulo}}</h5>
-                          <p algn="center">Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> - Fecha de Creación de Proyecto: <span class="badge badge-info">{{proyectos.created_at}}</span> - Estado del Proyecto: <span class="badge badge-warning">{{proyectos.status}} </span></p>
-                            <div class="row">
-                              <div class="col-lg-6">
-                                <p class="card-text" align="justify">Descripción: {{proyectos.descripcion}} </p></div>
-                                  <div class="col-lg-6">
-                                    <p class="card-text" align="justify">Descripción de la Iniciativa: 
-                                          <ol>
-                                            <li v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
-                                          </ol>
-                                    </p><br><br>
-                                  </div>
-                                  <div class="col-lg-6">Promotores: </div>
-                                  <div class="col-lg-6">Objetivos: <ol>
-                                            <li v-for="(objetivoss, index) in form.obejtivos" :key="index">{{objtivoss.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
-                                          </ol> </div><br><br>
-                                  <div class="col-lg-6">Observaciones: </div>
-                                  <div class="col-lg-6">Justificación</div><br><br>
-                                  <div class="col-lg-12">
-                                    <div class="row">
-                                      <div class="col-lg-6">Metas: {{proyectos.metas}} </div>
-                                      <div class="col-lg-6"></div>
-                                    </div>
-                                  </div><br><br>
-                            </div>
-                    
-                        <p class="card-text"><small class="text-muted">Presupuesto: {{proyectos.presupuesto}}</small></p>
-                      </div>
-                </div>
-            </b-modal>
-              <footer class="footer dark" style="background-color:#505d69; color:#fff;">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-6">
-          2021 © 
-        </div>
-        <div class="col-sm-6">
-          <div class="text-sm-right d-none d-sm-block">
-            Desarrollado por
-            © Innova Tu Hotel
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-  </Layout>
-
-
-
+        </footer>
+    </Layout>
 </template>
 
 
@@ -123,6 +239,11 @@ import PageHeader from "@/components/page-header";
 import VueHtml2pdf from 'vue-html2pdf';
 import VueFormWizard from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf'
+import html2pdf from 'html2pdf.js'
+import e6promise from 'es6-promise'
+//import * as jsPDF from 'jspdf';
 
 
 // Local
@@ -130,11 +251,14 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import {FormWizard, TabContent} from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import VueDocPreview from 'vue-doc-preview'
+
 /**
  * Dashboard component
  */
 export default {
   components: {
+   e6promise,
+    html2pdf,
     vueDropzone: vue2Dropzone,
     Layout,
     PageHeader,
@@ -208,9 +332,10 @@ export default {
       }
     }
   },
-
+  
 
   watch: {
+   
     cliente: function (val) {
       this.form.cliente_id=val;
       this.listarEmpresas();
@@ -228,12 +353,35 @@ export default {
   },
   },
   methods: {
-
+    	exportToPDF () {
+				html2pdf(this.$refs.document, {
+          width:10,
+          height:9,
+					margin: 0.5,
+					filename: 'Proyecto.pdf',
+					image: { type: 'jpeg', quality: 0.98 },
+					html2canvas: { dpi: 192, letterRendering: true },
+					jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait',putOnlyUsedFonts:true, floatPrecision: 16 }
+				})
+			},
+              createPDF () {
+             
+             
+            var doc = new jsPDF();
+            html2pdf(this.$refs.document, {
+					margin: 1,
+					filename: 'document.pdf',
+					image: { type: 'jpeg', quality: 0.98 },
+					html2canvas: { dpi: 192, letterRendering: true },
+					jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+				})
+          },
      ...mapActions(['guardarUsuario']),
     async submit() {
       console.log("email submitted!");
       
     },
+    
     resete(){
       var formulario = this.form;
      for ( var key in formulario) {
@@ -409,7 +557,7 @@ export default {
       }
     },
      generateReport () {
-            this.$refs.html2Pdf.generatePdf()
+
      },
      async eliminarProyecto(id){
         let data = new FormData();
@@ -525,7 +673,8 @@ export default {
 		}else{
 			this.$router.push({ name: 'Home' });
 		}
-	}
+	},
+  
   },
     created(){
 	  this.session();
@@ -536,8 +685,8 @@ export default {
       return this.proyectos.length;
     },
   },
+  
 }
-
 
 
 </script>

@@ -1,6 +1,12 @@
 <template>
   <Layout class="authentication-bg">
-    <PageHeader title="Mis empresas"  />
+   <div v-if="usuarioDB.cliente[0].sector=='Privado'">
+  <PageHeader title="Certifiaciones Empresariales"  />
+  </div>
+
+  <div v-else-if="usuarioDB.cliente[0].sector=='Público'">
+  <PageHeader title="Certificaciones"  />
+  </div>
     <div class="row">
         <div class="col-3" v-for="empresas in empresas" :key="empresas.id">
           <div class="card p-3">

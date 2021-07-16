@@ -4,7 +4,7 @@
       
     </div>
     <div>
-      <div class="container-fluid p-0  authentication-bg ">
+      <div class="container-fluid p-0 ">
         <div class="row no-gutters">
           <div class="col-lg-4">
             <div class="authentication-page-content  p-4 d-flex align-items-center min-vh-100">
@@ -14,11 +14,12 @@
                     <div>
                       <div class="text-center">
                         <div>
-                           <h4 class="font-size-32 mt-4 text-white">Bienvenido a nuestra Intranet!</h4>
+                           <h4 class="font-size-32 mt-4 ">Bienvenido a nuestra Intranet!</h4>
                           <a href="/" class="logo">
+                          <img src="@/assets/images/Logo-Knowmadcity-final.png" height="70" alt="logo" />
                           </a>
                         </div>               
-                        <p class="text-white">Logueate para continuar al sistema.</p>
+                        <p class="">Logueate para continuar al sistema.</p>
                       </div>
 
                       <b-alert
@@ -67,7 +68,7 @@
                               id="customControlInline"
                             />
                             <label
-                              class="custom-control-label text-white"
+                              class="custom-control-label "
                               for="customControlInline"
                             >Recordarme</label>
                           </div>
@@ -80,7 +81,7 @@
                           </div>
 
                           <div class="mt-4 text-center">
-                            <router-link tag="a" to="/forgot-password" class="text-white">
+                            <router-link tag="a" to="/forgot-password" class="">
                               <i class="mdi mdi-lock mr-1"></i> Olvidaste tu contraseña?
                             </router-link>
                           </div>
@@ -88,9 +89,9 @@
                         
                       </div>
 
-                      <div class="mt-5 text-center text-white">
+                      <div class="mt-5 text-center ">
                         <p>
-                          © 2021 Desarrollador por: <br><a href="https://innovatuhotel.com" target="_blank" style="color:white;">INNOVA TU HOTEL ECUADOR</a>
+                          © 2021 Desarrollador por: <br><a href="https://innovatuhotel.com" target="_blank" >INNOVA TU HOTEL ECUADOR</a>
                         </p>
                       </div>
                     </div>
@@ -100,10 +101,10 @@
             </div>
           </div>
           <div class="col-lg-8">
-            <div class=""><br>
-             <img src="@/assets/images/Logo-Knowmadcity-finalblanco.png" height="350" align="center" alt="" class="centerimg">
-               
+            <div class="authentication-bg">
+              <div class="bg-overlay"></div>
             </div>
+          </div>
           </div>
         </div>
       </div>
