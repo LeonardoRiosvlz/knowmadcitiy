@@ -18,8 +18,6 @@
               </div>
               <div class="col-4 pl-4">
                             <!-- Search -->
-
-              
               <label class="d-inline-flex align-items-center">
                     Buscar: escriba el nombre del proyecto</label>
                     <b-form-input
@@ -31,7 +29,7 @@
                   <!-- End search -->
               </div>
           </div>
-          <div class="card-body">
+          <div class="card-body" >
             <h4 class="card-title"></h4>
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
@@ -46,7 +44,7 @@
 
             </div>
             <!-- Table -->
-            <div class="table-responsive mb-0">
+            <div class="table-responsive mb-0" style="min-height:500px">
 
               <b-table
                 :items="proyectos"

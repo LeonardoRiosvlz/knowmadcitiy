@@ -50,7 +50,7 @@ export default {
     },
      salir(){
       localStorage.removeItem('token');
-      this.$router.push({ name: '/' });
+      this.$router.push({ path: '' });
       this.cerrarSession();
      },
     toggleMenu() {
@@ -101,7 +101,7 @@ export default {
         }).catch(e => { 
           if (e.response.status==403) {
             localStorage.removeItem('token');
-            this.$router.push({ name: '/' });
+            this.$router.push({ path: '/' });
             this.cerrarSession();
           }
     });
