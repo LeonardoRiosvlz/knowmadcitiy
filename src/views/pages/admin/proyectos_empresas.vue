@@ -175,7 +175,7 @@ export default {
 			this.guardarUsuario(token);
 			
 		}else{
-			this.$router.push({ name: 'Home' });
+			this.$router.push({ path: '/home' });
 		}
 	}
   },

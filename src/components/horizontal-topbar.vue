@@ -269,97 +269,24 @@ mounted(){
             </div>
           </div>
           <simplebar style="max-height: 230px">
-            <a href class="text-reset notification-item">
+            <a v-for="(msg, index) in notificaciones" :key="index" :href="msg.modulo" class="text-reset notification-item">
               <div class="media">
                 <div class="avatar-xs mr-3">
-                  <span
-                    class="avatar-title bg-primary rounded-circle font-size-16"
-                  >
-                    <i class="ri-shopping-cart-line"></i>
+                  <span :class="msg.color">
+                    <i :class="msg.icon"></i>
                   </span>
                 </div>
                 <div class="media-body">
-                  <h6 class="mt-0 mb-1">
-                    {{ $t("navbar.dropdown.notification.order.title") }}
-                  </h6>
+                  <h6 class="mt-0 mb-1">{{msg.titulo}}</h6>
                   <div class="font-size-12 text-muted">
-                    <p class="mb-1">
-                      {{ $t("navbar.dropdown.notification.order.text") }}
+                    <p class="mb-1">{{msg.descripcion}}</p>
+                    <p class="mb-0">
+                     Remitente: {{msg.remitente.nombre }} {{msg.remitente.apellido }}
+    
                     </p>
                     <p class="mb-0">
                       <i class="mdi mdi-clock-outline"></i>
-                      {{ $t("navbar.dropdown.notification.order.time") }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a href class="text-reset notification-item">
-              <div class="media">
-                <img
-                  src="@/assets/images/users/avatar-3.jpg"
-                  class="mr-3 rounded-circle avatar-xs"
-                  alt="user-pic"
-                />
-                <div class="media-body">
-                  <h6 class="mt-0 mb-1">
-                    {{ $t("navbar.dropdown.notification.james.title") }}
-                  </h6>
-                  <div class="font-size-12 text-muted">
-                    <p class="mb-1">
-                      {{ $t("navbar.dropdown.notification.james.text") }}
-                    </p>
-                    <p class="mb-0">
-                      <i class="mdi mdi-clock-outline"></i>
-                      {{ $t("navbar.dropdown.notification.james.time") }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a href class="text-reset notification-item">
-              <div class="media">
-                <div class="avatar-xs mr-3">
-                  <span
-                    class="avatar-title bg-success rounded-circle font-size-16"
-                  >
-                    <i class="ri-checkbox-circle-line"></i>
-                  </span>
-                </div>
-                <div class="media-body">
-                  <h6 class="mt-0 mb-1">
-                    {{ $t("navbar.dropdown.notification.item.title") }}
-                  </h6>
-                  <div class="font-size-12 text-muted">
-                    <p class="mb-1">
-                      {{ $t("navbar.dropdown.notification.item.text") }}
-                    </p>
-                    <p class="mb-0">
-                      <i class="mdi mdi-clock-outline"></i>
-                      {{ $t("navbar.dropdown.notification.item.time") }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a href class="text-reset notification-item">
-              <div class="media">
-                <img
-                  src="@/assets/images/users/perfil.png"
-                  class="mr-3 rounded-circle avatar-xs"
-                  alt="user-pic"
-                />
-                <div class="media-body">
-                  <h6 class="mt-0 mb-1">
-                    {{ $t("navbar.dropdown.notification.salena.title") }}
-                  </h6>
-                  <div class="font-size-12 text-muted">
-                    <p class="mb-1">
-                      {{ $t("navbar.dropdown.notification.salena.text") }}
-                    </p>
-                    <p class="mb-0">
-                      <i class="mdi mdi-clock-outline"></i>
-                      {{ $t("navbar.dropdown.notification.salena.time") }}
+                      {{msg.created_at | capitalize }}
                     </p>
                   </div>
                 </div>
@@ -406,6 +333,7 @@ mounted(){
           </a>
         </b-dropdown>       
       </div>
+        <notifications group="foo" />
     </div>
   </header>
 </template>

@@ -286,7 +286,7 @@ export default {
 			this.guardarUsuario(token);
 			
 		}else{
-		   this.$router.push({ name: '/login' });
+		   this.$router.push({ path: '/login' });
 		}
 	},
   setear() {

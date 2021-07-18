@@ -64,8 +64,10 @@
                 {{data.item.empresa.nombre}}
               </template>
               <template v-slot:cell(estado)="data">
-                 <span v-if="data.item.status==='aprobado'" class="badge badge-success">Aprobado</span>
-                <span v-else class="badge badge-warning">Pendiente</span>
+                <span v-if="data.item.status==='Creado'" class="badge badge-success">Creado</span>
+                 <span v-if ="data.item.status==='Pendiente'" class="badge badge-success">Pendiente</span>
+                 <span v-if ="data.item.status==='Aprobado'" class="badge badge-success">Aprobado</span>
+                 <span v-if ="data.item.status==='Rechazado'" class="badge badge-success">Rechazado</span>
               </template>
                 <template v-slot:cell(actions)="data">
                 
@@ -74,6 +76,7 @@
                     Acciones
                     <i class="mdi mdi-chevron-down"></i>
                   </template>
+                  <b-dropdown-item-button@click="notificarConsulta(data.item.id,data.item.aprueba_id)">Notificar</b-dropdown-item-button>
                   <b-dropdown-item-button@click="editMode=true;setear(data.item.id)">Editar Proyecto</b-dropdown-item-button>
                   <b-dropdown-item-button@click="editMode=true;eliminar(data.item.id)">Eliminar Proyecto</b-dropdown-item-button>
                   
@@ -247,6 +250,42 @@
                         </ol>
                       </b-row>
                       <b-row>
+                        <div class="col-11">
+                          <div class="form-group">
+                            <label>Dimension Ecologica </label>
+                                <input v-model="form.ecologica"  type="text" class="form-control" placeholder=" ">
+                            </div>
+                        </div >
+                        <div class="col-1 py-4">
+                          <label></label>
+                          <button class="btn btn-success " @click="cargarEcologica()" :disabled="form.ecologica===''">+</button>
+                        </div >
+                      </b-row>
+                      <b-row>
+                      
+                        <ol>
+                          <li v-for="(objetivo, index) in form.dimension_ecologica" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarEcologica(index)">X</button></li>
+                        </ol>
+                      </b-row>
+                                            <b-row>
+                        <div class="col-11">
+                          <div class="form-group">
+                            <label>Dimension Digital </label>
+                                <input v-model="form.digital"  type="text" class="form-control" placeholder=" ">
+                            </div>
+                        </div >
+                        <div class="col-1 py-4">
+                          <label></label>
+                          <button class="btn btn-success " @click="cargarDigital()" :disabled="form.digital===''">+</button>
+                        </div >
+                      </b-row>
+                      <b-row>
+                      
+                        <ol>
+                          <li v-for="(objetivo, index) in form.dimension_digital" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarDigital(index)">X</button></li>
+                        </ol>
+                      </b-row>
+                      <b-row>
                         <b-col>
                           <div class="form-group">
                             <label>Presupuesto</label>
@@ -383,8 +422,12 @@ export default {
       'iniciativa':'',
       'descripcion_iniciativa':[],
       'promotor':'',
+      'digital':'',
+      'ecologica':'',
       'descripcion':'',
 	    'promotores': [],
+      'dimension_ecologica':[],
+      'dimension_digital': [],
       'metas': [],
       'objetivo':'',
 	    'objetivos': [],
@@ -429,6 +472,10 @@ export default {
                 this.form.promotores=[];
             }else if (key=='objetivos') {
                 this.form.objetivos=[];
+            }else if (key=='dimension_ecologica') {
+                this.form.dimension_ecologica=[];
+            }else if (key=='dimension_digital') {
+                this.form.dimension_digital=[];
             }else{
                 this.form[key]="";
             }
@@ -480,6 +527,22 @@ export default {
     eliminarIniciativa(index){
        this.form.descripcion_iniciativa.splice(index, 1);  
     },
+    cargarDigital(){
+      this.form.dimension_digital.push({
+       nombre:this.form.digital,
+      });
+    },
+    eliminarDigital(index){
+       this.form.dimension_digital.splice(index, 1);  
+    },
+    cargarEcologica(){
+      this.form.dimension_ecologica.push({
+       nombre:this.form.ecologica,
+      });
+    },
+    eliminarEcologica(index){
+       this.form.dimension_ecologica.splice(index, 1);  
+    },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
@@ -490,11 +553,7 @@ export default {
       var formulario = this.form;
 
      for ( var key in formulario) {
-            if (key=='descripcion_iniciativa') {
-                data.append(key,JSON.stringify(formulario[key]));
-            }else if (key=='promotores') {
-                data.append(key,JSON.stringify(formulario[key]));
-            }else if (key=='objetivos') {
+            if (key=='descripcion_iniciativa'||key=='promotores'||key=='objetivos'||key=='dimension_ecologica'||key=='dimension_digital') {
                 data.append(key,JSON.stringify(formulario[key]));
             }else{
                 data.append(key,formulario[key]);
@@ -521,15 +580,11 @@ export default {
      let data = new FormData();
       var formulario = this.form;
       for ( var key in formulario) {
-              if (key=='descripcion_iniciativa') {
-                  data.append(key,JSON.stringify(formulario[key]));
-              }else if (key=='promotores') {
-                  data.append(key,JSON.stringify(formulario[key]));
-              }else if (key=='objetivos') {
-                  data.append(key,JSON.stringify(formulario[key]));
-              }else{
-                  data.append(key,formulario[key]);
-              }
+            if (key=='descripcion_iniciativa'||key=='promotores'||key=='objetivos'||key=='dimension_ecologica'||key=='dimension_digital') {
+                data.append(key,JSON.stringify(formulario[key]));
+            }else{
+                data.append(key,formulario[key]);
+            }
       }
       if (this.file) {
         data.append('filename',this.file);
@@ -563,6 +618,8 @@ export default {
           this.form.presupuesto=this.proyectos[index].presupuesto;
           this.form.promotores=JSON.parse(this.proyectos[index].promotores);
           this.form.objetivos=JSON.parse(this.proyectos[index].objetivos);
+          this.form.dimension_ecologica=JSON.parse(this.proyectos[index].dimension_ecologica);
+          this.form.dimension_digital=JSON.parse(this.proyectos[index].dimension_digital);
           this.form.descripcion_iniciativa=JSON.parse(this.proyectos[index].descripcion_iniciativa);
           this.form.justificacion=this.proyectos[index].justificacion;
           this.form.descripcion=this.proyectos[index].descripcion;
@@ -636,6 +693,36 @@ export default {
           }
         })
       },
+      notificarConsulta(id,aprueba_id){
+        this.$swal({
+          title: 'Desea notificar este proyecto al administrador?',
+          icon: 'question',
+          iconHtml: '',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          showCancelButton: true,
+          showCloseButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.notificarProyecto(id,aprueba_id);
+          }
+        })
+      },
+      async  notificarProyecto(id,aprueba_id){
+    let data = new FormData();
+    data.append('aprueba_id',aprueba_id);
+    data.append('id',id);
+    await  this.axios.post('api/proyectos/notificar',data)
+      .then((response) => {
+        if (response.status==200) {
+          this.$swal('Notificado con exito ','','success');
+          this.listarProyectos();
+        }
+      })
+      .catch((e)=>{
+        this.$swal('ocurrio un problema','','warning');
+      })
+    },
   async  listarclientes(){
     await  this.axios.get('api/clientes')
       .then((response) => {

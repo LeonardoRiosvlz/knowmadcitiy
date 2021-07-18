@@ -130,6 +130,10 @@
                   <div class="font-size-12 text-muted">
                     <p class="mb-1">{{msg.descripcion}}</p>
                     <p class="mb-0">
+                     Remitente: {{msg.remitente.nombre }} {{msg.remitente.apellido }}
+    
+                    </p>
+                    <p class="mb-0">
                       <i class="mdi mdi-clock-outline"></i>
                       {{msg.created_at | capitalize }}
                     </p>
@@ -194,7 +198,6 @@ import moment from 'moment';
 export default {
   data() {
     return {
-      socket : '',
       canal: '',
       user: '',
       message: '',
@@ -304,7 +307,7 @@ mounted(){
 },
   created(){
       
-      this.listarNotificaciones();
+   
 
   }
 };
