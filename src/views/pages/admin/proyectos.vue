@@ -75,6 +75,8 @@
                     <i class="mdi mdi-chevron-down"></i>
                   </template>
                   <b-dropdown-item-button@click="notificarConsulta(data.item.id,data.item.aprueba_id)">Notificar</b-dropdown-item-button>
+                  <b-dropdown-item-button@click="notificarConsultaAprobar(data.item.id,data.item.elabora_id)">Aprobar</b-dropdown-item-button>
+                  <b-dropdown-item-button@click="editMode=true;setearObservaciones(data.item.id)">Rechazar</b-dropdown-item-button>
                   <b-dropdown-item-button@click="editMode=true;setear(data.item.id)">Editar Proyecto</b-dropdown-item-button>
                   <b-dropdown-item-button@click="editMode=true;eliminar(data.item.id)">Eliminar Proyecto</b-dropdown-item-button>
                   
@@ -345,6 +347,21 @@
         </ValidationObserver>
       </b-modal>
 
+
+  <b-modal id="modal_observaciones" hide-footer>
+    <b-row>
+      <b-col>
+        <div class="form-group">
+          <label>Observaciones de rechazo</label>
+            <textarea v-model="form.observaciones"  type="text" class="form-control" placeholder=" "></textarea>
+        </div>
+      </b-col>
+    </b-row>
+    <button class="btn btn-danger btn-block" @click="notificarConsultaRechazar()" :disabled="form.observaciones===''"> Rechazar</button>
+  </b-modal>
+
+
+
   <footer class="footer dark" style="background-color:#505d69; color:#fff;">
     <div class="container-fluid">
       <div class="row">
@@ -451,6 +468,7 @@ export default {
       'promotor':'',
       'digital':'',
       'ecologica':'',
+      'observaciones':'',
       'descripcion':'',
 	    'promotores': [],
       'dimension_ecologica':[],
@@ -556,7 +574,7 @@ export default {
     },
     cargarDigital(){
        this.form.dimension_digital.push({
-       nombre:this.form.dimension_digital,
+       nombre:this.form.digital,
       });/*
       this.form.dimension_digital.push({
        nombre:this.form.digital,
@@ -637,6 +655,17 @@ export default {
               this.$swal('ocurrio un problema','','warning');
             });
      },
+    setearObservaciones(id) {
+      for (let index = 0; index < this.proyectos.length; index++) {
+        if (this.proyectos[index].id===id) {
+          this.form.id=this.proyectos[index].id;
+          this.form.observaciones=this.proyectos[index].observaciones;
+          this.form.elabora_id=this.proyectos[index].elabora_id;
+          this.$root.$emit("bv::show::modal", "modal_observaciones", "#btnShow");
+          return;
+        }
+      }
+    },
     setear(id) {
       for (let index = 0; index < this.proyectos.length; index++) {
         if (this.proyectos[index].id===id) {
@@ -748,6 +777,69 @@ export default {
       .then((response) => {
         if (response.status==200) {
           this.$swal('Notificado con exito ','','success');
+          this.listarProyectos();
+        }
+      })
+      .catch((e)=>{
+        this.$swal('ocurrio un problema','','warning');
+      })
+    },
+          notificarConsultaAprobar(id,elabora_id){
+        this.$swal({
+          title: 'Desea aprobar este proyecto?',
+          icon: 'question',
+          iconHtml: '',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          showCancelButton: true,
+          showCloseButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.notificarProyectoAprobacion(id,elabora_id);
+          }
+        })
+      },
+      async  notificarProyectoAprobacion(id,elabora_id){
+    let data = new FormData();
+    data.append('elabora_id',elabora_id);
+    data.append('id',id);
+    await  this.axios.post('api/proyectos/aprobar',data)
+      .then((response) => {
+        if (response.status==200) {
+          this.$swal('Notificado con exito ','','success');
+          this.listarProyectos();
+        }
+      })
+      .catch((e)=>{
+        this.$swal('ocurrio un problema','','warning');
+      })
+    },
+
+      notificarConsultaRechazar(){
+        this.$swal({
+          title: 'Desea rechazar este proyecto?',
+          icon: 'question',
+          iconHtml: '',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          showCancelButton: true,
+          showCloseButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.notificarProyectoRechazar();
+          }
+        })
+      },
+   async  notificarProyectoRechazar(){
+    let data = new FormData();
+    data.append('elabora_id',this.form.elabora_id);
+    data.append('id',this.form.id);
+    data.append('observaciones',this.form.observaciones);
+    await  this.axios.post('api/proyectos/rechazar',data)
+      .then((response) => {
+        if (response.status==200) {
+          this.$swal('Rechazado con exito ','','success');
+          this.$root.$emit("bv::hide::modal", "modal_observaciones", "#btnShow");
           this.listarProyectos();
         }
       })
