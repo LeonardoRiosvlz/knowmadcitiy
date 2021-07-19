@@ -56,7 +56,7 @@
                                 El Proyecto aún no ha sido aprobado
                                 </div>
                             </div>
-                        <!-- <pre> {{form}} </pre>--> 
+                        <!----> <pre> {{form}} </pre> 
                       </div>
                           </div>
                       </div>                    
@@ -122,9 +122,12 @@
                                 <div class="col-lg-12"><br><p align="left"><h4>DIMENSIÓN DIGITAL Y ECOLÓGICA DE LA INICIATIVA:</h4>  </p>
                                     <div class="row">
                                       <div class="col-lg-6"><b>Dimensión Digital:</b>  <p></p>
-                                          <p algin="justify"> 
-                                             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatibus, excepturi nisi. Aliquam similique inventore, ducimus architecto unde fugiat quidem quasi quos officiis. Recusandae blanditiis sunt quisquam, quod excepturi tenetur incidunt.
-                                          </p>
+                                          <p align="justify" class="card-text">
+                                          <br>
+                                          <ol>
+                                            <li v-for="(iniciativa, index) in form.dimension_digital" :key="index">{{iniciativa.nombre}} </li>
+                                          </ol>
+                                      </p>
                                       </div>
                                       <div class="col-lg-6"><b>Dimensión Ecológica:</b><p></p> 
                                           <p algin="justify"> 
@@ -524,6 +527,8 @@ export default {
           this.form.presupuesto=this.proyectos.presupuesto;
           this.form.promotores=JSON.parse(this.proyectos.promotores);
           this.form.objetivos=JSON.parse(this.proyectos.objetivos);
+          this.form.dimension_digital=JSON.parse(this.proyectos.dimension_digital);
+          this.form.dimension_ecologica=JSON.parse(this.proyectos.dimension_ecologica);
           this.form.descripcion_iniciativa=JSON.parse(this.proyectos.descripcion_iniciativa);
           this.form.justificacion=this.proyectos.justificacion;
           this.form.descripcion=this.proyectos.descripcion;

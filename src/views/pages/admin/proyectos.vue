@@ -115,10 +115,16 @@
             <!--Paso 0-->
             <tab-content title="Bienvenido"  subtitle="Paso 1" icon="ri-star-3-fill">
                     <b-row>
-                    <b-col>
+                    <b-col v-if="form.titulo!=''">
+                      <p align="center"><h5 align="center">Bienvenido al Formulario de actualización de Proyectos</h5></p>
+                      <p align="justify">
+                        <b>En el siguiente formulario podrá  editar o actualizar el proyecto según lo solicitado por el supervisor en caso de no haber sido aprobado el proyecto o que se deba modificar antes de enviar a su aprobación.</b> 
+                      </p>
+                    </b-col>
+                    <b-col v-else>
                       <p align="center"><h5 align="center">Bienvenido al Formulario de creación de Proyectos</h5></p>
                       <p align="justify">
-                        <b>En el siguiente formulario podrá agregar, editar o actualizar el proyecto segun el cliente y la empresa que lo haya solicitado</b> 
+                        <b>En el siguiente formulario podrá crear su proyecto según los criterios que hayan sido solicitados</b> 
                       </p>
                     </b-col>
                       <b-col>
@@ -131,38 +137,47 @@
             </tab-content>
             <!--Paso 1-->
             <tab-content title="Seleccionar Cliente y empresa"  subtitle="Paso 1" icon="ri-user-3-fill" >
-                            <b-row>
+                   <b-row>
+                      <b-col><br><br>
+                          <p align="justify" v-if="form.titulo!=''">Paso 1: Actualice la información necesaria ya sea el cliente, la empresa correspondiente o el surpervisor encargado de aprobar este proyecto.</p>
+                          <p align="justify" v-else>Paso 1: Elija el cliente, la empresa correspondiente y el surpervisor encargado de aprobar este proyecto.</p>
+                          <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="120" alin="center" height="120" alt=""></p>
+                        
+                      </b-col>
                       <b-col>
                         <ValidationProvider name="cliente" rules="required" v-slot="{ errors }">
                           <label>Cliente</label>
                             <v-select v-model="cliente" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
                             <span style="color:red">{{ errors[0] }}</span>
                         </ValidationProvider>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
+                      
                         <ValidationProvider name="empresas" rules="required" v-slot="{ errors }">
                           <label>Empresas </label>
                             <v-select v-model="form.empresa_id" :options="empresas" :reduce="empresas => empresas.id"  :getOptionLabel="option => option.nombre" ></v-select>
                             <span style="color:red">{{ errors[0] }}</span>
                         </ValidationProvider>
-                      </b-col>
-                    </b-row>                    
-                    <b-row>
-                      <b-col>
+
                         <ValidationProvider name="Aprueba" rules="required" v-slot="{ errors }">
-                            <label>Aprueba</label>
+                            <label>Supervisor que aprobará el Proyecto</label>
                                <v-select v-model="form.aprueba_id" :options="users" :reduce="users => users.id"  :getOptionLabel="option => option.nombre" ></v-select>
                               <span style="color:red">{{ errors[0] }}</span>
                         </ValidationProvider>
                       </b-col>
+                      
                     </b-row>
+                  
+
             </tab-content>
             <!--Paso 2-->
             <tab-content title="Descripción del Proyecto"  subtitle="Paso 2" icon="ri-building-2-fill">
                     <b-row>
-                      <b-col>
+                    <b-col><br><br>
+                          <p align="justify" v-if="form.titulo!=''">Paso 2: Actualice la información necesesaria o solicitada como la descripción corta y descripción de la iniciatavita del proyecto:</p>
+                          <p align="justify" v-else>Paso 2: Indique el título, descripción corta y descripción de la iniciatavita del proyecto:</p>
+                          <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="120" alin="center" height="120" alt=""></p>
+                        
+                      </b-col>
+                    <b-col>
                         <div class="form-group">
                           <label>Titulo del Proyecto </label>
                           <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
@@ -170,10 +185,7 @@
                                 <span style="color:red">{{ errors[0] }}</span>
                           </ValidationProvider>
                         </div>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
+ 
                         <div class="form-group">
                           <label>Descripción corta </label>
                           <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
@@ -181,17 +193,14 @@
                                 <span style="color:red">{{ errors[0] }}</span>
                           </ValidationProvider>
                         </div>
-                      </b-col>
-                    </b-row>  
-                    <b-row>
-                    <b-col>
+
                         <label>Descripción de la iniciativa </label>
-                            <input v-model="form.iniciativa"  type="text" class="form-control" placeholder=" " size="2">
-                    </b-col>
-                    <b-col>            
-                    <button class="btn btn-success " @click="cargarIniciativa()" :disabled="form.iniciativa===''">Añadir +</button> 
+                            <input v-model="form.iniciativa"  type="text" class="form-control" placeholder=" " size="2"><br>
+                            <p align="center"><button class="btn btn-sm btn-success " @click="cargarIniciativa()" :disabled="form.iniciativa===''">Añadir Iniciativa</button></p>
+                              
                     </b-col>
                     <b-col>
+                    <h5>Iniciativas Agregadas:</h5>
                        <ol>
                          <li v-for="(iniciativa, index) in form.descripcion_iniciativa" :key="index">{{iniciativa.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarIniciativa(index)">x</button></li>
                        </ol>
@@ -201,91 +210,102 @@
             </tab-content>
             <!--Paso 3-->
             <tab-content title="Justificación del proyecto"  subtitle="Paso 3"  icon="ri-currency-fill">
-                          <b-row>
+                    <b-row>
+                     <b-col><br><br>
+                          <p align="justify" v-if="form.titulo!=''">Paso 3: Actualice la información necesaria como la justificación, objetivos, dimensiones y presupuesto del proyecto:</p>
+                          <p align="justify" v-else>Paso 3: Indique la justificación, objetivos, dimensiones y presupuesto del proyecto:</p>
+                          <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="120" alin="center" height="120" alt=""></p>
+                        
+                      </b-col>
                       <b-col>
                         <div class="form-group">
                           <label>Justificación de la necesidad </label>
                           <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
-                                <textarea v-model="form.justificacion"  type="text" class="form-control" placeholder=" "></textarea>
+                                <textarea rows="10" cols="10" v-model="form.justificacion"  type="text" class="form-control" placeholder=" "></textarea>
                                 <span style="color:red">{{ errors[0] }}</span>
                           </ValidationProvider>
                         </div>
                       </b-col>
                       </b-row>      
                       <b-row>
-                        <div class="col-11">
-                          <div class="form-group">
-                            <label>Promotores </label>
-                                <input v-model="form.promotor"  type="text" class="form-control" placeholder=" ">
-                            </div>
-                        </div >
-                        <div class="col-1 py-4">
-                          <label></label>
-                          <button class="btn btn-success " @click="cargarPromotor()" :disabled="form.promotor===''">+</button>
-                        </div >
+                        <b-col>
+                          <div class="col-11">
+                              <div class="form-group form-inline">
+                                  <label>Agregar Promotores:&nbsp;</label>
+                                    
+                                    <input v-model="form.promotor"  type="text" class="form-control" placeholder=" ">
+                                      <button class="btn btn-success " @click="cargarPromotor()" :disabled="form.promotor===''">+</button>
+                                    
+                                    
+                                </div>
+                            </div >
+                        </b-col>
+                          <b-col>
+                          <h6>Promotores agregados:</h6>
+                            <ol>
+                              <li v-for="(promotor, index) in form.promotores" :key="index">{{promotor.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarpromotor(index)">X</button></li>
+                            </ol>
+                          </b-col>
+                      </b-row>
+
+                      <b-row>
+                        <b-col>
+                          <div class="col-11">
+                            <div class="form-group form-inline">
+                              <label>Agregar Objetivos de la iniciativa: </label>
+                                  <input v-model="form.objetivo"  type="text" class="form-control" placeholder=" ">
+                                  <button class="btn btn-success " @click="cargarObjetivo()" :disabled="form.objetivo===''">+</button>
+                              </div>
+                          </div >
+                        </b-col>
+                          <b-col>
+                              <h6>Obejtivos de la Iniciativa agregados</h6>
+                            <ol>
+                              <li v-for="(objetivo, index) in form.objetivos" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarObjetivo(index)">X</button></li>
+                            </ol>
+                          </b-col>
                       </b-row>
                       <b-row>
-                        <ol>
-                          <li v-for="(promotor, index) in form.promotores" :key="index">{{promotor.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarpromotor(index)">X</button></li>
-                        </ol>
+                          <b-col>
+                              <div class="col-11">
+                                <div class="form-group  form-inline">
+                                  <label>Dimension Ecológica: </label>
+                                      <input v-model="form.ecologica"  type="text" class="form-control" placeholder=" ">
+                                      <button class="btn btn-success " @click="cargarEcologica()" :disabled="form.ecologica===''">+</button>
+                                  </div>
+                              </div >
+                          </b-col>
+                            <b-col>
+                            <h6>Dimensión Ecológica:</h6>
+                              
+                              <ol>
+                                <li v-for="(ecologica, index) in form.dimension_ecologica" :key="index">{{ecologica.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarEcologica(index)">X</button></li>
+                              </ol>
+                            </b-col>
                       </b-row>
                       <b-row>
-                        <div class="col-11">
-                          <div class="form-group">
-                            <label>Objetivos de la iniciativa </label>
-                                <input v-model="form.objetivo"  type="text" class="form-control" placeholder=" ">
-                            </div>
-                        </div >
-                        <div class="col-1 py-4">
-                          <label></label>
-                          <button class="btn btn-success " @click="cargarObjetivo()" :disabled="form.objetivo===''">+</button>
-                        </div >
-                      </b-row>
-                      <b-row>
-                      
-                        <ol>
-                          <li v-for="(objetivo, index) in form.objetivos" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarObjetivo(index)">X</button></li>
-                        </ol>
-                      </b-row>
-                      <b-row>
-                        <div class="col-11">
-                          <div class="form-group">
-                            <label>Dimension Ecologica </label>
-                                <input v-model="form.ecologica"  type="text" class="form-control" placeholder=" ">
-                            </div>
-                        </div >
-                        <div class="col-1 py-4">
-                          <label></label>
-                          <button class="btn btn-success " @click="cargarEcologica()" :disabled="form.ecologica===''">+</button>
-                        </div >
-                      </b-row>
-                      <b-row>
-                      
-                        <ol>
-                          <li v-for="(objetivo, index) in form.dimension_ecologica" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarEcologica(index)">X</button></li>
-                        </ol>
-                      </b-row>
-                                            <b-row>
-                        <div class="col-11">
-                          <div class="form-group">
-                            <label>Dimension Digital </label>
-                                <input v-model="form.digital"  type="text" class="form-control" placeholder=" ">
-                            </div>
-                        </div >
-                        <div class="col-1 py-4">
-                          <label></label>
-                          <button class="btn btn-success " @click="cargarDigital()" :disabled="form.digital===''">+</button>
-                        </div >
-                      </b-row>
-                      <b-row>
-                      
-                        <ol>
-                          <li v-for="(objetivo, index) in form.dimension_digital" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarDigital(index)">X</button></li>
-                        </ol>
+                          <b-col>
+                            <div class="col-11">
+                              <div class="form-group form-inline">
+                                <label>Dimension Digital:</label>
+                                    <input v-model="form.digital"  type="text" class="form-control" placeholder=" ">
+                                    <button class="btn btn-success " @click="cargarDigital()" :disabled="form.dimension_digital===''">+</button>
+                                </div>
+                            </div >
+                          </b-col>
+                        
+                          <b-col>
+                            <h6>Dimension Digital:</h6>
+                              <ol>
+                                <li v-for="(objetivo, index) in form.dimension_digital" :key="index">{{objetivo.nombre}} <button class="btn btn-sm btn-danger" @click="eliminarDigital(index)">X</button></li>
+                              </ol>
+                          </b-col>
+                          
                       </b-row>
                       <b-row>
                         <b-col>
                           <div class="form-group">
+                            <label v-if="form.presupuesto!=''">Actualizar Presupuesto</label>
                             <label>Presupuesto</label>
                             <ValidationProvider name="numero de empleados" rules="required" v-slot="{ errors }">
                                     <input v-model="form.presupuesto"  type="text" class="form-control" placeholder=" ">
@@ -293,24 +313,33 @@
                             </ValidationProvider>
                             </div>
                         </b-col>
-                      </b-row>
-                      <b-row>
                         <b-col>
-                            <label>Soporte del Proyecto</label>
-                              <b-form-file
-                                  v-model="file"
-                                  placeholder="Seleccione su archivo pdf..."
-                                  drop-placeholder="Drop file here..."
-                                  @change="onFileChange"
-                              ></b-form-file>
+                        <div v-if="form.presupuesto!=''">
+                          <h6>Presupuesto actual:</h6>
+                          {{form.presupuesto}}&nbsp;€
+                        </div>
+                          
                         </b-col>
                       </b-row>
 
             </tab-content>
             <!--Paso 4-->
             <tab-content title="Guardar Proyecto"  subtitle="Paso 4" icon="ri-save-2-fill">
-              <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Crear Proyecto</button>
+                <b-row>
+                  <b-col>
+                  <br><br>
+                          <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="120" alin="center" height="120" alt=""></p>
+                          <p align="justify" v-if="form.titulo!=''">Paso 4: Proyecto Actualizado, ya solo falta guardar los cambios y notificar al subervisor:</p>
+                           <p align="justify" v-else>Paso 4: Proyecto Completo, ya solo falta crear el proyecto y notificar al subervisor:</p>
+
+                  </b-col>
+                  <b-col>
+                      <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Crear Proyecto</button>
               <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Guardar Cambios</button>
+                  </b-col>
+                </b-row>
+
+            
             </tab-content>
           </form-wizard>
         </ValidationObserver>
@@ -526,9 +555,12 @@ export default {
        this.form.descripcion_iniciativa.splice(index, 1);  
     },
     cargarDigital(){
+       this.form.dimension_digital.push({
+       nombre:this.form.dimension_digital,
+      });/*
       this.form.dimension_digital.push({
        nombre:this.form.digital,
-      });
+      });*/
     },
     eliminarDigital(index){
        this.form.dimension_digital.splice(index, 1);  
@@ -641,6 +673,8 @@ export default {
           this.form.presupuesto=this.proyectos[index].presupuesto;
           this.form.promotores=JSON.parse(this.proyectos[index].promotores);
           this.form.objetivos=JSON.parse(this.proyectos[index].objetivos);
+          this.form.dimension_ecologica=JSON.parse(this.proyectos[index].dimension_ecologica);
+          this.form.dimension_digital=JSON.parse(this.proyectos[index].dimension_digital);
           this.form.descripcion_iniciativa=JSON.parse(this.proyectos[index].descripcion_iniciativa);
           this.form.justificacion=this.proyectos[index].justificacion;
           this.form.empresa_id=this.proyectos[index].empresa_id;
