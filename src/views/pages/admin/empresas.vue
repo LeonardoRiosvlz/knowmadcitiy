@@ -41,7 +41,7 @@
               <!-- End search -->
             </div>
             <!-- Table -->
-            <div class="table-responsive mb-0">
+            <div class="table-responsive mb-0" style="min-height:350px">
 
               <b-table
                 :items="empresas"
@@ -86,76 +86,57 @@
         </div>
       </div>
     </div>
-
-
-
-
+   
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de empresas" ok-only>
           <ValidationObserver ref="form">
-
- 
-
             <form-wizard next-button-text="Siguiente" back-button-text="Anterior" finish-button-text="---"  color="#7fa3a3" transition="fade">
+            <!---Paso 0--->
+            <tab-content title="Bienvenido"  subtitle="Paso 1" icon="ri-star-3-fill">
+                    <b-row>
+                    <b-col v-if="form.cliente_id!=''">
+                    <br><br>
+                      <p align="center"><h5 align="center">Bienvenido al Formulario de actualización de Proyectos
+                      </h5></p>
+                     <p align="justify">
+                        <b>En el siguiente formulario podrá  editar o actualizar la información de la empresa según lo solicitado por el supervisor en caso de no haber sido aprobado el proyecto o que se deba modificar antes de enviar a su aprobación.</b> 
+                      </p>
+                    </b-col>
+                    <b-col v-else-if="form.cliente_id==''"><p align="center"><h5 align="center">Bienvenido al Formulario de creación de Empresas</h5></p>
+                      <p align="justify">
+                        <b>En el siguiente formulario podrá agregar la empresa según los criterios que hayan sido solicitados por el cliente</b> 
+                      </p>
+                       
+                    </b-col>
+                      <b-col>
+                      
+                      <p align="center"><img src="@/assets/images/forms/empresa.svg" width="450" height="250" alt=""></p>
+                        
+                      </b-col>
+                    </b-row>
+            
+            </tab-content>
             <!---Paso 1--->
             <tab-content title="Datos de Cliente y descripción de la Empresa"  subtitle="Paso 1" icon="ri-user-3-fill">
-                          <b-row>
-              <b-col>
-                <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
-                  <label>Cliente {{form.dependencia}}</label>
-                    <v-select v-model="form.cliente_id" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
-                    <span style="color:red">{{ errors[0] }}</span>
-                </ValidationProvider>
-              </b-col>
-            </b-row>
-         <b-row>
-              <b-col>
-                <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
-                  <label>Fundada</label>
-                   <b-form-datepicker id="example-datepicker" v-model="form.fundada" class="mb-2"></b-form-datepicker>
-               <span style="color:red">{{ errors[0] }}</span>
-                </ValidationProvider>
-              </b-col>
-            </b-row>
             <b-row>
-              <b-col>
-                <div class="form-group">
-                  <label>Nombre </label>
-                  <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
-                        <input v-model="form.nombre"  type="text" class="form-control" placeholder=" ">
-                        <span style="color:red">{{ errors[0] }}</span>
-                  </ValidationProvider>
-                </div>
-              </b-col>
-              <b-col>
-                <div class="form-group">
-                  <label>Cargo del contacto </label>
-                  <ValidationProvider name="cargo del contacto" rules="required" v-slot="{ errors }">
-                        <input v-model="form.cargo_contacto"  type="text" class="form-control" placeholder=" ">
-                        <span style="color:red">{{ errors[0] }}</span>
-                  </ValidationProvider>
-                </div>
-              </b-col>
-              </b-row>      
-              <b-row>
-                <b-col>
-                  <div class="form-group">
-                    <label>Actividad o sector de la Empresa </label>
-                    <ValidationProvider name="rubro" rules="required" v-slot="{ errors }">
-                            <input v-model="form.rubro"  type="text" class="form-control" placeholder=" ">
-                            <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                    </div>
-                </b-col>
-              </b-row>
-            </tab-content >
-            <!--Paso 2-->
-            <tab-content title="Datos de empleados y logo de la Empresa"  subtitle="Paso 1" icon="ri-lock-password-fill" >
-                <b-row class="mb-2">
+            <b-col><br><br>
+                  <h5> Paso 1: Datos de Cliente y descripción de la Empresa</h5><br>
+                  <p align="justify" v-if="form.cliente_id!==''">                        
+                      Actualice la información necesaria solicitada por el supervisor o el cliente en cuanto a la empresa, asegurese de que está eligiendo el cliente correspondiente a la empresa que se va a editar.
 
-                  <b-col>
-                    <label>Logo de la Empresa</label>
+                  </p>
+                  <p align="justify" v-else>                        
+                      Para la creación de la empresa debe elegir el cliente y llenar los campos correspondientes a la información de la empresa.
+
+                  </p>
+                  <p align="center"><img src="@/assets/images/forms/undraw_Collaboration.svg" width="200" alin="center" height="200" alt=""></p>
+                        
+            </b-col>
+              <b-col>
+                  <label>Logo de la Empresa</label>
                       <div id="preview mb-2">
-                      <img v-if="url" width="30%" align="center" style="float:center!importan" class="rounded"  :src="url" />
+                      <p align="center">
+                      <img v-if="url" width="140" align="center" style="float:center!importan" height="120" class="rounded"  :src="url" />
+                      </p>
                       </div>
                         <b-form-file
                             v-model="file"
@@ -163,61 +144,141 @@
                             drop-placeholder="Drop file here..."
                             @change="onFileChange"
                         ></b-form-file>
-                  </b-col>
+                <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
+                  <label>Cliente {{form.dependencia}}</label>
+                    <v-select v-model="form.cliente_id" :options="clientes" :reduce="clientes => clientes.id"  :getOptionLabel="option => option.nombre" ></v-select>
+                    <span style="color:red">{{ errors[0] }}</span>
+                </ValidationProvider>
+                <ValidationProvider name="area dependiente" rules="required" v-slot="{ errors }">
+                  <label>Fundada</label>
+                   <b-form-datepicker id="example-datepicker" v-model="form.fundada" class="mb-2"></b-form-datepicker>
+               <span style="color:red">{{ errors[0] }}</span>
+                </ValidationProvider>
+                 <div class="form-group">
+                  <label>Nombre </label>
+                  <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
+                        <input v-model="form.nombre"  type="text" class="form-control" placeholder=" ">
+                        <span style="color:red">{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </div>
+                <div class="form-group">
+                  <label>Cargo del contacto </label>
+                  <ValidationProvider name="cargo del contacto" rules="required" v-slot="{ errors }">
+                        <input v-model="form.cargo_contacto"  type="text" class="form-control" placeholder=" ">
+                        <span style="color:red">{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </div>
+                <div class="form-group">
+                    <label>Actividad o sector de la Empresa </label>
+                    <ValidationProvider name="rubro" rules="required" v-slot="{ errors }">
+                            <input v-model="form.rubro"  type="text" class="form-control" placeholder=" ">
+                            <span style="color:red">{{ errors[0] }}</span>
+                    </ValidationProvider>
+                    </div>
+              </b-col>
+            </b-row>
 
-                     <b-col>
-                  <div class="form-group">
+            </tab-content >
+            <!--Paso 2-->
+            <tab-content title="Datos de empleados y logo de la Empresa"  subtitle="Paso 1" icon="ri-lock-password-fill" >
+                <b-row class="mb-2">
+                  <b-col class="col-6"><br><br>
+                  <h5>Paso 2: Datos de empleados y logo de la Empresa</h5>
+                  <p align="justify" v-if="form.cliente_id!==''">                        
+                        Actualice la información de la empresa segun lo solicitado por el cliente o supervisor, ya sea volúmen de facturación, porcentaje de mujeres, etc.
+                  </p>
+                  <p align="justify" v-else>                        
+                        Indique la cantidad de empleados, volúmen de facturación y demas datos necesarios para la creación de la empresa.
+                  </p>
+                  <p align="center"><img src="@/assets/images/forms/trabajadores.svg" width="200" alin="center" height="200" alt=""></p>
+                        
+            </b-col>
+
+            
+                  <b-col>
+                  <br><br><br><br>
+                    <div class="form-group">
                     <label>Numero de empleados </label>
                     <ValidationProvider name="numero de empleados" rules="required" v-slot="{ errors }">
                             <input v-model="form.numero_empleados"  type="text" class="form-control" placeholder=" ">
                             <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
                     </div>
-                </b-col>
-                </b-row>
-              <b-row>
-               <b-col>
-                  <div class="form-group">
-                    <label>Porcentaje de mujeres </label>
-                    <ValidationProvider name="Porcentaje de mujeres" rules="required" v-slot="{ errors }">
-                            <input v-model="form.procentaje_mujeres"  type="text" class="form-control" placeholder=" ">
-                            <span style="color:red">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                    </div>
-                </b-col>
-                <b-col>
-                  <div class="form-group">
+                     <div class="form-group">
                     <label>Volumen de facturación</label>
                     <ValidationProvider name="volumen de facturación" rules="required" v-slot="{ errors }">
                           <input v-model="form.volumen_facturacion"  type="text" class="form-control" placeholder=" ">
                           <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
                   </div>
-                </b-col>
-            </b-row>
-              <b-row>
-                <b-col>
-                  <div class="form-group">
+                  </b-col>
+                  <b-col>
+                  <br><br><br><br>
+                    <div class="form-group">
+                    <label>Porcentaje de mujeres </label>
+                    <ValidationProvider name="Porcentaje de mujeres" rules="required" v-slot="{ errors }">
+                            <input v-model="form.procentaje_mujeres"  type="text" class="form-control" placeholder=" ">
+                            <span style="color:red">{{ errors[0] }}</span>
+                    </ValidationProvider>
+                    </div>
+                    <div class="form-group">
                     <label>Dirección</label>
                     <ValidationProvider name="dirección" rules="required" v-slot="{ errors }">
-                          <textarea v-model="form.direccion"  type="text" class="form-control" placeholder=" "></textarea>
+                          <textarea v-model="form.direccion" rows="1"  type="text" class="form-control" placeholder=" "></textarea>
                           <span style="color:red">{{ errors[0] }}</span>
                     </ValidationProvider>
                   </div>
+                     
+                  
                 </b-col>
             </b-row>
-            <hr>
+
  
             </tab-content>
             <!--Paso 3-->
             <tab-content title="Crear/Actualizar Empresa"  subtitle="Paso 3" icon="ri-check-fill" >
-             <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Crear Empresa</button>
-             <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Guardar Cambios</button>
+                                <b-row>
+
+                      <b-col>
+                          <h5 align="center">Paso 3: Crear/Actualizar Empresa</h5>
+                      <p align="center" v-if="form.cliente_id!==''">                        
+                        Guarde los cambios realizados en la empresa y mantengase al tanto de notificaciones del supervisor a cargo.
+                  </p>
+                  <p align="center" v-else>                        
+                        Haga clic en <b>Crear Empresa</b> para agregar el registro de la misma en nuestro sistema.
+                  </p>
+                      <p align="center"><img src="@/assets/images/forms/undraw_Updated_resume_re_q1or.svg" width="210" alin="center" height="210" alt=""></p>
+                      <b-row>
+                        <b-co-3></b-co-3>
+                        <b-co-3 class="offset-5">                      <p align="center" style="width:160px; margin-left:-15%;"> 
+                      <button class="btn btn-block float-right btn-success" size="10" @click="switchLoc" v-if="!ver && !editMode">Crear Empresa</button>
+                      <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Guardar Cambios</button>
+                      </p></b-co-3>
+                        <b-co-3></b-co-3>
+                      </b-row>
+              
+                      </b-col>
+                    </b-row>
+
             </tab-content>
             </form-wizard>     
         </ValidationObserver>
      </b-modal>
-    <pre>{{usuarioDB}}</pre>
+         <footer class="footer dark" style="background-color:#505d69; color:#fff;">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  2021 © 
+                </div>
+                <div class="col-sm-6">
+                  <div class="text-sm-right d-none d-sm-block">
+                    Desarrollado por
+                    © Innova Tu Hotel
+                  </div>
+                </div>
+              </div>
+            </div>
+        </footer>
   </Layout>
 </template>
 

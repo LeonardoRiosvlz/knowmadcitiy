@@ -44,7 +44,7 @@
 
             </div>
             <!-- Table -->
-            <div class="table-responsive mb-0" style="min-height:500px">
+            <div class="table-responsive mb-0" style="min-height:400px">
 
               <b-table
                 :items="proyectos"
@@ -62,10 +62,10 @@
                 {{data.item.empresa.nombre}}
               </template>
               <template v-slot:cell(estado)="data">
-                <span v-if="data.item.status==='Creado'" class="badge badge-success">Creado</span>
-                 <span v-if ="data.item.status==='Pendiente'" class="badge badge-success">Pendiente</span>
+                <span v-if="data.item.status==='Creado'" class="badge badge-info">Creado</span>
+                 <span v-if ="data.item.status==='Pendiente'" class="badge badge-warning">Pendiente</span>
                  <span v-if ="data.item.status==='Aprobado'" class="badge badge-success">Aprobado</span>
-                 <span v-if ="data.item.status==='Rechazado'" class="badge badge-success">Rechazado</span>
+                 <span v-if ="data.item.status==='Rechazado'" class="badge badge-danger">Rechazado</span>
               </template>
                 <template v-slot:cell(actions)="data">
                 
@@ -79,8 +79,6 @@
                   <b-dropdown-item-button@click="editMode=true;setearObservaciones(data.item.id)">Rechazar</b-dropdown-item-button>
                   <b-dropdown-item-button@click="editMode=true;setear(data.item.id)">Editar Proyecto</b-dropdown-item-button>
                   <b-dropdown-item-button@click="editMode=true;eliminar(data.item.id)">Eliminar Proyecto</b-dropdown-item-button>
-                  
-                  <!--<b-dropdown-item-button@clic="generateReport()">Ver/Descargar Proyecto</b-dropdown-item-button>-->
                   <b-dropdown-item-button><a :href="'proyecto/'+data.item.id">Ver</a></b-dropdown-item-button>
                     
                 </b-dropdown>
@@ -103,13 +101,7 @@
       </div>
     </div><br><br><br>
 
-        <b-modal id="modal_ver" false size="xl" hide-footer  title="Gestión de proyectos" ok-only>
-          <div>
-            <h4 align="center">USE EL SIGUIENTE BOTÓN PARA VER O DESCARGAR EL PROYECTO DE NOMBRE:</h4>  
-           
-              <VueDocPreview :value="form.archivo" type="office" />
-          </div>
-        </b-modal>
+        
 
         <b-modal id="modal" false size="lg" hide-footer  title="Gestión de proyectos" ok-only>
           <ValidationObserver ref="form">
@@ -141,9 +133,9 @@
             <tab-content title="Seleccionar Cliente y empresa"  subtitle="Paso 1" icon="ri-user-3-fill" >
                    <b-row>
                       <b-col><br><br>
-                          <p align="justify" v-if="form.titulo!=''">Paso 1: Actualice la información necesaria ya sea el cliente, la empresa correspondiente o el surpervisor encargado de aprobar este proyecto.</p>
+                          <p align="justify" v-if="form.id!=''">Paso 1: Actualice la información necesaria ya sea el cliente, la empresa correspondiente o el surpervisor encargado de aprobar este proyecto.</p>
                           <p align="justify" v-else>Paso 1: Elija el cliente, la empresa correspondiente y el surpervisor encargado de aprobar este proyecto.</p>
-                          <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="120" alin="center" height="120" alt=""></p>
+                          <p align="center"><img src="@/assets/images/forms/undraw_Collaboration.svg" width="120" alin="center" height="120" alt=""></p>
                         
                       </b-col>
                       <b-col>
@@ -174,9 +166,9 @@
             <tab-content title="Descripción del Proyecto"  subtitle="Paso 2" icon="ri-building-2-fill">
                     <b-row>
                     <b-col><br><br>
-                          <p align="justify" v-if="form.titulo!=''">Paso 2: Actualice la información necesesaria o solicitada como la descripción corta y descripción de la iniciatavita del proyecto:</p>
+                          <p align="justify" v-if="form.id!=''">Paso 2: Actualice la información necesesaria o solicitada como la descripción corta y descripción de la iniciatavita del proyecto:</p>
                           <p align="justify" v-else>Paso 2: Indique el título, descripción corta y descripción de la iniciatavita del proyecto:</p>
-                          <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="120" alin="center" height="120" alt=""></p>
+                          <p align="center"><img src="@/assets/images/forms/document.svg" width="120" alin="center" height="120" alt=""></p>
                         
                       </b-col>
                     <b-col>
@@ -214,16 +206,16 @@
             <tab-content title="Justificación del proyecto"  subtitle="Paso 3"  icon="ri-currency-fill">
                     <b-row>
                      <b-col><br><br>
-                          <p align="justify" v-if="form.titulo!=''">Paso 3: Actualice la información necesaria como la justificación, objetivos, dimensiones y presupuesto del proyecto:</p>
+                          <p align="justify" v-if="form.id!=''">Paso 3: Actualice la información necesaria como la justificación, objetivos, dimensiones y presupuesto del proyecto:</p>
                           <p align="justify" v-else>Paso 3: Indique la justificación, objetivos, dimensiones y presupuesto del proyecto:</p>
-                          <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="120" alin="center" height="120" alt=""></p>
+                          <p align="center"><img src="@/assets/images/forms/presupuesto.svg" width="140" alin="center" height="140" alt=""></p>
                         
                       </b-col>
                       <b-col>
                         <div class="form-group">
-                          <label>Justificación de la necesidad </label>
+                          <label>Justificación de la necesidad: </label>
                           <ValidationProvider name="nombre" rules="required" v-slot="{ errors }">
-                                <textarea rows="10" cols="10" v-model="form.justificacion"  type="text" class="form-control" placeholder=" "></textarea>
+                                <textarea rows="8" cols="7" v-model="form.justificacion"  type="text" class="form-control" placeholder=" "></textarea>
                                 <span style="color:red">{{ errors[0] }}</span>
                           </ValidationProvider>
                         </div>
@@ -330,12 +322,14 @@
                 <b-row>
                   <b-col>
                   <br><br>
-                          <p align="center"><img src="@/assets/images/undraw_fill_form_re_cwyf.svg" width="120" alin="center" height="120" alt=""></p>
+                          <p align="center"><img src="@/assets/images/forms/subirpro.svg" width="180" alin="center" height="180" alt=""></p>
                           <p align="justify" v-if="form.titulo!=''">Paso 4: Proyecto Actualizado, ya solo falta guardar los cambios y notificar al subervisor:</p>
                            <p align="justify" v-else>Paso 4: Proyecto Completo, ya solo falta crear el proyecto y notificar al subervisor:</p>
 
                   </b-col>
-                  <b-col>
+                  <b-col><br>
+                    <p align="center"><img src="@/assets/images/forms/nott.svg" width="140" alin="center" height="140" alt=""></p>
+                    <h6>Su Proyecto será cargado y debe crear la notificación al supervisor para que proceda a la revisión.</h6>
                       <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && !editMode">Crear Proyecto</button>
               <button class="btn btn-block float-right btn-success" @click="switchLoc" v-if="!ver && editMode">Guardar Cambios</button>
                   </b-col>
@@ -350,10 +344,15 @@
 
   <b-modal id="modal_observaciones" hide-footer>
     <b-row>
+    <b-col>
+        <p align="center">
+           <p align="center"><img src="@/assets/images/forms/cancel.svg" width="180" alin="center" height="180" alt=""></p>
+        </p>
+    </b-col>
       <b-col>
         <div class="form-group">
-          <label>Observaciones de rechazo</label>
-            <textarea v-model="form.observaciones"  type="text" class="form-control" placeholder=" "></textarea>
+          <label>Razones del rechazo del Proyecto:</label>
+            <textarea cols="7" rows="6" v-model="form.observaciones"  type="text" class="form-control" placeholder=" "></textarea>
         </div>
       </b-col>
     </b-row>
@@ -630,6 +629,7 @@ export default {
       for ( var key in formulario) {
             if (key=='descripcion_iniciativa'||key=='promotores'||key=='objetivos'||key=='dimension_ecologica'||key=='dimension_digital') {
                 data.append(key,JSON.stringify(formulario[key]));
+                
             }else{
                 data.append(key,formulario[key]);
             }
@@ -756,7 +756,7 @@ export default {
       },
       notificarConsulta(id,aprueba_id){
         this.$swal({
-          title: 'Desea notificar este proyecto al administrador?',
+          title: '¿Desea notificar este proyecto al administrador?',
           icon: 'question',
           iconHtml: '',
           confirmButtonText: 'Si',

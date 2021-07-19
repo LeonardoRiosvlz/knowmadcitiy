@@ -38,14 +38,14 @@
                                     <h5 class="title" align="center">{{proyectos.titulo}}</h5>
                                       <p algn="center">
                                         Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> <br>
-                                        Estado del Proyecto: <span class="badge badge-warning">{{form.status}} </span>  <br>
+                                        Estado del Proyecto: <span class="badge badge-info">{{form.status}} </span>  <br>
                                         <span>Presupuesto: {{proyectos.presupuesto}}</span>
                                       </p>
                                 </div>
                                     
                             <div class="col-lg-12">
                                 <p align="center"> <h6 align="center">Para descargar el soporte de este proyecto haga clic a continuación:</h6></p>
-                              <div class="" v-if="form.status==='Creado'">
+                              <div class="" v-if="form.status==='Aprobado'">
                                 <p align="center"> 
                                     <b-button id="show-btn" v-b-modal.modal-lg style="background-color:#fff;" class="btn bg-pdf" @click="$bvModal.show('bv-modal-example')"> <img src="@/assets/images/pdf.png" alt height="75" width="60" /></b-button> 
                                   
@@ -53,16 +53,124 @@
                               </div>
                             <div class="" v-else>
                                 <div class="alert alert-warning">
-                                El Proyecto aún no ha sido aprobado
+                                <p>Para notificar nuevamente haga clic aqui: <b-dropdown-item-button@click="notificarConsulta(form.id,form.aprueba_id)">Notificar</b-dropdown-item-button></p>
+                                El Proyecto aún no ha sido aprobado, debe esperar aque se apruebe el proyecto para descargar el soporte.
                                 </div>
                             </div>
-                        <!----> <pre> {{form}} </pre> 
+                        <!----> <pre> {{form.id}} </pre> 
                       </div>
                           </div>
-                      </div>                    
+                      </div>
+                    <div class="header bg-white card" v-if="form.status==='Pendiente'">
+                                
+                          <div class="row">
+                                <div class="col-lg-6"><p></p>
+                                      <p align="center">
+                                        <img  width="150"  height="150" style="float:center!importan;" class="rounded"   v-bind:src="proyectos.empresa.logo" />
+                                      </p>
+                                </div>
+                                <div class="col-lg-6"><p></p>
+                                    <h4>Titulo del Proyecto:</h4>
+                                    <h5 class="title" align="center">{{proyectos.titulo}}</h5>
+                                      <p algn="center">
+                                        Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> <br>
+                                        Estado del Proyecto: <span class="badge badge-warning">{{form.status}} </span>  <br>
+                                        <span>Presupuesto: {{proyectos.presupuesto}}</span>
+                                      </p>
+                                </div>
+                                    
+                            <div class="col-lg-12">
+                                <p align="center"> <h6 align="center">Para descargar el soporte de este proyecto haga clic a continuación:</h6></p>
+                              <div class="" v-if="form.status==='Aprobado'">
+                                <p align="center"> 
+                                    <b-button id="show-btn" v-b-modal.modal-lg style="background-color:#fff;" class="btn bg-pdf" @click="$bvModal.show('bv-modal-example')"> <img src="@/assets/images/pdf.png" alt height="75" width="60" /></b-button> 
+                                  
+                                  </p>
+                              </div>
+                            <div class="" v-else>
+
+                                
+                                 <div v-if="usuarioDB.rol==='Master'">
+                                    <b-row>
+                                          <b-col>
+                                              <p align="center">Para verificar el proyecto haga Clic aquí: 
+                                                <button id="show-btn" v-b-modal.modal-lg style="background-color:#fff;" class="btn text-dark btn-info" @click="$bvModal.show('bv-modal-example')"> Verificar Proyecto</button> 
+                                              </p>
+                                          </b-col>
+                                        
+                                    </b-row>
+                                    <b-row>
+                                        <b-col>
+                                        <p align="center"> 
+                                                <b-button class="btn btn-success" @click="notificarConsultaAprobar(form.id,form.elabora_id)">
+                                                Aprobar Proyecto
+                                                </b-button>
+                                        </p>
+                                          
+                                        </b-col>
+                                        <b-col>
+                                             <button id="show-btn" v-b-modal.modal-lg  class="btn btn-danger" @click="$bvModal.show('modal_observaciones')"> Rechazar Prpyecto</button> 
+                                        </b-col>
+                                    </b-row>
+                                 </div>
+
+                                <div v-else>
+                                        <div class="alert alert-warning">
+                                          El Proyecto aún no ha sido aprobado, debe esperar aque se apruebe el proyecto para descargar el soporte.
+                                          
+                                        <p align="center">Para notificar nuevamente haga clic aqui: 
+                                          <b-button class="btn btn-info" @click="notificarConsulta(form.id,form.aprueba_id)">
+                                          Notificar Nuevamente
+                                          </b-button>
+                                        </p>
+                                      </div>
+                                 </div>
+
+                                
+
+                            </div>
+                        <!--<pre> {{form}} </pre> --> 
+                      </div>
+                          </div>
+                      </div>
+                       <div class="header bg-white card" v-if="form.status==='Aprobado'">
+                                
+                          <div class="row">
+                                <div class="col-lg-6"><p></p>
+                                      <p align="center">
+                                        <img  width="150"  height="150" style="float:center!importan;" class="rounded"   v-bind:src="proyectos.empresa.logo" />
+                                      </p>
+                                </div>
+                                <div class="col-lg-6"><p></p>
+                                    <h4>Titulo del Proyecto:</h4>
+                                    <h5 class="title" align="center">{{proyectos.titulo}}</h5>
+                                      <p algn="center">
+                                        Empresa: <span class="badge badge-info">{{proyectos.empresa.nombre}} </span> <br>
+                                        Estado del Proyecto: <span class="badge badge-success">{{form.status}} </span>  <br>
+                                        <span>Presupuesto: {{proyectos.presupuesto}}</span>
+                                      </p>
+                                </div>
+                                    
+                            <div class="col-lg-12">
+                                <p align="center"> <h6 align="center">Para descargar el soporte de este proyecto haga clic a continuación:</h6></p>
+                              <div class="" v-if="form.status==='Aprobado'">
+                                <p align="center"> 
+                                    <a id="show-btn" v-b-modal.modal-lg style="background-color:#fff;" class=" bg-pdf" @click="$bvModal.show('bv-modal-example')"> <img src="@/assets/images/pdf.png" alt height="75" width="60" /></a> 
+                                  
+                                  </p>
+                              </div>
+                            <div class="" v-else>
+                                <div class="alert alert-warning">
+                                El Proyecto aún no ha sido aprobado, debe esperar aque se apruebe el proyecto para descargar el soporte.
+                                </div>
+                            </div>
+                        <!--<pre> {{form}} </pre> --> 
+                      </div>
+                          </div>
+                      </div>                     
                 </div>
                     <!--Modal para PDF-->
-                    <b-modal id="bv-modal-example" size="xl" class="modal-lg modal-md modal-dialog fade" hide-footer >
+             <b-modal id="bv-modal-example" size="xl" class="modal-lg modal-md modal-dialog fade" hide-footer >
                       <template #modal-title>
                         <h4 class="">Información del Proyecto: {{proyectos.titulo}} </h4>
                       </template>
@@ -123,15 +231,18 @@
                                     <div class="row">
                                       <div class="col-lg-6"><b>Dimensión Digital:</b>  <p></p>
                                           <p align="justify" class="card-text">
-                                          <br>
-                                          <ol>
-                                            <li v-for="(iniciativa, index) in form.dimension_digital" :key="index">{{iniciativa.nombre}} </li>
-                                          </ol>
-                                      </p>
+                                              <br>
+                                              <ol>
+                                                <li v-for="(iniciativa, index) in form.dimension_digital" :key="index">{{iniciativa.nombre}} </li>
+                                              </ol>
+                                          </p>
                                       </div>
                                       <div class="col-lg-6"><b>Dimensión Ecológica:</b><p></p> 
-                                          <p algin="justify"> 
-                                             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatibus, excepturi nisi. Aliquam similique inventore, ducimus architecto unde fugiat quidem quasi quos officiis. Recusandae blanditiis sunt quisquam, quod excepturi tenetur incidunt.
+                                          <p align="justify" class="card-text">
+                                              <br>
+                                              <ol>
+                                                <li v-for="(iniciativa, index) in form.dimension_digital" :key="index">{{iniciativa.nombre}} </li>
+                                              </ol>
                                           </p>
                                       </div>
                                     </div>
@@ -182,34 +293,26 @@
                   </div>
                   <p align="center"> <button class="btn btn-outline-secondary" @click="exportToPDF">Descarcar Soporte del Proyecto</button></p>
                       
-                    </b-modal>
-                <!--DEscargar PDF
-                <div class="col-lg-6 ">
-                <h4 class="text-white">Descargar Soporte del proyecto </h4>
-                    <div class="row bg-pdf"><br><br>
-                    <div class="col-lg-12 card">
-                    
-                      <div class="col-lg-12">
-              
-                        <div class="" v-if="form.status==='Creado'">
-                          <p align="center"> 
-                              <b-button id="show-btn" class="btn-small" @click="$bvModal.show('bv-modal-example')">Ver/Descargar Proyecto</b-button> 
-                             
-                            </p>
-                        </div>
-                      <div class="" v-else>
-                          <div class="alert alert-warning">
-                          El Proyecto aún no ha sido aprobado
-                          </div>
-                      </div>
-                   
-                      </div>
-                    </div>
-                      
-                  </div>
+            </b-modal>
 
-                </div>-->
             </div>  
+
+             <b-modal id="modal_observaciones" hide-footer>
+    <b-row>
+    <b-col>
+        <p align="center">
+           <p align="center"><img src="@/assets/images/forms/cancel.svg" width="180" alin="center" height="180" alt=""></p>
+        </p>
+    </b-col>
+      <b-col>
+        <div class="form-group">
+          <label>Razones del rechazo del Proyecto:</label>
+            <textarea cols="7" rows="6" v-model="form.observaciones"  type="text" class="form-control" placeholder=" "></textarea>
+        </div>
+      </b-col>
+    </b-row>
+    <button class="btn btn-danger btn-block" @click="notificarConsultaRechazar()" :disabled="form.observaciones===''"> Rechazar</button>
+  </b-modal>
         <footer class="footer dark" style="background-color:#505d69; color:#fff;">
             <div class="container-fluid">
               <div class="row">
@@ -517,6 +620,17 @@ export default {
               this.$swal('ocurrio un problema','','warning');
             });
      },
+         setearObservaciones(id) {
+      for (let index = 0; index < this.proyectos.length; index++) {
+        if (this.proyectos[index].id===id) {
+          this.form.id=this.proyectos[index].id;
+          this.form.observaciones=this.proyectos[index].observaciones;
+          this.form.elabora_id=this.proyectos[index].elabora_id;
+          this.$root.$emit("bv::show::modal", "modal_observaciones", "#btnShow");
+          return;
+        }
+      }
+    },
     setear() {
 
         //this.cliente=this.proyectos[index].empresa.cliente_id;
@@ -599,6 +713,99 @@ export default {
           }
         })
       },
+            notificarConsulta(id,aprueba_id){
+        this.$swal({
+          title: 'Desea notificar este proyecto al administrador?',
+          icon: 'question',
+          iconHtml: '',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          showCancelButton: true,
+          showCloseButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.notificarProyecto(id,aprueba_id);
+          }
+        })
+      },
+      async  notificarProyecto(id,aprueba_id){
+    let data = new FormData();
+    data.append('aprueba_id',aprueba_id);
+    data.append('id',id);
+    await  this.axios.post('api/proyectos/notificar',data)
+      .then((response) => {
+        if (response.status==200) {
+          this.$swal('Notificado con exito ','','success');
+          this.listarProyectos();
+        }
+      })
+      .catch((e)=>{
+        this.$swal('ocurrio un problema','','warning');
+      })
+    },
+          notificarConsultaAprobar(id,elabora_id){
+        this.$swal({
+          title: 'Desea aprobar este proyecto?',
+          icon: 'question',
+          iconHtml: '',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          showCancelButton: true,
+          showCloseButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.notificarProyectoAprobacion(id,elabora_id);
+          }
+        })
+      },
+      async  notificarProyectoAprobacion(id,elabora_id){
+    let data = new FormData();
+    data.append('elabora_id',elabora_id);
+    data.append('id',id);
+    await  this.axios.post('api/proyectos/aprobar',data)
+      .then((response) => {
+        if (response.status==200) {
+          this.$swal('Notificado con exito ','','success');
+          this.listarProyectos();
+        }
+      })
+      .catch((e)=>{
+        this.$swal('ocurrio un problema','','warning');
+      })
+    },
+
+      notificarConsultaRechazar(){
+        this.$swal({
+          title: 'Desea rechazar este proyecto?',
+          icon: 'question',
+          iconHtml: '',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          showCancelButton: true,
+          showCloseButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.notificarProyectoRechazar();
+          }
+        })
+      },
+   async  notificarProyectoRechazar(){
+    let data = new FormData();
+    data.append('elabora_id',this.form.elabora_id);
+    data.append('id',this.form.id);
+    data.append('observaciones',this.form.observaciones);
+    await  this.axios.post('api/proyectos/rechazar',data)
+      .then((response) => {
+        if (response.status==200) {
+          this.$swal('Rechazado con exito ','','success');
+          this.$root.$emit("bv::hide::modal", "modal_observaciones", "#btnShow");
+          this.listarProyectos();
+        }
+      })
+      .catch((e)=>{
+        this.$swal('ocurrio un problema','','warning');
+      })
+    },
   async  listarclientes(){
     await  this.axios.get('api/clientes')
       .then((response) => {
@@ -686,6 +893,7 @@ export default {
       this.listarProyectos();
     },
     computed: {
+      ...mapState(['usuarioDB','cliente']),
     rows() {
       return this.proyectos.length;
     },

@@ -37,7 +37,7 @@
               <!-- End Buscar Cliente -->
             </div>
             <!-- Table -->
-            <div class="table-responsive mb-0 " style="color:#fff;">
+            <div class="table-responsive mb-0 " style="color:#fff; min-height:300px;">
 
               <b-table
               
