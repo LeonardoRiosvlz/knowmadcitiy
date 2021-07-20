@@ -8,7 +8,7 @@ import moment from 'moment';
 export default {
   data() {
     return {
-      socket : io('http://localhost:4000/'),
+      socket : io('https://plataformaknowmad.herokuapp.com/'),
       canal: '',
       user: '',
       message: '',
